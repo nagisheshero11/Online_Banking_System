@@ -1,0 +1,113 @@
+/* ===== HOW IT WORKS SECTION STYLES ===== */
+.how-it-works-section {
+    padding: 100px 0;
+    background: var(--light-gray);
+}
+
+.how-it-works-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.how-it-works-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.how-it-works-title {
+    font-size: 2.8rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-weight: bold;
+}
+
+.how-it-works-subtitle {
+    font-size: 1.2rem;
+    color: var(--dark-gray);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+.steps-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 3rem;
+    margin-top: 50px;
+    position: relative;
+}
+
+.step-card {
+    text-align: center;
+    position: relative;
+}
+
+.step-number {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0 auto 1.5rem;
+    box-shadow: 0 8px 25px rgba(44, 90, 160, 0.3);
+    position: relative;
+    z-index: 2;
+}
+
+.step-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.2rem;
+    opacity: 0.8;
+}
+
+.step-title {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.step-description {
+    color: var(--dark-gray);
+    line-height: 1.6;
+    font-size: 1.1rem;
+}
+
+/* How It Works responsive */
+@media (max-width: 768px) {
+    .how-it-works-section {
+        padding: 60px 0;
+    }
+
+    .how-it-works-title {
+        font-size: 2.2rem;
+    }
+
+    .how-it-works-subtitle {
+        font-size: 1.1rem;
+    }
+
+    .steps-container {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .step-number {
+        width: 70px;
+        height: 70px;
+        font-size: 1.8rem;
+    }
+
+    .step-title {
+        font-size: 1.3rem;
+    }
+}
