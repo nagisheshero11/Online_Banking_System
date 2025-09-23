@@ -1,0 +1,154 @@
+/* Layout/containers and common card styles for dashboard */
+.dashboard-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    min-height: 100vh;
+    background: linear-gradient(180deg, #eef2f7 0%, #f7f9fc 100%);
+}
+
+.dashboard-sidebar {
+    background: #0f233d;
+}
+
+.dashboard-main {
+    padding: 32px;
+}
+
+.dashboard-header {
+    margin-bottom: 24px;
+}
+
+.dashboard-title {
+    font-size: 32px;
+    font-weight: 800;
+    color: #1e2a3a;
+}
+
+.dashboard-widgets {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.card {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    padding: 20px;
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1f2b3b;
+    margin-bottom: 14px;
+}
+
+/* Inlined from AccountOverview.css */
+.account-overview .account-meta {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    font-size: 14px;
+    margin: 8px 0;
+    color: #3c4a5c;
+}
+
+.account-overview .balance-value {
+    font-size: 28px;
+    font-weight: 800;
+    color: #e09c11;
+    /* goldish */
+}
+
+/* Inlined from QuickActions.css */
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.action-card {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    padding: 14px;
+    display: grid;
+    justify-items: center;
+    align-items: center;
+    gap: 6px;
+}
+
+.action-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: #e9f2ff;
+    color: var(--primary-color);
+    display: grid;
+    place-items: center;
+}
+
+.action-icon svg {
+    width: 22px;
+    height: 22px;
+}
+
+.action-label {
+    font-size: 13px;
+    color: #334155;
+    text-align: center;
+}
+
+/* Inlined from RecentTransactions.css */
+.recent-transactions .transactions-list {
+    display: grid;
+    gap: 10px;
+}
+
+.transaction-row {
+    display: grid;
+    grid-template-columns: 140px 1fr 140px;
+    align-items: center;
+    padding: 12px 10px;
+    border-bottom: 1px solid #eef2f7;
+}
+
+.tx-date {
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.tx-desc {
+    color: #1f2937;
+    font-weight: 600;
+}
+
+.tx-amount {
+    text-align: right;
+    font-weight: 700;
+}
+
+.tx-amount.debit {
+    color: #ef4444;
+}
+
+.tx-amount.credit {
+    color: #10b981;
+}
+
+@media (max-width: 1024px) {
+    .dashboard-layout {
+        grid-template-columns: 220px 1fr;
+    }
+
+    .dashboard-widgets {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-layout {
+        grid-template-columns: 1fr;
+    }
+}

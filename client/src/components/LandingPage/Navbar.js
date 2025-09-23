@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link } from 'react-scroll';
+import { Link as ScrollLink } from 'react-scroll';
+import { Link } from 'react-router-dom';
 import { FaBars } from 'react-icons/fa';
 import './styles/Navbar.css';
 
@@ -7,33 +8,33 @@ const Navbar = () => {
     return (
         <nav className="navbar">
             <div className="navbar-container">
-                <Link to="home" className="navbar-logo" smooth={true} duration={500}>
+                <ScrollLink to="home" className="navbar-logo" smooth={true} duration={500}>
                     🏦 BANKIFY
-                </Link>
+                </ScrollLink>
 
                 <ul className="navbar-nav">
                     <li>
-                        <Link to="home" className="nav-link" smooth={true} duration={500} spy={true} activeClass="active" offset={-80}>
+                        <ScrollLink to="home" className="nav-link" smooth={true} duration={500} spy={true} activeClass="active" offset={-80}>
                             Home
-                        </Link>
+                        </ScrollLink>
                     </li>
                     <li>
-                        <Link to="features" className="nav-link" smooth={true} duration={500} spy={true} activeClass="active" offset={-80}>
+                        <ScrollLink to="features" className="nav-link" smooth={true} duration={500} spy={true} activeClass="active" offset={-80}>
                             Features
-                        </Link>
+                        </ScrollLink>
                     </li>
                     <li>
-                        <Link to="how-it-works" className="nav-link" smooth={true} duration={500} spy={true} activeClass="active" offset={-80}>
+                        <ScrollLink to="how-it-works" className="nav-link" smooth={true} duration={500} spy={true} activeClass="active" offset={-80}>
                             How It Works
-                        </Link>
+                        </ScrollLink>
                     </li>
                     <li>
-                        <Link to="about" className="nav-link" smooth={true} duration={500} spy={true} activeClass="active" offset={-80}>
+                        <ScrollLink to="about" className="nav-link" smooth={true} duration={500} spy={true} activeClass="active" offset={-80}>
                             About
-                        </Link>
+                        </ScrollLink>
                     </li>
                     <li>
-                        <Link to="contact" className="nav-cta" smooth={true} duration={500}>
+                        <Link to="/dashboard" className="nav-cta">
                             Login / Register
                         </Link>
                     </li>

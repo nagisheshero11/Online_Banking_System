@@ -1,0 +1,72 @@
+/* Sidebar-specific styles */
+.sidebar {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    color: #e6edf7;
+}
+
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.brand-logo {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: var(--primary-color);
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+.brand-text {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.sidebar-nav {
+    padding: 12px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    color: #cfd9e7;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.sidebar-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: #ffffff;
+}
+
+.sidebar-item.active {
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04));
+    color: #ffffff;
+    border-left: 4px solid var(--secondary-color);
+}
+
+.sidebar-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.sidebar-footer {
+    margin-top: auto;
+    padding: 8px;
+}
