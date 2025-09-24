@@ -1,20 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-scroll';
+import { Link as RouterLink } from 'react-router-dom';
 import { FaBars } from 'react-icons/fa';
 import './styles/Navbar.css';
-import AuthModal from './LoginandSignup'; // Using standard import without .js extension
 
 const Navbar = () => {
-    // State to manage the visibility of the modal
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
-    const handleOpenModal = () => {
-        setIsModalOpen(true);
-    };
-
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
-    };
 
     return (
         <>
@@ -46,10 +36,7 @@ const Navbar = () => {
                             </Link>
                         </li>
                         <li>
-                            {/* This is now a button to open the modal */}
-                            <button onClick={handleOpenModal} className="nav-cta">
-                                Login / Register
-                            </button>
+                            <RouterLink to="/login" className="nav-cta">Login / Register</RouterLink>
                         </li>
                     </ul>
 
@@ -60,11 +47,8 @@ const Navbar = () => {
                 </div>
             </nav>
 
-            {/* Render the modal component */}
-            <AuthModal isOpen={isModalOpen} onClose={handleCloseModal} />
         </>
     );
 };
 
 export default Navbar;
-

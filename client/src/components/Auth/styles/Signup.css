@@ -1,0 +1,7 @@
+/* Signup page styles - can diverge from login if needed */
+@import './Login.css';
+
+/* Overrides specific to signup (optional placeholder) */
+.auth-form-panel h3 {
+    color: #111827;
+}
