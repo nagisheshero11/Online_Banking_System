@@ -7,11 +7,11 @@
 }
 
 .dashboard-sidebar {
-    background: #0f233d;
+    background: transparent;
 }
 
 .dashboard-main {
-    padding: 32px;
+    padding: 24px;
 }
 
 .dashboard-header {
@@ -31,6 +31,149 @@
     margin-bottom: 24px;
 }
 
+/* Summary cards row */
+.summary-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin: 16px 0 20px;
+}
+
+.summary-card {
+    border-radius: 14px;
+    color: #ffffff;
+    padding: 18px;
+    box-shadow: var(--card-shadow);
+}
+
+.summary-title {
+    font-size: 12px;
+    opacity: 0.9;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.summary-value {
+    font-size: 28px;
+    font-weight: 800;
+}
+
+.summary-sub {
+    font-size: 12px;
+    opacity: 0.9;
+    margin-top: 4px;
+}
+
+.gradient-blue {
+    background: linear-gradient(225deg, #0d47a1, #1e88e5);
+}
+
+.gradient-green {
+    background: linear-gradient(225deg, #0ea5a5, #22c55e);
+}
+
+.gradient-cyan {
+    background: linear-gradient(225deg, #06b6d4, #38bdf8);
+}
+
+/* Quick actions large buttons */
+.quick-actions-row {
+    margin-bottom: 22px;
+}
+
+.qa-title {
+    font-weight: 700;
+    color: #1f2b3b;
+    margin-bottom: 10px;
+}
+
+.qa-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.qa-btn {
+    height: 56px;
+    border-radius: 12px;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.qa-deposit {
+    background: #10b981;
+}
+
+.qa-transfer {
+    background: #1f2b6c;
+}
+
+.qa-bills {
+    background: #06b6d4;
+}
+
+.qa-loan {
+    background: #f59e0b;
+}
+
+.qa-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Recent transactions enhanced list */
+.rt-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.view-all {
+    color: var(--primary-color);
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.transaction-row {
+    grid-template-columns: 34px 1fr 140px 120px;
+    column-gap: 12px;
+}
+
+.tx-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #e5f7ef;
+}
+
+.tx-icon.out {
+    background: #fde8e8;
+}
+
+.tx-main {
+    display: flex;
+    flex-direction: column;
+}
+
+.tx-sub {
+    color: #6b7280;
+    font-size: 12px;
+}
+
+.tx-type {
+    color: #6b7280;
+    font-size: 12px;
+    text-align: right;
+}
+
 .card {
     background: #ffffff;
     border-radius: 12px;
@@ -43,6 +186,23 @@
     font-weight: 700;
     color: #1f2b3b;
     margin-bottom: 14px;
+}
+
+/* Center key card headings for clearer hierarchy */
+.account-overview .card-title,
+.quick-actions-card .card-title,
+.recent-transactions .card-title {
+    text-align: center;
+}
+
+/* Quick Actions card as right-side panel */
+.quick-actions-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.quick-actions-card .quick-actions {
+    margin-top: 8px;
 }
 
 /* Inlined from AccountOverview.css */
@@ -144,6 +304,18 @@
 
     .dashboard-widgets {
         grid-template-columns: 1fr;
+    }
+
+    .summary-row {
+        grid-template-columns: 1fr;
+    }
+
+    .qa-buttons {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .transaction-row {
+        grid-template-columns: 24px 1fr 100px 90px;
     }
 }
 

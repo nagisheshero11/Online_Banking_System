@@ -1,11 +1,15 @@
-/* Sidebar-specific styles */
+/* Sidebar-specific styles (light theme) */
 .sidebar {
     position: sticky;
-    top: 0;
-    height: 100vh;
+    top: 64px;
+    /* height of top navbar */
+    height: calc(100vh - 64px);
     display: flex;
     flex-direction: column;
-    color: #e6edf7;
+    color: #374151;
+    background: #ffffff;
+    padding: 12px 0 12px;
+    border-right: 1px solid #e5e7eb;
 }
 
 .sidebar-brand {
@@ -13,7 +17,8 @@
     align-items: center;
     gap: 12px;
     padding: 20px 16px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    margin-bottom: 6px;
 }
 
 .brand-logo {
@@ -28,42 +33,68 @@
 }
 
 .brand-text {
-    font-weight: 700;
-    letter-spacing: 0.5px;
+    display: none;
 }
 
-.sidebar-nav {
-    padding: 12px 8px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+.sidebar-section {
+    padding: 10px 12px 6px 12px;
+}
+
+.section-label {
+    display: none;
+}
+
+.sidebar-link {
+    text-decoration: none;
+    color: inherit;
 }
 
 .sidebar-item {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 12px 14px;
-    border-radius: 10px;
-    color: #cfd9e7;
+    padding: 10px 14px;
+    border-radius: 12px;
+    color: #374151;
     cursor: pointer;
     transition: background 0.2s ease, color 0.2s ease;
+    position: relative;
 }
 
 .sidebar-item:hover {
-    background: rgba(255, 255, 255, 0.06);
-    color: #ffffff;
+    background: #f3f4f6;
+    color: #111827;
 }
 
 .sidebar-item.active {
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04));
+    background: #2f5bb2;
     color: #ffffff;
-    border-left: 4px solid var(--secondary-color);
 }
 
-.sidebar-icon svg {
-    width: 18px;
-    height: 18px;
+/* Remove left indicator bar in light design */
+.sidebar-item.active::before {
+    display: none;
+}
+
+.icon-wrap {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    background: transparent;
+    color: #3b4758;
+}
+
+.icon-wrap svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Active item makes icon/text white */
+.sidebar-item.active .icon-wrap,
+.sidebar-item.active .sidebar-label {
+    color: #ffffff;
 }
 
 .sidebar-footer {

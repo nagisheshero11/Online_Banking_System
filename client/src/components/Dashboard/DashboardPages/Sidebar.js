@@ -1,39 +1,58 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { FaTachometerAlt, FaUser, FaExchangeAlt, FaFileInvoiceDollar, FaMoneyCheckAlt, FaCog, FaSignOutAlt } from 'react-icons/fa';
+import { NavLink, Link } from 'react-router-dom';
+import { FaTachometerAlt, FaUser, FaExchangeAlt, FaFileInvoiceDollar, FaMoneyCheckAlt, FaCog, FaCreditCard, FaUserCircle, FaListAlt, FaArrowDown, FaPaperPlane, FaSuitcase } from 'react-icons/fa';
 import './styles/Sidebar.css';
 
 const NavItem = ({ icon: Icon, label, to, active }) => {
-    const content = (
+    const Item = (
         <div className={`sidebar-item ${active ? 'active' : ''}`}>
-            <span className="sidebar-icon"><Icon /></span>
+            <span className="icon-wrap"><Icon /></span>
             <span className="sidebar-label">{label}</span>
         </div>
     );
-    return to ? <Link to={to} style={{ textDecoration: 'none' }}>{content}</Link> : content;
+    if (to) {
+        // Use NavLink so active class is applied based on current route
+        return (
+            <NavLink
+                to={to}
+                end
+                className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}
+            >
+                {({ isActive }) => (
+                    <div className={`sidebar-item ${isActive || active ? 'active' : ''}`}>
+                        <span className="icon-wrap"><Icon /></span>
+                        <span className="sidebar-label">{label}</span>
+                    </div>
+                )}
+            </NavLink>
+        );
+    }
+    return Item;
 };
 
 const Sidebar = () => {
     return (
-        <div className="sidebar">
-            <div className="sidebar-brand">
-                <div className="brand-logo">B</div>
-                <div className="brand-text">BANKIFY</div>
+        <nav className="sidebar" aria-label="Sidebar">
+            <div className="sidebar-section">
+                <NavItem icon={FaTachometerAlt} label="Dashboard" to="/dashboard" />
+                <NavItem icon={FaUser} label="Account Details" />
+                <NavItem icon={FaListAlt} label="Transactions" />
+                <NavItem icon={FaArrowDown} label="Deposit Money" />
+                <NavItem icon={FaPaperPlane} label="Transfer Money" />
+                <NavItem icon={FaFileInvoiceDollar} label="Pay Bills" />
+                <NavItem icon={FaSuitcase} label="Request Loan" />
+                <NavItem icon={FaMoneyCheckAlt} label="Loan Status" />
             </div>
-
-            <nav className="sidebar-nav">
-                <NavItem icon={FaTachometerAlt} label="Dashboard" active />
-                <NavItem icon={FaUser} label="Accounts" />
-                <NavItem icon={FaExchangeAlt} label="Transfers" />
-                <NavItem icon={FaFileInvoiceDollar} label="Bills" />
-                <NavItem icon={FaMoneyCheckAlt} label="Loans" />
-                <NavItem icon={FaCog} label="Settings" />
-            </nav>
 
             <div className="sidebar-footer">
-                <NavItem icon={FaSignOutAlt} label="Logout" to="/logout" />
+                <div className="sidebar-link">
+                    <div className="sidebar-item">
+                        <span className="icon-wrap"><FaUserCircle /></span>
+                        <span className="sidebar-label">Profile</span>
+                    </div>
+                </div>
             </div>
-        </div>
+        </nav>
     );
 };
 
