@@ -84,8 +84,4 @@
     /* light orange tint */
 }
 
-@media (max-width: 768px) {
-    .brand-text {
-        display: none;
-    }
-}
+/* Keep brand text visible on all screen sizes */
