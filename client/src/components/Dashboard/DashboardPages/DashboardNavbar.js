@@ -9,7 +9,7 @@ const DashboardNavbar = ({ userName = 'User', accountId = '' }) => {
             <div className="nav-left">
                 <div className="brand">
                     <div className="brand-logo-mini">B</div>
-                    <div className="brand-text">Bankify</div>
+                    <div className="brand-text">BANKIFY</div>
                 </div>
             </div>
             <div className="nav-right">

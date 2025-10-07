@@ -32,7 +32,8 @@
     color: #ffffff;
 }
 
-.brand-text {
+/* Scope to sidebar to avoid hiding navbar brand text */
+.sidebar .brand-text {
     display: none;
 }
 

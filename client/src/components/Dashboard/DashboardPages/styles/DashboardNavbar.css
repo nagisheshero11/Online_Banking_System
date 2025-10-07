@@ -23,7 +23,7 @@
     align-items: center;
     gap: 10px;
     font-weight: 800;
-    color: var(--primary-color);
+    color: var(--primary-color, #1f4aa1);
     letter-spacing: 0.3px;
 }
 
@@ -31,7 +31,7 @@
     width: 36px;
     height: 36px;
     border-radius: 8px;
-    background: var(--primary-color);
+    background: var(--primary-color, #1f4aa1);
     color: #ffffff;
     display: grid;
     place-items: center;
@@ -40,6 +40,7 @@
 
 .brand-text {
     font-weight: 800;
+    color: var(--primary-color, #1f4aa1);
 }
 
 .nav-right {
