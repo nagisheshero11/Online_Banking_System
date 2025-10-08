@@ -42,7 +42,7 @@ const DepositMoney = () => {
         <div className="deposit-money-container">
             {/* Header Section */}
             <div className="deposit-header">
-                <h2>Deposit Money</h2>
+                {/* <h2>Deposit Money</h2> */}
                 <p>Add funds to your account</p>
             </div>
 

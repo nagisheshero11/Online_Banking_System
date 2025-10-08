@@ -93,7 +93,7 @@ const RequestLoan = () => {
         <div className="request-loan-container">
             {/* Header Section */}
             <div className="loan-header">
-                <h2>Request Loan</h2>
+                {/* <h2>Request Loan</h2> */}
                 <p>Apply for a loan with competitive interest rates</p>
             </div>
 
