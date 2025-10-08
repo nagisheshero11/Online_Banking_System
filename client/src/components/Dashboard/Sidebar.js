@@ -9,7 +9,8 @@ import {
   FaListAlt,
   FaArrowDown,
   FaPaperPlane,
-  FaSuitcase
+  FaSuitcase,
+  FaIdCard
 } from 'react-icons/fa';
 import './styles/Sidebar.css';
 
@@ -44,6 +45,8 @@ const Sidebar = () => {
         <NavItem icon={FaArrowDown} label="Deposit Money" to="/dashboard/deposit-money" />
         <NavItem icon={FaPaperPlane} label="Transfer Money" to="/dashboard/transfer-money" />
         <NavItem icon={FaFileInvoiceDollar} label="Pay Bills" to="/dashboard/pay-bills" />
+        <NavItem icon={FaIdCard} label="Apply Card" to="/dashboard/apply-card" />
+        <NavItem icon={FaIdCard} label="Cards" to="/dashboard/cards" />
 
         {/* Loan Services */}
         <NavItem icon={FaSuitcase} label="Request Loan" to="/dashboard/request-loan" />

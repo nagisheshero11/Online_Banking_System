@@ -16,7 +16,9 @@ const DashboardHeader = () => {
             '/dashboard/request-loan': 'Request Loan',
             '/dashboard/loan-status': 'Loan Status',
             '/dashboard/pay-bills': 'Pay Bills',
-            '/dashboard/profile': 'Profile'
+            '/dashboard/profile': 'Profile',
+            '/dashboard/cards': 'Cards',
+            '/dashboard/apply-card': 'Apply Card'
         };
 
         return routeTitleMap[pathname] || 'Dashboard';
