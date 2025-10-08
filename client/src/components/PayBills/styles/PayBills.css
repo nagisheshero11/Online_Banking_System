@@ -1,0 +1,331 @@
+/* ========================================================================= */
+/* client/src/components/PayBills/styles/PayBills.css - COMPLETE & FINAL STYLING */
+/* ========================================================================= */
+
+/* --- Base Layout & Centering --- */
+/* client/src/components/PayBills/styles/PayBills.css */
+
+/* ... (around Line 21) ... */
+
+/* --- Base Layout & Centering --- */
+.pay-bills-page {
+    padding: 20px;
+}
+
+/* Add a wrapper class for centering the header content */
+.page-header-wrapper {
+    /* Set max-width and center it, matching the cards below (750px) */
+    max-width: 750px; 
+    margin: 0 auto 20px auto; 
+}
+
+.page-header { 
+    /* Remove original margin-bottom as it's now on the wrapper */
+    margin-bottom: 0; 
+    /* Ensure the text inside the header wrapper aligns to the left */
+    text-align: left;
+}
+
+.header-title { 
+    font-size: 1.8em; 
+    color: #023e8a; 
+    margin-bottom: 5px; 
+}
+
+/* ... rest of the CSS ... */
+.header-subtitle { font-size: 1em; color: #666; }
+
+.selector-title {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: #023e8a;
+    margin-bottom: 20px;
+    /* --- NEW ALIGNMENT --- */
+    text-align: left; 
+    /* The padding is already handled by the .card padding */
+}
+
+
+/* --- 1. Bill Type Selector Grid (WIDER & CENTERED) --- */
+
+.bill-selector-container {
+    /* Increased MAX-WIDTH for a more substantial look */
+    max-width: 750px; 
+    
+    /* CENTER THE CONTAINER */
+    margin: 0 auto 30px auto; 
+}
+
+.bill-selector-card {
+    margin-bottom: 0; 
+}
+
+.bill-type-grid {
+    display: flex;
+    gap: 25px; /* Increased gap for better spacing */
+    justify-content: space-between;
+}
+
+.bill-type-tile {
+    flex: 1; 
+    text-align: center;
+    padding: 20px 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fcfcfc; 
+    position: relative;
+}
+
+/* Base style for icon wrapper (Slightly larger circles) */
+.tile-icon-wrap {
+    width: 65px; 
+    height: 65px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    transition: background-color 0.2s;
+}
+
+.tile-icon {
+    font-size: 1.8em; 
+    color: #fff; /* Icons are white for contrast on colored circles */
+}
+
+.tile-label {
+    font-size: 0.9em; 
+    font-weight: 600;
+    color: #555;
+    transition: color 0.2s;
+}
+
+/* Specific COLORS for Each Tile's ICON WRAPPER */
+.bill-type-tile:nth-child(1) .tile-icon-wrap { background-color: #ffc107; } /* Electricity (Yellow) */
+.bill-type-tile:nth-child(2) .tile-icon-wrap { background-color: #00d4ff; } /* Internet (Cyan) */
+.bill-type-tile:nth-child(3) .tile-icon-wrap { background-color: #fd7e14; } /* Gas (Orange) */
+.bill-type-tile:nth-child(4) .tile-icon-wrap { background-color: #28a745; } /* Mobile (Green) */
+
+
+/* --- Active State & Hover Effects --- */
+.bill-type-tile:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.bill-type-tile.active {
+    /* Border color is set dynamically via JS style prop */
+    border: 2px solid; 
+    background-color: #ffffff; 
+    box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1); 
+    transform: translateY(-2px); 
+}
+
+.bill-type-tile.active .tile-label {
+    color: #333; 
+}
+
+
+/* --- 2. Payment Form Card (WIDER & CENTERED) --- */
+
+.payment-form-card {
+    /* Increased MAX-WIDTH, matching the selector for alignment */
+    max-width: 750px; 
+    
+    /* CENTER THE CARD */
+    margin: 0 auto 30px auto; 
+    
+    padding-top: 0; 
+}
+
+/* Top Banner inside the Form Card - BACKGROUND IS DYNAMIC VIA JS STYLE PROP */
+.form-header-banner {
+    color: #fff;
+    padding: 15px 25px;
+    margin: 0 -25px 25px -25px; 
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+}
+
+.form-header-banner svg {
+    font-size: 1.5em;
+    margin-right: 15px;
+}
+
+.bill-name {
+    font-size: 1.1em;
+    font-weight: 700;
+}
+
+.balance-info {
+    margin-left: auto; 
+    font-size: 0.9em;
+    opacity: 0.9;
+}
+
+/* --- Validation Message --- */
+.validation-message {
+    background-color: #ffebe9; /* Light red background */
+    border: 1px solid #ff4d4f; /* Red border */
+    color: #cf1322; /* Darker red text */
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    font-size: 0.95em;
+    font-weight: 500;
+}
+
+.validation-message .validation-icon {
+    margin-right: 10px;
+    font-size: 1.2em;
+}
+
+
+/* --- Form Elements --- */
+.bill-payment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; 
+}
+
+.form-label {
+    font-size: 0.9em;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 0;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1em;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+
+.form-input:focus {
+    border-color: #3366cc;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(51, 102, 204, 0.2);
+}
+
+.input-group .input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+    font-size: 1em;
+}
+
+.input-group .form-input[name="billAmount"] {
+    padding-left: 40px; 
+}
+
+
+/* --- 3. Payment Summary & Actions (REFINED STYLING) --- */
+
+/* Payment Summary - BACKGROUND & BORDER IS DYNAMIC VIA JS STYLE PROP */
+.payment-summary {
+    padding: 15px;
+    margin-top: 10px;
+    border-radius: 8px;
+    font-size: 0.9em;
+    color: #555;
+    line-height: 1.6;
+    border: 1px solid;
+}
+
+.summary-title-text {
+    font-size: 1.1em;
+    font-weight: 700;
+    margin-bottom: 10px; 
+    /* Color is set via JS inline style */
+}
+
+/* Styling for each summary line */
+.payment-summary .summary-line {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.payment-summary .summary-label {
+    font-weight: 500;
+    color: #666; 
+    flex-basis: 35%;
+    text-align: left;
+}
+
+.payment-summary .summary-value {
+    font-weight: 800; /* BOLD text for values */
+    color: #333; 
+    font-size: 1.1em; /* Larger font size for values */
+    flex-basis: 60%;
+    text-align: right;
+}
+
+/* Action Buttons */
+.form-actions {
+    display: flex;
+    justify-content: flex-end; /* Align buttons to the right */
+    gap: 15px;
+    padding-top: 20px;
+}
+
+.btn-pay, .btn-cancel {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, opacity 0.2s, box-shadow 0.2s;
+}
+
+/* Pay Button - BACKGROUND IS DYNAMIC VIA JS STYLE PROP */
+.btn-pay {
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.btn-pay:hover:not(:disabled) {
+    opacity: 0.9;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.btn-pay:disabled {
+    background-color: #ccc !important;
+    cursor: not-allowed;
+    opacity: 0.7;
+    box-shadow: none;
+}
+
+.btn-cancel {
+    background-color: #f8f9fa; 
+    color: #555;
+    border: 1px solid #ddd;
+}
+
+.btn-cancel:hover {
+    background-color: #eee;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
