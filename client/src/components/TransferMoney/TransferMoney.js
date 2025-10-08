@@ -53,7 +53,7 @@ const TransferMoney = () => {
         <div className="transfer-money-container">
             {/* Header Section */}
             <div className="transfer-header">
-                <h2>Transfer Money</h2>
+                {/* <h2>Transfer Money</h2> */}
                 <p>Send money to any account instantly</p>
             </div>
 
