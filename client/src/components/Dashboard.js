@@ -1,9 +1,9 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import Sidebar from './Dashboard/DashboardPages/Sidebar';
-import DashboardHeader from './Dashboard/DashboardPages/DashboardHeader';
-import DashboardNavbar from './Dashboard/DashboardPages/DashboardNavbar';
-import './Dashboard/DashboardPages/styles/DashboardLayout.css';
+import Sidebar from './Dashboard/Sidebar';
+import DashboardHeader from './Dashboard/DashboardHeader';
+import DashboardNavbar from './Dashboard/DashboardNavbar';
+import './Dashboard/styles/DashboardLayout.css';
 // Import theme variables so Dashboard can render standalone
 import './styles/LandingPage.css';
 
