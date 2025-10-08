@@ -17,7 +17,7 @@ const DashboardNavbar = ({ userName = 'User', accountId = '' }) => {
                     <span className="user-name-strong">{userName}</span>
                     {accountId ? <span className="user-sub">{accountId}</span> : null}
                 </div>
-                <a className="logout-btn" href="/logout">
+                <a className="logout-btn" href="/">
                     <FaSignOutAlt />
                     <span>Logout</span>
                 </a>
