@@ -11,6 +11,8 @@ import AccountDetails from './components/AccountDetails/AccountDetails';
 import LoanStatus from './components/LoanStatus/LoanStatus';
 import Transaction from './components/Transaction/Transaction';
 import DepositMoney from './components/DepositMoney/DepositMoney';
+import TransferMoney from './components/TransferMoney/TransferMoney';
+import PayBills from './components/PayBills/PayBills';
 
 import './App.css';
 
