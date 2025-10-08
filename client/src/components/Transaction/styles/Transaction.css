@@ -1,0 +1,124 @@
+.transactions-container {
+  background-color: #f8f9fc;
+  padding: 20px;
+  font-family: "Inter", sans-serif;
+}
+
+.transactions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.transactions-header h2 {
+  color: #1a237e;
+  margin-bottom: 5px;
+}
+
+.transactions-header p {
+  color: #777;
+  font-size: 14px;
+}
+
+.download-btn {
+  background-color: #1a73e8;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.download-btn:hover {
+  background-color: #155bb5;
+}
+
+.transactions-filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.transactions-filters input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.transactions-filters select {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.transactions-table {
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.transactions-table h4 {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+th {
+  text-align: left;
+  padding: 10px;
+  color: #555;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+td {
+  padding: 12px 10px;
+  border-bottom: 1px solid #eee;
+  color: #333;
+}
+
+.amount.credit {
+  color: green;
+}
+
+.amount.debit {
+  color: red;
+}
+
+.txn-type {
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.txn-type.deposit {
+  background-color: #e6f4ea;
+  color: #0f9d58;
+}
+
+.txn-type.transfer {
+  background-color: #e8f0fe;
+  color: #1a73e8;
+}
+
+.txn-type.bill-payment {
+  background-color: #fce8e6;
+  color: #d93025;
+}
+
+.status.success {
+  background-color: #e6f4ea;
+  color: #0f9d58;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 13px;
+}
