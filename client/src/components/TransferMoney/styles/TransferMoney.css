@@ -1,0 +1,306 @@
+/* TransferMoney Component Styles */
+.transfer-money-container {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Header Section */
+.transfer-header {
+    margin-bottom: 24px;
+}
+
+.transfer-header h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0 0 8px 0;
+}
+
+.transfer-header p {
+    font-size: 16px;
+    color: #6b7280;
+    margin: 0;
+}
+
+/* Transfer Card */
+.transfer-card {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+/* Banner Section */
+.transfer-banner {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    padding: 24px;
+    color: white;
+}
+
+.banner-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.transfer-icon {
+    font-size: 2.5rem;
+    opacity: 0.9;
+}
+
+.banner-text h3 {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 4px 0;
+}
+
+.banner-text p {
+    font-size: 16px;
+    margin: 0;
+    opacity: 0.9;
+}
+
+/* Form Section */
+.transfer-form {
+    padding: 32px;
+}
+
+/* Form Group */
+.form-group {
+    margin-bottom: 24px;
+}
+
+.form-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 8px;
+}
+
+/* Account Input */
+.account-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.account-icon {
+    position: absolute;
+    left: 16px;
+    font-size: 16px;
+    color: #6b7280;
+    z-index: 1;
+}
+
+.account-input {
+    width: 100%;
+    padding: 12px 16px 12px 45px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 500;
+    transition: border-color 0.2s ease;
+}
+
+.account-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Amount Input */
+.amount-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.currency-symbol {
+    position: absolute;
+    left: 16px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #6b7280;
+    z-index: 1;
+}
+
+.amount-input {
+    width: 100%;
+    padding: 12px 16px 12px 40px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 500;
+    transition: border-color 0.2s ease;
+}
+
+.amount-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Description Input */
+.description-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 16px;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 80px;
+    transition: border-color 0.2s ease;
+}
+
+.description-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.description-input::placeholder,
+.account-input::placeholder,
+.amount-input::placeholder {
+    color: #9ca3af;
+}
+
+/* Transfer Details Summary */
+.transfer-details {
+    background: #eff6ff;
+    border: 1px solid #dbeafe;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+}
+
+.transfer-details h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1d4ed8;
+    margin: 0 0 16px 0;
+}
+
+.details-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    padding: 4px 0;
+}
+
+.details-row:last-child {
+    margin-bottom: 0;
+    padding-top: 8px;
+    border-top: 1px solid #dbeafe;
+    font-weight: 600;
+}
+
+.detail-label {
+    font-size: 14px;
+    color: #374151;
+    font-weight: 500;
+}
+
+.detail-value {
+    font-size: 14px;
+    color: #1e40af;
+    font-weight: 600;
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.transfer-btn {
+    flex: 1;
+    padding: 14px 24px;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 160px;
+}
+
+.transfer-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+}
+
+.cancel-btn {
+    padding: 14px 24px;
+    background: #ffffff;
+    color: #6b7280;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 120px;
+}
+
+.cancel-btn:hover {
+    border-color: #d1d5db;
+    background: #f9fafb;
+    color: #374151;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .transfer-money-container {
+        padding: 16px;
+    }
+
+    .transfer-form {
+        padding: 24px 20px;
+    }
+
+    .banner-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+    }
+
+    .transfer-icon {
+        font-size: 2rem;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .transfer-btn,
+    .cancel-btn {
+        width: 100%;
+    }
+
+    .details-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+}
+
+@media (max-width: 480px) {
+    .transfer-header h2 {
+        font-size: 24px;
+    }
+
+    .banner-text h3 {
+        font-size: 20px;
+    }
+
+    .transfer-details {
+        padding: 16px;
+    }
+}

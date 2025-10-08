@@ -11,6 +11,7 @@ import AccountDetails from './components/AccountDetails/AccountDetails';
 import LoanStatus from './components/LoanStatus/LoanStatus';
 import Transaction from './components/Transaction/Transaction';
 import DepositMoney from './components/DepositMoney/DepositMoney';
+import TransferMoney from './components/TransferMoney/TransferMoney';
 
 import './App.css';
 
@@ -32,6 +33,7 @@ function App() {
             <Route path="loan-status" element={<LoanStatus />} />
             <Route path="transactions" element={<Transaction />} />
             <Route path="deposit-money" element={<DepositMoney />} />
+            <Route path="transfer-money" element={<TransferMoney />} />
           </Route>
 
           {/* Authentication routes */}
