@@ -33,25 +33,25 @@ const DashboardLayout = ({ accountNumber, currentBalance, transactions }) => {
       <section className="quick-actions-row card">
         <div className="qa-title">Quick Actions</div>
         <div className="qa-buttons">
-          <button className="qa-btn qa-deposit">
+          <Link to="/dashboard/deposit-money" className="qa-btn qa-deposit">
             <FaMoneyBillWave />
             <span className="qa-label">Deposit Money</span>
-          </button>
+          </Link>
 
-          <button className="qa-btn qa-transfer">
+          <Link to="/dashboard/transfer-money" className="qa-btn qa-transfer">
             <FaExchangeAlt />
             <span className="qa-label">Transfer Money</span>
-          </button>
+          </Link>
 
-          <button className="qa-btn qa-bills">
+          <Link to="/dashboard/pay-bills" className="qa-btn qa-bills">
             <FaRupeeSign />
             <span className="qa-label">Pay Bills</span>
-          </button>
+          </Link>
 
-          <button className="qa-btn qa-loan">
+          <Link to="/dashboard/request-loan" className="qa-btn qa-loan">
             <FaPiggyBank />
             <span className="qa-label">Request Loan</span>
-          </button>
+          </Link>
         </div>
       </section>
 
@@ -60,7 +60,7 @@ const DashboardLayout = ({ accountNumber, currentBalance, transactions }) => {
         <div className="card recent-transactions">
           <div className="rt-header">
             <h3 className="card-title">Recent Transactions</h3>
-            <Link className="view-all" to="/transactions">
+            <Link className="view-all" to="/dashboard/transactions">
               View All
             </Link>
           </div>

@@ -1,5 +1,6 @@
 import React from "react";
 import "./styles/LoanStatus.css";
+import { Link } from 'react-router-dom';
 
 const LoanStatus = () => {
   const loanStats = {
@@ -37,7 +38,9 @@ const LoanStatus = () => {
           <h2>Loan Status</h2>
           <p>Track your loan applications</p>
         </div>
-        <button className="request-loan-btn">+ Request New Loan</button>
+        <Link to="/dashboard/request-loan">
+          <button className="request-loan-btn">+ Request New Loan</button>
+        </Link>
       </div>
 
       {/* Summary Cards */}
@@ -85,13 +88,12 @@ const LoanStatus = () => {
                 <td>{loan.rate}</td>
                 <td>
                   <span
-                    className={`status-badge ${
-                      loan.status === "Approved"
-                        ? "approved"
-                        : loan.status === "Pending"
+                    className={`status-badge ${loan.status === "Approved"
+                      ? "approved"
+                      : loan.status === "Pending"
                         ? "pending"
                         : "rejected"
-                    }`}
+                      }`}
                   >
                     {loan.status}
                   </span>
