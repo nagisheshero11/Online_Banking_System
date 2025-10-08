@@ -1,7 +1,11 @@
+// client/src/components/Dashboard/DashboardPages/Sidebar.js
 import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
-import { FaTachometerAlt, FaUser, FaExchangeAlt, FaFileInvoiceDollar, FaMoneyCheckAlt, FaCog, FaCreditCard, FaUserCircle, FaListAlt, FaArrowDown, FaPaperPlane, FaSuitcase } from 'react-icons/fa';
+// Keep only the icons used in the NavItem components
+import { FaTachometerAlt, FaUser, FaFileInvoiceDollar, FaMoneyCheckAlt, FaUserCircle, FaListAlt, FaArrowDown, FaPaperPlane, FaSuitcase } from 'react-icons/fa';
 import './styles/Sidebar.css';
+
+// ... rest of the code ...
 
 const NavItem = ({ icon: Icon, label, to, active }) => {
     const Item = (
@@ -35,22 +39,29 @@ const Sidebar = () => {
         <nav className="sidebar" aria-label="Sidebar">
             <div className="sidebar-section">
                 <NavItem icon={FaTachometerAlt} label="Dashboard" to="/dashboard" />
-                <NavItem icon={FaUser} label="Account Details" />
-                <NavItem icon={FaListAlt} label="Transactions" />
-                <NavItem icon={FaArrowDown} label="Deposit Money" />
-                <NavItem icon={FaPaperPlane} label="Transfer Money" />
-                <NavItem icon={FaFileInvoiceDollar} label="Pay Bills" />
-                <NavItem icon={FaSuitcase} label="Request Loan" />
-                <NavItem icon={FaMoneyCheckAlt} label="Loan Status" />
+                
+                <NavItem icon={FaUser} label="Account Details" to="/dashboard/account-details" />
+                
+                <NavItem icon={FaListAlt} label="Transactions" to="/transactions" />
+                
+                <NavItem icon={FaArrowDown} label="Deposit Money" to="/deposit-money" />
+                
+                <NavItem icon={FaPaperPlane} label="Transfer Money" to="/transfer-money" />
+                
+                <NavItem icon={FaFileInvoiceDollar} label="Pay Bills" to="/pay-bills" />
+                
+                <NavItem icon={FaSuitcase} label="Request Loan" to="/request-loan" />
+                
+                <NavItem icon={FaMoneyCheckAlt} label="Loan Status" to="/loan-status" />
             </div>
 
             <div className="sidebar-footer">
-                <div className="sidebar-link">
+                <Link to="/profile" className="sidebar-link">
                     <div className="sidebar-item">
                         <span className="icon-wrap"><FaUserCircle /></span>
                         <span className="sidebar-label">Profile</span>
                     </div>
-                </div>
+                </Link>
             </div>
         </nav>
     );

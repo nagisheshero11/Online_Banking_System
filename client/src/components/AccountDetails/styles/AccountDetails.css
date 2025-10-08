@@ -1,0 +1,249 @@
+/* client/src/components/AccountDetails/styles/AccountDetails.css */
+
+/* Global Page Layout */
+.account-details-page {
+    padding: 20px;
+}
+
+/* Page Header Styling */
+.page-header {
+    margin-bottom: 20px;
+}
+
+.header-title {
+    font-size: 1.8em;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.header-subtitle {
+    font-size: 1em;
+    color: #666;
+}
+
+/* Base Card Styles */
+.account-summary-card, .account-info-details, .quick-actions-section {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Soft shadow for modern look */
+    margin-bottom: 30px;
+}
+
+.info-section-title {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: #1a428a; /* Use a darker blue matching the design accent */
+    margin-bottom: 20px;
+}
+
+/* --- Account Summary Card Styling (The Blue Card) --- */
+.account-summary-card {
+    /* Override base card styles for the summary card */
+    background: linear-gradient(135deg, #1A428A, #3366cc); /* Deep blue gradient */
+    color: #ffffff; /* White text for contrast */
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow: hidden; /* Important for border-radius */
+    position: relative;
+}
+
+/* General labels in the summary card */
+.summary-label {
+    font-size: 0.8em;
+    opacity: 0.8;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+/* Top Row: Holder Name and Icon */
+.summary-holder-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.summary-holder-name {
+    font-size: 1.8em;
+    font-weight: 700;
+    margin: 0;
+}
+
+.summary-icon {
+    font-size: 2.5em;
+    opacity: 0.3;
+}
+
+/* Account Number Row */
+.summary-number-row {
+    margin-top: 5px;
+}
+
+.summary-account-number {
+    font-size: 1em;
+    font-weight: 400;
+    margin: 0;
+}
+
+/* Bottom Row: Balance and Account Type */
+.summary-balance-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 10px;
+}
+
+.summary-balance-value {
+    font-size: 2.5em;
+    font-weight: 900;
+    margin: 0;
+    /* Slightly lighter color for emphasis, if needed */
+    color: #ffffff; 
+    line-height: 1; /* Tighten up line height */
+}
+
+.summary-type-info {
+    text-align: right;
+}
+
+.summary-account-type {
+    font-size: 1.1em;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.2;
+}
+
+/* --- Account Information Details Grid Styling --- */
+
+/* Grid container for the 2x2 layout */
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Creates two equal columns */
+    gap: 20px; /* Space between the grid items */
+}
+
+/* Individual detail item */
+.info-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border: 1px solid #eee; /* Light border around each item */
+    border-radius: 8px;
+    transition: box-shadow 0.2s;
+}
+
+.info-item:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Subtle hover effect */
+}
+
+/* Text area for label and value */
+.info-text {
+    margin-left: 15px;
+}
+
+.info-label {
+    font-size: 0.85em;
+    color: #888;
+    margin-bottom: 2px;
+}
+
+.info-value {
+    font-size: 1em;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+/* Special styling for the balance value to match the green text in the design */
+.balance-value {
+    color: #28a745; /* Bootstrap-like success green */
+}
+
+/* --- Icon Badge Styling --- */
+
+.info-icon-badge {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    font-size: 1.2em;
+    color: #fff; /* White icon color */
+}
+
+/* Color definitions based on the design */
+.info-icon-badge.blue {
+    background-color: #3366cc; /* Similar to summary card blue */
+}
+
+.info-icon-badge.green {
+    background-color: #28a745; /* Success green */
+}
+
+.info-icon-badge.purple {
+    background-color: #6f42c1; /* Lavender/Purple */
+}
+
+.info-icon-badge.orange {
+    background-color: #fd7e14; /* Warning orange */
+}
+
+/* --- Quick Actions Styling --- */
+
+/* Row container for the buttons */
+.quick-actions-row {
+    display: flex;
+    gap: 20px; /* Space between buttons */
+    justify-content: flex-start;
+}
+
+/* Base button style */
+.action-button {
+    flex: 1; /* Allows buttons to share space equally */
+    display: flex;
+    flex-direction: column; /* Stacks icon and text vertically */
+    align-items: center;
+    justify-content: center;
+    padding: 20px 15px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    color: #fff;
+    font-size: 1.1em;
+    font-weight: 600;
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-align: center;
+}
+
+/* Icon style within the button */
+.action-button svg {
+    font-size: 1.8em;
+    margin-bottom: 8px;
+}
+
+/* Hover/active effects */
+.action-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* --- Specific Button Colors (Matching the dashboard design) --- */
+
+/* Green Button: Deposit Money */
+.action-button.green-button {
+    background: linear-gradient(45deg, #1b9b59, #33cc66); /* Vibrant green gradient */
+}
+
+/* Dark Blue Button: Transfer Money */
+.action-button.blue-button {
+    background: linear-gradient(45deg, #1A428A, #3366cc); /* Deep blue gradient */
+}
+
+/* Cyan/Light Blue Button: View Transactions */
+.action-button.cyan-button {
+    background: linear-gradient(45deg, #00b0d8, #00d4ff); /* Bright cyan/aqua gradient */
+}
