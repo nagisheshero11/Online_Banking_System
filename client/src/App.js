@@ -11,6 +11,7 @@ import AccountDetails from './components/AccountDetails/AccountDetails';
 import LoanStatus from './components/LoanStatus/LoanStatus';
 import Transaction from './components/Transaction/Transaction';
 import DepositMoney from './components/DepositMoney/DepositMoney';
+import PayBills from './components/PayBills/PayBills';
 
 import './App.css';
 
@@ -28,6 +29,7 @@ function App() {
             <Route index element={<DashboardIndex />} />
 
             {/* Nested dashboard pages */}
+            <Route path="pay-bills" element={<PayBills />} />
             <Route path="account-details" element={<AccountDetails />} />
             <Route path="loan-status" element={<LoanStatus />} />
             <Route path="transactions" element={<Transaction />} />
