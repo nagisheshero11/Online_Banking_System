@@ -89,9 +89,10 @@
 .qa-title {
     font-weight: 700;
     color: #023e8a;
-    margin-bottom: 16px; /* Space between title and buttons */
-    text-align: left; 
-    display: block; 
+    margin-bottom: 16px;
+    /* Space between title and buttons */
+    text-align: left;
+    display: block;
 }
 
 /* All buttons in one row under the title */
@@ -99,14 +100,15 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 18px;
-    width: 100%; /* Ensure buttons span the full width of the card's content area */
+    width: 100%;
+    /* Ensure buttons span the full width of the card's content area */
 }
 
 /* Buttons stay under the title and fill width */
 .qa-btn {
     width: 100%;
     /* HEIGHT INCREASED FROM 70px TO 80px */
-    height: 80px; 
+    height: 80px;
     border-radius: 12px;
     border: none;
     display: flex;
@@ -119,6 +121,8 @@
     transition: all 0.3s ease;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     cursor: pointer;
+    text-decoration: none;
+    /* Remove default link underline */
 }
 
 /* Button color variants */
@@ -166,10 +170,10 @@
 }
 
 .transaction-row {
-    display: grid; 
+    display: grid;
     grid-template-columns: 34px 1fr 140px 120px;
     column-gap: 12px;
-    padding: 8px 0; 
+    padding: 8px 0;
     border-bottom: 1px solid #f0f4f8;
 }
 
@@ -195,13 +199,13 @@
 }
 
 .tx-amount.debit {
-    color: #ef4444; 
+    color: #ef4444;
     font-weight: 600;
     text-align: right;
 }
 
 .tx-amount.credit {
-    color: #10b981; 
+    color: #10b981;
     font-weight: 600;
     text-align: right;
 }
@@ -229,12 +233,12 @@
 /* Key card headings alignment */
 .account-overview .card-title,
 .recent-transactions .card-title {
-    text-align: left; 
+    text-align: left;
 }
 
 /* Quick Actions card specifically */
 .quick-actions-card {
-    display: block; 
+    display: block;
 }
 
 .quick-actions-card .quick-actions {
