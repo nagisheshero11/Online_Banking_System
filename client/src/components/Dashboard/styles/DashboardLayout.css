@@ -171,21 +171,35 @@
 
 .transaction-row {
     display: grid;
-    grid-template-columns: 34px 1fr 140px 120px;
-    column-gap: 12px;
-    padding: 8px 0;
-    border-bottom: 1px solid #f0f4f8;
+    grid-template-columns: 40px 1fr 180px 120px;
+    column-gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid #eef2f7;
+    align-items: center;
 }
 
-.tx-icon {
-    width: 28px;
-    height: 28px;
+.tx-icon-circle {
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
-    background: #e5f7ef;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.tx-icon.out {
-    background: #fde8e8;
+.tx-icon-circle.credit {
+    background: #e6f9f1;
+    color: #059669;
+}
+
+.tx-icon-circle.debit {
+    background: #fdecec;
+    color: #dc2626;
+}
+
+.tx-icon-svg {
+    width: 16px;
+    height: 16px;
 }
 
 .tx-main {
@@ -193,27 +207,101 @@
     flex-direction: column;
 }
 
-.tx-sub {
+.tx-desc {
+    font-weight: 700;
+    color: #111827;
+}
+
+.tx-date {
     color: #6b7280;
     font-size: 12px;
 }
 
-.tx-amount.debit {
-    color: #ef4444;
-    font-weight: 600;
-    text-align: right;
+.tx-amount-pill {
+    justify-self: end;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-weight: 800;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 4px;
 }
 
-.tx-amount.credit {
-    color: #10b981;
-    font-weight: 600;
-    text-align: right;
+.tx-amount-pill.credit {
+    background: #e6f9f1;
+    color: #065f46;
+}
+
+.tx-amount-pill.debit {
+    background: #fdecec;
+    color: #7f1d1d;
+}
+
+.tx-amount-sign {
+    opacity: 0.75;
+}
+
+.tx-amount-value {
+    letter-spacing: .2px;
 }
 
 .tx-type {
-    color: #6b7280;
-    font-size: 12px;
     text-align: right;
+}
+
+.tx-chip {
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 12px;
+}
+
+.tx-chip.credit {
+    background: #ecfeff;
+    color: #0e7490;
+}
+
+.tx-chip.debit {
+    background: #fff7ed;
+    color: #9a3412;
+}
+
+.transactions-list {
+    padding-top: 6px;
+}
+
+.transaction-row:hover {
+    background: #fafcff;
+    border-radius: 10px;
+    padding-left: 8px;
+    transition: background .2s ease;
+}
+
+.tx-empty {
+    text-align: center;
+    padding: 24px 10px;
+    color: #6b7280;
+}
+
+.tx-empty-title {
+    font-weight: 800;
+    color: #1f2937;
+}
+
+.tx-empty-sub {
+    font-size: 12px;
+}
+
+@media (max-width: 768px) {
+    .transaction-row {
+        grid-template-columns: 36px 1fr auto;
+        row-gap: 6px;
+    }
+
+    .tx-type {
+        display: none;
+    }
 }
 
 .card {

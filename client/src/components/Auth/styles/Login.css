@@ -100,32 +100,63 @@
 
 .form-input-group {
     position: relative;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.1rem;
+    justify-content: space-between;
 }
 
 .form-input-icon {
     position: absolute;
     top: 50%;
-    left: 12px;
+    left: 22px;
+    /* move icon further right */
+    /* fine-tune offset */
     transform: translateY(-50%);
     width: 20px;
     height: 20px;
-    color: #9ca3af;
+    color: #6b7280;
+
+    pointer-events: none;
+    /* prevent icon from capturing clicks */
 }
 
-.form-input {
+.auth-form-panel .form-input {
     width: 100%;
-    padding: 10px 12px 10px 40px;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
+    height: 50px;
+    padding: 0 18px 0 47px;
+    /* icon (20) + left (22) + 46 spacing */
+    border: 1.5px solid #d1d5db;
+    border-radius: 12px;
     font-size: 1rem;
-    transition: .2s;
+    line-height: 1.2;
+    transition: border-color .2s, box-shadow .2s;
+    box-sizing: border-box;
 }
 
-.form-input:focus {
+.auth-form-panel .form-input:focus {
     outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, .4);
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, .15);
+}
+
+/* Placeholder color across browsers */
+.auth-form-panel .form-input::placeholder {
+    color: #9aa3af;
+}
+
+input::-webkit-input-placeholder {
+    color: #9aa3af;
+}
+
+input::-moz-placeholder {
+    color: #9aa3af;
+}
+
+input:-ms-input-placeholder {
+    color: #9aa3af;
+}
+
+input::-ms-input-placeholder {
+    color: #9aa3af;
 }
 
 .form-button {

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './styles/Login.css';
+import Toast from '../Common/Toast';
 
 const Icon = ({ path, className }) => (
     <svg className={className} fill="currentColor" viewBox="0 0 20 20">
@@ -25,11 +26,13 @@ const Login = () => {
     const navigate = useNavigate();
     const onSubmit = (e) => {
         e.preventDefault();
-        navigate('/dashboard');
+        // Navigate immediately and let Dashboard show success toast
+        navigate('/dashboard', { state: { showLoginSuccess: true } });
     };
 
     return (
         <div className="auth-page">
+            {/* Toast moved to Dashboard after navigation */}
             <div className="auth-card">
                 <div className="auth-brand-panel">
                     <h2>BANKIFY</h2>
