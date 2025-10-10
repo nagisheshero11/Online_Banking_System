@@ -31,16 +31,18 @@
     align-items: center;
     justify-content: center;
     /* Backdrop overlay similar to modal */
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.35);
     backdrop-filter: blur(4px);
     padding: 24px;
     animation: fadeIn 0.3s ease-in-out;
 }
 
 .auth-card {
-    background: #fff;
+    background: #FFFFFF;
+    color: #0D0D0D;
     border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    border: 1px solid #E0E0E0;
+    box-shadow: none;
     width: 100%;
     max-width: 900px;
     display: flex;
@@ -50,8 +52,8 @@
 
 .auth-brand-panel {
     width: 50%;
-    background: #023e8a;
-    color: #fff;
+    background: #1A1A1A;
+    color: #FFFFFF;
     padding: 48px;
     display: flex;
     flex-direction: column;
@@ -76,7 +78,7 @@
     height: 8rem;
     margin-top: 2rem;
     opacity: 0.6;
-    color: #a5b4fc;
+    color: #C0A062;
 }
 
 .auth-form-panel {
@@ -89,12 +91,12 @@
 .auth-form-panel h3 {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #1f2937;
+    color: #0D0D0D;
     margin-bottom: .5rem;
 }
 
 .form-subtitle {
-    color: #6b7280;
+    color: #595959;
     margin-bottom: 2rem;
 }
 
@@ -108,23 +110,20 @@
     position: absolute;
     top: 50%;
     left: 22px;
-    /* move icon further right */
-    /* fine-tune offset */
     transform: translateY(-50%);
     width: 20px;
     height: 20px;
-    color: #6b7280;
-
+    color: #595959;
     pointer-events: none;
-    /* prevent icon from capturing clicks */
 }
 
 .auth-form-panel .form-input {
     width: 100%;
     height: 50px;
     padding: 0 18px 0 47px;
-    /* icon (20) + left (22) + 46 spacing */
-    border: 1.5px solid #d1d5db;
+    border: 1.5px solid #E0E0E0;
+    background: #FFFFFF;
+    color: #0D0D0D;
     border-radius: 12px;
     font-size: 1rem;
     line-height: 1.2;
@@ -134,35 +133,35 @@
 
 .auth-form-panel .form-input:focus {
     outline: none;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, .15);
+    border-color: #D4AF37;
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, .15);
 }
 
 /* Placeholder color across browsers */
 .auth-form-panel .form-input::placeholder {
-    color: #9aa3af;
+    color: #595959;
 }
 
 input::-webkit-input-placeholder {
-    color: #9aa3af;
+    color: #595959;
 }
 
 input::-moz-placeholder {
-    color: #9aa3af;
+    color: #595959;
 }
 
 input:-ms-input-placeholder {
-    color: #9aa3af;
+    color: #595959;
 }
 
 input::-ms-input-placeholder {
-    color: #9aa3af;
+    color: #595959;
 }
 
 .form-button {
     width: 100%;
-    background: #023e8a;
-    color: #fff;
+    background: #D4AF37;
+    color: #0D0D0D;
     padding: 12px;
     border: 0;
     border-radius: 6px;
@@ -173,24 +172,25 @@ input::-ms-input-placeholder {
 }
 
 .form-button:hover {
-    background: #1d4ed8;
+    background: #C0A062;
 }
 
 .form-switch-text {
     text-align: center;
     font-size: .875rem;
-    color: #4b5563;
+    color: #595959;
     margin-top: 1.5rem;
 }
 
 .form-switch-link {
     font-weight: 600;
-    color: #2563eb;
+    color: #D4AF37;
     text-decoration: none;
 }
 
 .form-switch-link:hover {
     text-decoration: underline;
+    color: #C0A062;
 }
 
 /* Close button styling to match previous modal */
@@ -203,15 +203,13 @@ input::-ms-input-placeholder {
     font-size: 2rem;
     font-weight: 300;
     line-height: 1;
-    color: #9ca3af;
-    /* Gray 400 */
+    color: #595959;
     cursor: pointer;
     transition: color 0.2s;
 }
 
 .auth-modal-close-btn:hover {
-    color: #374151;
-    /* Gray 700 */
+    color: #0D0D0D;
 }
 
 @media (max-width: 768px) {

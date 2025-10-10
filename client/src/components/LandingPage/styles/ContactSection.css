@@ -1,8 +1,10 @@
 /* ===== CONTACT SECTION STYLES ===== */
 .contact-section {
     padding: 100px 0;
-    background: #4d565e;
-    color: #ffffff;
+    background: #FFFFFF;
+    color: #0D0D0D;
+    border-top: 1px solid #E0E0E0;
+    border-bottom: 1px solid #E0E0E0;
 }
 
 .contact-container {
@@ -15,7 +17,7 @@
 }
 
 .contact-info h3 {
-    color: var(--secondary-color);
+    color: #0D0D0D;
     font-size: 1.5rem;
     margin-bottom: 1.5rem;
 }
@@ -30,35 +32,36 @@
 .contact-icon {
     width: 40px;
     height: 40px;
-    background: var(--secondary-color);
+    background: #FFFFFF;
+    border: 1px solid #E0E0E0;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1rem;
-    color: #ffffff;
+    color: #0D0D0D;
     flex-shrink: 0;
 }
 
 .mission-section h3 {
-    color: var(--secondary-color);
+    color: #0D0D0D;
     font-size: 1.5rem;
     margin-bottom: 1.5rem;
 }
 
 .mission-text {
     line-height: 1.6;
-    opacity: 0.9;
+    color: #595959;
 }
 
 .ready-text {
     margin-top: 2rem;
     font-weight: 600;
-    color: var(--secondary-color);
+    color: #D4AF37;
 }
 
 .why-choose-section h3 {
-    color: var(--secondary-color);
+    color: #0D0D0D;
     font-size: 1.5rem;
     margin-bottom: 1.5rem;
 }
@@ -73,13 +76,13 @@
 .why-icon {
     width: 30px;
     height: 30px;
-    background: var(--success-color);
+    background: #00C896;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 0.9rem;
-    color: #ffffff;
+    color: #111111;
     flex-shrink: 0;
 }
 

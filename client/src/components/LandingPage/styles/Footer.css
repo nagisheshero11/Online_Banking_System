@@ -1,9 +1,10 @@
 /* ===== FOOTER STYLES ===== */
 .footer {
-    background: var(--dark-gray);
-    color: #ffffff;
+    background: #FAFAFA;
+    color: #0D0D0D;
     padding: 2rem 0;
     text-align: center;
+    border-top: 1px solid #E0E0E0;
 }
 
 .footer-container {
@@ -20,7 +21,7 @@
 }
 
 .footer-heading {
-    color: var(--secondary-color);
+    color: #0D0D0D;
     font-size: 1.5rem;
     margin-bottom: 1.5rem;
 }
@@ -35,13 +36,14 @@
 .footer-contact-icon {
     width: 40px;
     height: 40px;
-    background: var(--secondary-color);
+    background: #FFFFFF;
+    border: 1px solid #E0E0E0;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1rem;
-    color: #ffffff;
+    color: #0D0D0D;
     flex-shrink: 0;
 }
 
@@ -51,8 +53,8 @@
 }
 
 .footer-cta-button {
-    background: #ffffff;
-    color: var(--primary-color);
+    background: #D4AF37;
+    color: #0D0D0D;
     padding: 12px 28px;
     border-radius: 50px;
     text-decoration: none;
@@ -64,8 +66,8 @@
 
 .footer-cta-button:hover {
     transform: translateY(-2px);
-    background: var(--secondary-color);
-    color: #ffffff;
+    background: #C0A062;
+    color: #0D0D0D;
 }
 
 .footer-why-item {
@@ -78,13 +80,13 @@
 .footer-why-icon {
     width: 30px;
     height: 30px;
-    background: var(--success-color);
+    background: #00C896;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 0.9rem;
-    color: #ffffff;
+    color: #111111;
     flex-shrink: 0;
 }
 
@@ -108,18 +110,19 @@
 .social-link {
     width: 40px;
     height: 40px;
-    background: var(--primary-color);
+    background: #1A1A1A;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #ffffff;
+    color: #FFFFFF;
     text-decoration: none;
     transition: all 0.3s ease;
 }
 
 .social-link:hover {
-    background: var(--secondary-color);
+    background: #D4AF37;
+    color: #0D0D0D;
     transform: translateY(-2px);
 }
 

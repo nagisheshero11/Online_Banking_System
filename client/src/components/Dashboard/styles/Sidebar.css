@@ -1,4 +1,4 @@
-/* Sidebar-specific styles (light theme) */
+/* Sidebar-specific styles (light theme with specified palette) */
 .sidebar {
     position: sticky;
     top: 64px;
@@ -6,10 +6,10 @@
     height: calc(100vh - 64px);
     display: flex;
     flex-direction: column;
-    color: #374151;
-    background: #ffffff;
+    color: #595959;
+    background: #FFFFFF;
     padding: 12px 0 12px;
-    border-right: 1px solid #e5e7eb;
+    border-right: 1px solid #E0E0E0;
 }
 
 .sidebar-brand {
@@ -17,7 +17,7 @@
     align-items: center;
     gap: 12px;
     padding: 20px 16px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    border-bottom: 1px solid #E0E0E0;
     margin-bottom: 6px;
 }
 
@@ -25,11 +25,11 @@
     width: 36px;
     height: 36px;
     border-radius: 8px;
-    background: var(--primary-color);
+    background: #1A1A1A;
     display: grid;
     place-items: center;
     font-weight: 800;
-    color: #ffffff;
+    color: #FFFFFF;
 }
 
 /* Scope to sidebar to avoid hiding navbar brand text */
@@ -56,20 +56,21 @@
     gap: 12px;
     padding: 10px 14px;
     border-radius: 12px;
-    color: #374151;
+    color: #595959;
     cursor: pointer;
     transition: background 0.2s ease, color 0.2s ease;
     position: relative;
 }
 
 .sidebar-item:hover {
-    background: #f3f4f6;
-    color: #111827;
+    background: #E0E0E0;
+    color: #0D0D0D;
 }
 
 .sidebar-item.active {
-    background: #2f5bb2;
-    color: #ffffff;
+    background: #E0E0E0;
+    color: #0D0D0D;
+    border-left: 4px solid #D4AF37;
 }
 
 /* Remove left indicator bar in light design */
@@ -84,7 +85,7 @@
     display: grid;
     place-items: center;
     background: transparent;
-    color: #3b4758;
+    color: #595959;
 }
 
 .icon-wrap svg {
@@ -95,7 +96,7 @@
 /* Active item makes icon/text white */
 .sidebar-item.active .icon-wrap,
 .sidebar-item.active .sidebar-label {
-    color: #ffffff;
+    color: #0D0D0D;
 }
 
 .sidebar-footer {

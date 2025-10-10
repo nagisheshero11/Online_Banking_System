@@ -10,7 +10,8 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
-    color: #333;
+    color: #0D0D0D;
+    background: #FFFFFF;
 }
 
 .landing-page {
@@ -19,19 +20,7 @@ body {
 }
 
 /* Colors that will be used throughout the landing page */
-:root {
-    --primary-color: #2c5aa0;
-    --secondary-color: #48cae4;
-    --accent-color: #023e8a;
-    --success-color: #06d6a0;
-    --warning-color: #ffd166;
-    --danger-color: #f77f00;
-    --light-gray: #f8f9fa;
-    --dark-gray: #343a40;
-    --white: #ffffff;
-    --gradient-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-}
+/* remove previous color variables; using direct dark theme colors */
 
 /* Common utilities */
 .container {
@@ -61,24 +50,25 @@ body {
 }
 
 .btn-primary {
-    background-color: var(--primary-color);
-    color: #ffffff;
+    background-color: #D4AF37;
+    color: #0D0D0D;
 }
 
 .btn-primary:hover {
-    background-color: var(--accent-color);
+    background-color: #C0A062;
     transform: translateY(-2px);
 }
 
 .btn-secondary {
-    background-color: rgba(0, 0, 0, 0);
-    color: var(--primary-color);
-    border: 2px solid var(--primary-color);
+    background-color: transparent;
+    color: #0D0D0D;
+    border: 2px solid #E0E0E0;
 }
 
 .btn-secondary:hover {
-    background-color: var(--primary-color);
-    color: #ffffff;
+    background-color: #E0E0E0;
+    color: #0D0D0D;
+    border-color: #E0E0E0;
 }
 
 /* Responsive Design */

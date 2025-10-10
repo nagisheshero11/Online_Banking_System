@@ -1,7 +1,8 @@
 /* ===== HOW IT WORKS SECTION STYLES ===== */
 .how-it-works-section {
     padding: 100px 0;
-    background: var(--light-gray);
+    background: #FAFAFA;
+    border-top: 1px solid #E0E0E0;
 }
 
 .how-it-works-container {
@@ -17,14 +18,14 @@
 
 .how-it-works-title {
     font-size: 2.8rem;
-    color: var(--primary-color);
+    color: #0D0D0D;
     margin-bottom: 1rem;
     font-weight: bold;
 }
 
 .how-it-works-subtitle {
     font-size: 1.2rem;
-    color: var(--dark-gray);
+    color: #595959;
     max-width: 600px;
     margin: 0 auto;
     line-height: 1.6;
@@ -46,8 +47,9 @@
 .step-number {
     width: 80px;
     height: 80px;
-    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-    color: #ffffff;
+    background: #1A1A1A;
+    color: #FFFFFF;
+    border: 2px solid #1A1A1A;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -55,7 +57,6 @@
     font-size: 2rem;
     font-weight: bold;
     margin: 0 auto 1.5rem;
-    box-shadow: 0 8px 25px rgba(44, 90, 160, 0.3);
     position: relative;
     z-index: 2;
 }
@@ -71,13 +72,13 @@
 
 .step-title {
     font-size: 1.5rem;
-    color: var(--primary-color);
+    color: #0D0D0D;
     margin-bottom: 1rem;
     font-weight: 600;
 }
 
 .step-description {
-    color: var(--dark-gray);
+    color: #595959;
     line-height: 1.6;
     font-size: 1.1rem;
 }

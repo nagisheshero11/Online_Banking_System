@@ -3,7 +3,7 @@
     display: grid;
     grid-template-columns: 260px 1fr;
     min-height: 100vh;
-    background: linear-gradient(180deg, #eef2f7 0%, #f7f9fc 100%);
+    background: #FFFFFF;
 }
 
 .dashboard-sidebar {
@@ -21,7 +21,7 @@
 .dashboard-title {
     font-size: 32px;
     font-weight: 800;
-    color: #1e2a3a;
+    color: #0D0D0D;
 }
 
 .dashboard-widgets {
@@ -34,21 +34,23 @@
 /* Summary cards row */
 .summary-row {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 16px;
-    margin: 16px 0 20px;
+    margin: 0 0 20px;
 }
 
 .summary-card {
-    border-radius: 14px;
-    color: #ffffff;
-    padding: 18px;
-    box-shadow: var(--card-shadow);
+    border-radius: 16px;
+    color: #0D0D0D;
+    padding: 18px 20px;
+    background: #FFFFFF;
+    border: 1px solid #E0E0E0;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
 }
 
 .summary-title {
-    font-size: 12px;
-    opacity: 0.9;
+    font-size: 13px;
+    color: #595959;
     margin-bottom: 6px;
     display: flex;
     align-items: center;
@@ -62,90 +64,143 @@
 
 .summary-sub {
     font-size: 12px;
-    opacity: 0.9;
+    color: #8C8C8C;
     margin-top: 4px;
 }
 
-.gradient-blue {
-    background: linear-gradient(225deg, #0d47a1, #1e88e5);
+/* Balance gradient card */
+.summary-card.balance {
+    background: linear-gradient(135deg, #F3E7B3 0%, #D9B86A 100%);
+    color: #0D0D0D;
+    border: none;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 12px 24px rgba(212, 175, 55, 0.25);
+    border-radius: 20px;
+    min-height: 140px;
+    grid-column: 1 / -1;
 }
 
-.gradient-green {
-    background: linear-gradient(225deg, #0ea5a5, #22c55e);
+.summary-card.balance .summary-title {
+    color: rgba(13, 13, 13, 0.8);
+    font-weight: 600;
 }
 
+.summary-card.balance .summary-value {
+    font-size: 36px;
+    font-weight: 800;
+}
+
+.summary-card.balance .summary-sub {
+    color: rgba(13, 13, 13, 0.7);
+}
+
+.summary-card.balance .balance-chevron {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.55;
+}
+
+/* Mini summary cards */
+.summary-card.mini {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #F7F7F7;
+    border: 1px solid #EAEAEA;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05) inset, 0 6px 12px rgba(0, 0, 0, 0.04);
+}
+
+.summary-card.mini .mini-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    background: #FFFFFF;
+    box-shadow: inset 0 0 0 1px #E0E0E0;
+}
+
+.summary-card.mini.income .mini-icon {
+    color: #00C896;
+}
+
+.summary-card.mini.spending .mini-icon {
+    color: #E63946;
+}
+
+/* Mini card text styling to match screenshot */
+.summary-card.mini .summary-title {
+    color: #0D0D0D;
+    font-weight: 700;
+}
+
+.summary-card.mini .summary-value {
+    color: #00C896;
+}
+
+.gradient-blue,
+.gradient-green,
 .gradient-cyan {
-    background: linear-gradient(225deg, #06b6d4, #38bdf8);
+    /* Unify summary cards to the theme's Card/Element color */
+    background: #1A1A1A;
 }
 
-/* Quick actions large buttons - FOCUSED UPDATE START HERE */
+/* Quick actions - pill chips aligned with mock */
 .quick-actions-row {
     margin-bottom: 22px;
     /* Ensure this container explicitly stacks its children vertically */
     display: flex;
+    justify-content: center;
     flex-direction: column;
 }
 
 .qa-title {
     font-weight: 700;
-    color: #023e8a;
+    color: #0D0D0D;
     margin-bottom: 16px;
     /* Space between title and buttons */
     text-align: left;
     display: block;
 }
 
-/* All buttons in one row under the title */
+/* Buttons row as chips */
 .qa-buttons {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 18px;
-    width: 100%;
-    /* Ensure buttons span the full width of the card's content area */
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
 }
 
-/* Buttons stay under the title and fill width */
 .qa-btn {
-    width: 100%;
-    /* HEIGHT INCREASED FROM 70px TO 80px */
-    height: 80px;
-    border-radius: 12px;
-    border: none;
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
     gap: 10px;
-    color: #ffffff;
-    font-weight: 600;
-    font-size: 16px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
+    background: #D4AF37;
+    color: #0D0D0D;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-weight: 700;
     text-decoration: none;
-    /* Remove default link underline */
+    box-shadow: 0 14px 26px rgba(212, 175, 55, 0.35);
 }
 
 /* Button color variants */
-.qa-deposit {
-    background: linear-gradient(135deg, #06d6a0, #10b981);
-}
-
-.qa-transfer {
-    background: linear-gradient(135deg, #1e3a8a, #2563eb);
-}
-
-.qa-bills {
-    background: linear-gradient(135deg, #06b6d4, #3b82f6);
-}
-
+/* Unify quick action buttons to accent */
+.qa-deposit,
+.qa-transfer,
+.qa-bills,
 .qa-loan {
-    background: linear-gradient(135deg, #f59e0b, #f97316);
+    background: #D4AF37;
 }
 
 /* Hover effect */
 .qa-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+    background: #C0A062;
 }
 
 .qa-btn svg {
@@ -153,7 +208,7 @@
     height: 18px;
 }
 
-/* END OF FOCUSED QUICK ACTIONS UPDATE */
+/* END Quick actions update */
 
 /* Recent transactions enhanced list */
 .rt-header {
@@ -163,9 +218,25 @@
     margin-bottom: 10px;
 }
 
+.rt-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.rt-filter {
+    background: #FFFFFF;
+    border: 1px solid #E0E0E0;
+    border-radius: 999px;
+    padding: 6px 10px;
+    color: #0D0D0D;
+}
+
 .view-all {
-    color: var(--primary-color);
-    font-size: 14px;
+    color: #0D0D0D;
+    border: 1px solid #E0E0E0;
+    padding: 6px 10px;
+    border-radius: 999px;
     text-decoration: none;
 }
 
@@ -174,7 +245,7 @@
     grid-template-columns: 40px 1fr 180px 120px;
     column-gap: 14px;
     padding: 12px 0;
-    border-bottom: 1px solid #eef2f7;
+    border-bottom: 1px solid #E0E0E0;
     align-items: center;
 }
 
@@ -185,16 +256,16 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    background: #FFFFFF;
+    border: 1px solid #E0E0E0;
 }
 
 .tx-icon-circle.credit {
-    background: #e6f9f1;
-    color: #059669;
+    color: #00C896;
 }
 
 .tx-icon-circle.debit {
-    background: #fdecec;
-    color: #dc2626;
+    color: #E63946;
 }
 
 .tx-icon-svg {
@@ -209,11 +280,11 @@
 
 .tx-desc {
     font-weight: 700;
-    color: #111827;
+    color: #0D0D0D;
 }
 
 .tx-date {
-    color: #6b7280;
+    color: #595959;
     font-size: 12px;
 }
 
@@ -226,16 +297,18 @@
     display: inline-flex;
     align-items: baseline;
     gap: 4px;
+    background: #FFFFFF;
+    border: 1px solid #E0E0E0;
 }
 
 .tx-amount-pill.credit {
-    background: #e6f9f1;
-    color: #065f46;
+    color: #00C896;
+    border-color: #00C896;
 }
 
 .tx-amount-pill.debit {
-    background: #fdecec;
-    color: #7f1d1d;
+    color: #E63946;
+    border-color: #E63946;
 }
 
 .tx-amount-sign {
@@ -258,13 +331,15 @@
 }
 
 .tx-chip.credit {
-    background: #ecfeff;
-    color: #0e7490;
+    background: #FFFFFF;
+    color: #00C896;
+    border: 1px solid #00C896;
 }
 
 .tx-chip.debit {
-    background: #fff7ed;
-    color: #9a3412;
+    background: #FFFFFF;
+    color: #E63946;
+    border: 1px solid #E63946;
 }
 
 .transactions-list {
@@ -272,7 +347,7 @@
 }
 
 .transaction-row:hover {
-    background: #fafcff;
+    background: #FFFFFF;
     border-radius: 10px;
     padding-left: 8px;
     transition: background .2s ease;
@@ -281,12 +356,12 @@
 .tx-empty {
     text-align: center;
     padding: 24px 10px;
-    color: #6b7280;
+    color: #595959;
 }
 
 .tx-empty-title {
     font-weight: 800;
-    color: #1f2937;
+    color: #0D0D0D;
 }
 
 .tx-empty-sub {
@@ -305,16 +380,16 @@
 }
 
 .card {
-    background: #ffffff;
+    background: #FFFFFF;
     border-radius: 12px;
-    box-shadow: var(--card-shadow);
+    border: 1px solid #E0E0E0;
     padding: 20px;
 }
 
 .card-title {
     font-size: 18px;
     font-weight: 700;
-    color: #1f2b3b;
+    color: #0D0D0D;
     margin-bottom: 14px;
 }
 
@@ -339,13 +414,13 @@
     grid-template-columns: 160px 1fr;
     font-size: 14px;
     margin: 8px 0;
-    color: #3c4a5c;
+    color: #595959;
 }
 
 .account-overview .balance-value {
     font-size: 28px;
     font-weight: 800;
-    color: #e09c11;
+    color: #D4AF37;
 }
 
 /* Responsive adjustment */

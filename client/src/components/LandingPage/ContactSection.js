@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-scroll';
+import { Link as RouterLink } from 'react-router-dom';
 import { FaShieldAlt, FaLightbulb, FaUsers, FaEnvelope, FaPhone, FaMapMarkerAlt } from 'react-icons/fa';
 import './styles/ContactSection.css';
 
@@ -35,9 +36,9 @@ const ContactSection = () => {
                         BANKIFY is a modern banking platform designed to make financial services simple and accessible. We provide secure account management, instant transfers, and convenient bill payments all in one place.
                     </p>
                     <p className="ready-text">Start your banking journey with us today!</p>
-                    <Link to="home" className="cta-button" smooth={true} duration={500} style={{ marginTop: '1rem', display: 'inline-block' }}>
+                    <RouterLink to="/signup" className="cta-button" style={{ marginTop: '1rem', display: 'inline-block' }}>
                         Create Account Now
-                    </Link>
+                    </RouterLink>
                 </div>
 
                 <div className="why-choose-section">

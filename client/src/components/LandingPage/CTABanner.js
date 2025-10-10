@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-scroll';
+import { Link as RouterLink } from 'react-router-dom';
 import './styles/CTABanner.css';
 
 const CTABanner = () => {
@@ -10,9 +11,9 @@ const CTABanner = () => {
                 <p className="cta-subtitle">
                     Join thousands of users who trust BANKIFY for their financial needs.
                 </p>
-                <Link to="contact" className="cta-button" smooth={true} duration={500}>
+                <RouterLink to="/signup" className="cta-button">
                     Create Account Now
-                </Link>
+                </RouterLink>
             </div>
         </section>
     );

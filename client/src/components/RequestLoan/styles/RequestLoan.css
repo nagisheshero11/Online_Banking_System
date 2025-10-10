@@ -13,29 +13,30 @@
 .loan-header h2 {
     font-size: 28px;
     font-weight: 700;
-    color: #1f2937;
+    color: #0D0D0D;
     margin: 0 0 8px 0;
 }
 
 .loan-header p {
     font-size: 16px;
-    color: #6b7280;
+    color: #595959;
     margin: 0;
 }
 
 /* Loan Card */
 .loan-card {
-    background: #ffffff;
+    background: #FFFFFF;
     border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid #E0E0E0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     overflow: hidden;
 }
 
 /* Banner Section */
 .loan-banner {
-    background: linear-gradient(135deg, #f97316, #ea580c);
+    background: #1A1A1A;
     padding: 24px;
-    color: white;
+    color: #FFFFFF;
 }
 
 .banner-content {
@@ -46,7 +47,7 @@
 
 .loan-icon {
     font-size: 2.5rem;
-    opacity: 0.9;
+    color: #D4AF37;
 }
 
 .banner-text h3 {
@@ -58,7 +59,8 @@
 .banner-text p {
     font-size: 16px;
     margin: 0;
-    opacity: 0.9;
+    color: #FFFFFF;
+    opacity: 0.85;
 }
 
 /* Form Section */
@@ -75,7 +77,7 @@
     display: block;
     font-size: 14px;
     font-weight: 600;
-    color: #374151;
+    color: #595959;
     margin-bottom: 8px;
 }
 
@@ -91,28 +93,31 @@
     left: 16px;
     font-size: 16px;
     font-weight: 600;
-    color: #6b7280;
+    color: #595959;
     z-index: 1;
 }
 
 .amount-input {
     width: 100%;
     padding: 12px 16px 12px 40px;
-    border: 2px solid #e5e7eb;
+    border: 1px solid #E0E0E0;
     border-radius: 12px;
     font-size: 16px;
     font-weight: 500;
     transition: border-color 0.2s ease;
+    background: #FFFFFF;
+    color: #0D0D0D;
 }
 
 .amount-input:focus {
     outline: none;
-    border-color: #f97316;
-    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+    border-color: #D4AF37;
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
 }
 
 .amount-input::placeholder {
-    color: #9ca3af;
+    color: #595959;
+    opacity: 0.7;
 }
 
 /* Quick Amounts Section */
@@ -124,7 +129,7 @@
     display: block;
     font-size: 14px;
     font-weight: 600;
-    color: #374151;
+    color: #595959;
     margin-bottom: 12px;
 }
 
@@ -136,26 +141,26 @@
 
 .quick-amount-btn {
     padding: 12px 16px;
-    border: 2px solid #fed7aa;
+    border: 1px solid #E0E0E0;
     border-radius: 12px;
-    background: #ffffff;
+    background: #FFFFFF;
     font-size: 16px;
     font-weight: 600;
-    color: #ea580c;
+    color: #0D0D0D;
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
 .quick-amount-btn:hover {
-    border-color: #f97316;
-    background: #fff7ed;
-    color: #ea580c;
+    border-color: #C0A062;
+    background: #FAFAFA;
+    color: #0D0D0D;
 }
 
 .quick-amount-btn.selected {
-    border-color: #f97316;
-    background: #f97316;
-    color: #ffffff;
+    border-color: #C0A062;
+    background: #D4AF37;
+    color: #0D0D0D;
 }
 
 /* Tenure Input */
@@ -169,18 +174,18 @@
     position: absolute;
     left: 16px;
     font-size: 16px;
-    color: #6b7280;
+    color: #595959;
     z-index: 1;
 }
 
 .tenure-select {
     width: 100%;
     padding: 12px 16px 12px 45px;
-    border: 2px solid #e5e7eb;
+    border: 1px solid #E0E0E0;
     border-radius: 12px;
     font-size: 16px;
     font-weight: 500;
-    background: #ffffff;
+    background: #FFFFFF;
     cursor: pointer;
     transition: border-color 0.2s ease;
     appearance: none;
@@ -192,8 +197,8 @@
 
 .tenure-select:focus {
     outline: none;
-    border-color: #f97316;
-    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+    border-color: #D4AF37;
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
 }
 
 /* Purpose Input */
@@ -206,36 +211,39 @@
     top: 16px;
     left: 16px;
     font-size: 16px;
-    color: #6b7280;
+    color: #595959;
     z-index: 1;
 }
 
 .purpose-input {
     width: 100%;
     padding: 12px 16px 12px 45px;
-    border: 2px solid #e5e7eb;
+    border: 1px solid #E0E0E0;
     border-radius: 12px;
     font-size: 16px;
     font-family: inherit;
     resize: vertical;
     min-height: 100px;
     transition: border-color 0.2s ease;
+    background: #FFFFFF;
+    color: #0D0D0D;
 }
 
 .purpose-input:focus {
     outline: none;
-    border-color: #f97316;
-    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+    border-color: #D4AF37;
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
 }
 
 .purpose-input::placeholder {
-    color: #9ca3af;
+    color: #595959;
+    opacity: 0.7;
 }
 
 /* Loan Details Summary */
 .loan-details {
-    background: #fff7ed;
-    border: 1px solid #fed7aa;
+    background: #FAFAFA;
+    border: 1px solid #E0E0E0;
     border-radius: 12px;
     padding: 20px;
     margin-bottom: 24px;
@@ -244,7 +252,7 @@
 .loan-details h4 {
     font-size: 16px;
     font-weight: 600;
-    color: #ea580c;
+    color: #0D0D0D;
     margin: 0 0 16px 0;
 }
 
@@ -259,19 +267,19 @@
 .details-row:last-child {
     margin-bottom: 0;
     padding-top: 8px;
-    border-top: 1px solid #fed7aa;
+    border-top: 1px solid #E0E0E0;
     font-weight: 600;
 }
 
 .detail-label {
     font-size: 14px;
-    color: #374151;
+    color: #595959;
     font-weight: 500;
 }
 
 .detail-value {
     font-size: 14px;
-    color: #ea580c;
+    color: #0D0D0D;
     font-weight: 600;
 }
 
@@ -285,9 +293,9 @@
 .loan-btn {
     flex: 1;
     padding: 14px 24px;
-    background: linear-gradient(135deg, #f97316, #ea580c);
-    color: #ffffff;
-    border: none;
+    background: #D4AF37;
+    color: #0D0D0D;
+    border: 1px solid transparent;
     border-radius: 12px;
     font-size: 16px;
     font-weight: 600;
@@ -298,14 +306,15 @@
 
 .loan-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(249, 115, 22, 0.3);
+    background: #C0A062;
+    box-shadow: 0 8px 20px rgba(212, 175, 55, 0.25);
 }
 
 .cancel-btn {
     padding: 14px 24px;
-    background: #ffffff;
-    color: #6b7280;
-    border: 2px solid #e5e7eb;
+    background: #FFFFFF;
+    color: #595959;
+    border: 1px solid #E0E0E0;
     border-radius: 12px;
     font-size: 16px;
     font-weight: 600;
@@ -315,9 +324,9 @@
 }
 
 .cancel-btn:hover {
-    border-color: #d1d5db;
-    background: #f9fafb;
-    color: #374151;
+    border-color: #C0A062;
+    background: #FAFAFA;
+    color: #0D0D0D;
 }
 
 /* Responsive Design */

@@ -91,7 +91,6 @@ const PayBills = ({ currentBalance = 45750.50 }) => {
                     {/* Dynamic Header Banner */}
                     <div
                         className="form-header-banner"
-                        style={{ background: `linear-gradient(90deg, ${activeBill.color}, ${activeBill.color}d0)` }}
                     >
                         <activeBill.icon />
                         <span className="bill-name">{activeBill.label}</span>
@@ -142,14 +141,9 @@ const PayBills = ({ currentBalance = 45750.50 }) => {
                         {/* Payment Summary */}
                         <div
                             className="payment-summary"
-                            style={{
-                                backgroundColor: `${activeBill.color}15`, // Light tint of the color
-                                borderColor: `${activeBill.color}50` // Transparent border of the color
-                            }}
                         >
                             <h4
                                 className="summary-title-text"
-                                style={{ color: activeBill.color }}
                             >
                                 Payment Summary
                             </h4>
@@ -175,7 +169,6 @@ const PayBills = ({ currentBalance = 45750.50 }) => {
                                 type="submit"
                                 className="btn-pay"
                                 disabled={!formData.accountNumber.trim() || !formData.billAmount.trim()}
-                                style={{ background: activeBill.color }}
                             >
                                 Pay Bill
                             </button>

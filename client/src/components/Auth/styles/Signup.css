@@ -1,7 +1,57 @@
-/* Signup page styles - can diverge from login if needed */
-@import './Login.css';
+/* Signup page light theme (direct colors) */
+.auth-card {
+    background: #FFFFFF;
+    color: #0D0D0D;
+    border: 1px solid #E0E0E0;
+    border-radius: 12px;
+    box-shadow: none;
+}
 
-/* Overrides specific to signup (optional placeholder) */
+.auth-brand-panel {
+    background: #1A1A1A;
+    color: #FFFFFF;
+}
+
 .auth-form-panel h3 {
-    color: #111827;
+    color: #0D0D0D;
+}
+
+.form-subtitle {
+    color: #595959;
+}
+
+.auth-form-panel .form-input {
+    background: #FFFFFF;
+    color: #0D0D0D;
+    border: 1.5px solid #E0E0E0;
+}
+
+.auth-form-panel .form-input:focus {
+    border-color: #D4AF37;
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, .15);
+}
+
+.auth-form-panel .form-input::placeholder {
+    color: #595959;
+}
+
+.form-button {
+    background: #D4AF37;
+    color: #0D0D0D;
+}
+
+.form-button:hover {
+    background: #C0A062;
+}
+
+.form-switch-text {
+    color: #595959;
+}
+
+.form-switch-link {
+    color: #D4AF37;
+}
+
+.form-switch-link:hover {
+    color: #C0A062;
 }

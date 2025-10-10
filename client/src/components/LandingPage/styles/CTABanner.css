@@ -1,9 +1,11 @@
 /* ===== CTA BANNER STYLES ===== */
 .cta-banner {
-    background: var(--light-gray);
+    background: #FAFAFA;
     padding: 80px 0;
     text-align: center;
-    color: var(--dark-gray);
+    color: #0D0D0D;
+    border-top: 1px solid #E0E0E0;
+    border-bottom: 1px solid #E0E0E0;
 }
 
 .cta-container {
@@ -21,25 +23,25 @@
 .cta-subtitle {
     font-size: 1.2rem;
     margin-bottom: 2.5rem;
-    opacity: 0.9;
+    color: #595959;
 }
 
 .cta-button {
-    background: #ffffff;
-    color: var(--primary-color);
+    background: #D4AF37;
+    color: #0D0D0D;
     padding: 18px 40px;
     border-radius: 50px;
     text-decoration: none;
     font-weight: 600;
     font-size: 1.2rem;
     transition: all 0.3s ease;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    box-shadow: none;
     display: inline-block;
 }
 
 .cta-button:hover {
     transform: translateY(-3px);
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+    background: #C0A062;
 }
 
 /* CTA Banner responsive */

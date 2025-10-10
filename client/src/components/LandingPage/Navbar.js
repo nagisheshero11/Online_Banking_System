@@ -10,7 +10,7 @@ const Navbar = () => {
         <>
             <nav className="navbar">
                 <div className="navbar-container">
-                    <Link to="home" className="navbar-logo" smooth={true} duration={500}>
+                    <Link to="home" className="navbar-logo" smooth={true} duration={500} offset={-80}>
                         🏦 BANKIFY
                     </Link>
 

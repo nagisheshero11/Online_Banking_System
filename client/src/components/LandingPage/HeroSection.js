@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-scroll';
+import { Link as RouterLink } from 'react-router-dom';
 import heroImage from '../../assets/landing_home_img.png';
 import './styles/HeroSection.css';
 
@@ -16,10 +17,10 @@ const HeroSection = () => {
                         Manage accounts, transfer funds, pay bills, and request loans — all in one secure platform.
                     </p>
                     <div className="hero-buttons">
-                        <Link to="contact" className="hero-btn-primary" smooth={true} duration={500}>
+                        <RouterLink to="/signup" className="hero-btn-primary">
                             Get Started
-                        </Link>
-                        <Link to="features" className="hero-btn-secondary" smooth={true} duration={500}>
+                        </RouterLink>
+                        <Link to="features" className="hero-btn-secondary" smooth={true} duration={500} offset={-80}>
                             Learn More
                         </Link>
                     </div>

@@ -1,6 +1,6 @@
 .loan-status-container {
   padding: 24px;
-  background: #f9fbff;
+  background: #FFFFFF;
   min-height: 100vh;
   font-family: "Inter", sans-serif;
 }
@@ -13,23 +13,28 @@
 }
 
 .loan-status-header h2 {
-  color: #0a1f44;
-  font-weight: 600;
+  color: #0D0D0D;
+  font-weight: 700;
 }
 
 .loan-status-header p {
-  color: #6b7280;
+  color: #595959;
   margin-top: 4px;
 }
 
 .request-loan-btn {
-  background-color: #ff7a00;
-  color: #fff;
+  background-color: #D4AF37;
+  color: #0D0D0D;
   padding: 10px 18px;
-  border: none;
+  border: 1px solid transparent;
   border-radius: 8px;
   cursor: pointer;
-  font-weight: 500;
+  font-weight: 600;
+}
+
+.request-loan-btn:hover {
+  background-color: #C0A062;
+  box-shadow: 0 6px 15px rgba(212, 175, 55, 0.25);
 }
 
 .loan-summary {
@@ -42,8 +47,9 @@
   flex: 1;
   padding: 18px;
   border-radius: 12px;
-  color: #fff;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+  color: #0D0D0D;
+  background: #FFFFFF;
+  border: 1px solid #E0E0E0;
 }
 
 .summary-card p {
@@ -59,29 +65,29 @@
   font-size: 14px;
 }
 
-.summary-card.approved {
-  background-color: #00b894;
+.summary-card.approved .summary-value {
+  color: #00C896;
 }
 
-.summary-card.pending {
-  background-color: #fbbc04;
+.summary-card.pending .summary-value {
+  color: #C0A062;
 }
 
-.summary-card.total {
-  background-color: #1e40af;
+.summary-card.total .summary-value {
+  color: #1A1A1A;
 }
 
 .loan-applications {
-  background: #fff;
+  background: #FFFFFF;
   padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  border: 1px solid #E0E0E0;
   margin-bottom: 28px;
 }
 
 .loan-applications h3 {
   margin-bottom: 16px;
-  color: #0a1f44;
+  color: #0D0D0D;
 }
 
 .loan-applications table {
@@ -99,36 +105,38 @@
 
 .status-badge {
   padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 500;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  background: #FFFFFF;
+  border: 1px solid #E0E0E0;
 }
 
 .status-badge.approved {
-  background: #e8f5e9;
-  color: #00b894;
+  border-color: #00C896;
+  color: #00C896;
 }
 
 .status-badge.pending {
-  background: #fff8e1;
-  color: #fbbc04;
+  border-color: #C0A062;
+  color: #C0A062;
 }
 
 .status-badge.rejected {
-  background: #ffebee;
-  color: #e53935;
+  border-color: #E63946;
+  color: #E63946;
 }
 
 .status-guide {
-  background: #fff;
+  background: #FFFFFF;
   padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  border: 1px solid #E0E0E0;
 }
 
 .status-guide h3 {
   margin-bottom: 16px;
-  color: #0a1f44;
+  color: #0D0D0D;
 }
 
 .guide-cards {
@@ -141,20 +149,21 @@
   border-radius: 10px;
   padding: 16px;
   font-size: 14px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
+  border: 1px solid #E0E0E0;
+  background: #FFFFFF;
 }
 
 .guide-card.pending {
-  background-color: #fff8e1;
-  color: #f59e0b;
+  border-color: #C0A062;
+  color: #C0A062;
 }
 
 .guide-card.approved {
-  background-color: #e8f5e9;
-  color: #00b894;
+  border-color: #00C896;
+  color: #00C896;
 }
 
 .guide-card.rejected {
-  background-color: #ffebee;
-  color: #e53935;
+  border-color: #E63946;
+  color: #E63946;
 }

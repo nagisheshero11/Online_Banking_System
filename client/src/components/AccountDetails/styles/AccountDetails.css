@@ -1,8 +1,10 @@
 /* client/src/components/AccountDetails/styles/AccountDetails.css */
 
-/* Global Page Layout */
-.account-details-page {
-    padding: 20px;
+/* Container (used in component) */
+.account-details-root {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 /* Page Header Styling */
@@ -12,42 +14,49 @@
 
 .header-title {
     font-size: 1.8em;
-    color: #333;
+    color: #0D0D0D;
     margin-bottom: 5px;
 }
 
 .header-subtitle {
     font-size: 1em;
-    color: #666;
+    color: #595959;
 }
 
 /* Base Card Styles */
-.account-summary-card, .account-info-details, .quick-actions-section {
-    background-color: #fff;
+.account-summary-card,
+.account-info-details,
+.quick-actions-section {
+    background-color: #FFFFFF;
     padding: 25px;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Soft shadow for modern look */
-    margin-bottom: 30px;
+    border: 1px solid #E0E0E0;
+    /* Subtle border for light theme */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
 }
 
 .info-section-title {
     font-size: 1.2em;
-    font-weight: 600;
-    color: #1a428a; /* Use a darker blue matching the design accent */
-    margin-bottom: 20px;
+    font-weight: 700;
+    color: #0D0D0D;
+    margin-bottom: 16px;
 }
 
 /* --- Account Summary Card Styling (The Blue Card) --- */
 .account-summary-card {
-    /* Override base card styles for the summary card */
-    background: linear-gradient(135deg, #1A428A, #3366cc); /* Deep blue gradient */
-    color: #ffffff; /* White text for contrast */
+    /* Match Dashboard balance gradient card */
+    background: linear-gradient(135deg, #F3E7B3 0%, #D9B86A 100%);
+    color: #0D0D0D;
     padding: 30px;
     display: flex;
     flex-direction: column;
     gap: 20px;
-    overflow: hidden; /* Important for border-radius */
+    overflow: hidden;
     position: relative;
+    border-radius: 20px;
+    box-shadow: 0 12px 24px rgba(212, 175, 55, 0.25);
+    border: none;
 }
 
 /* General labels in the summary card */
@@ -84,8 +93,10 @@
 
 .summary-account-number {
     font-size: 1em;
-    font-weight: 400;
+    font-weight: 600;
     margin: 0;
+    opacity: 0.85;
+    letter-spacing: 2px;
 }
 
 /* Bottom Row: Balance and Account Type */
@@ -97,16 +108,24 @@
 }
 
 .summary-balance-value {
-    font-size: 2.5em;
+    font-size: 2.6em;
     font-weight: 900;
     margin: 0;
-    /* Slightly lighter color for emphasis, if needed */
-    color: #ffffff; 
-    line-height: 1; /* Tighten up line height */
+    color: #0D0D0D;
+    line-height: 1;
 }
 
 .summary-type-info {
     text-align: right;
+}
+
+/* Chevron on balance card */
+.balance-chevron {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.55;
 }
 
 .summary-account-type {
@@ -121,45 +140,46 @@
 /* Grid container for the 2x2 layout */
 .info-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Creates two equal columns */
-    gap: 20px; /* Space between the grid items */
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
 }
 
 /* Individual detail item */
 .info-item {
     display: flex;
     align-items: center;
-    padding: 15px;
-    border: 1px solid #eee; /* Light border around each item */
-    border-radius: 8px;
-    transition: box-shadow 0.2s;
+    padding: 14px;
+    border: 1px solid #E0E0E0;
+    border-radius: 10px;
+    transition: border-color 0.2s, transform 0.2s;
 }
 
 .info-item:hover {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Subtle hover effect */
+    border-color: #D4AF37;
+    transform: translateY(-1px);
 }
 
 /* Text area for label and value */
 .info-text {
-    margin-left: 15px;
+    margin-left: 12px;
 }
 
 .info-label {
     font-size: 0.85em;
-    color: #888;
+    color: #595959;
     margin-bottom: 2px;
 }
 
 .info-value {
     font-size: 1em;
     font-weight: 600;
-    color: #333;
+    color: #0D0D0D;
     margin: 0;
 }
 
 /* Special styling for the balance value to match the green text in the design */
 .balance-value {
-    color: #28a745; /* Bootstrap-like success green */
+    color: #D4AF37;
 }
 
 /* --- Icon Badge Styling --- */
@@ -172,78 +192,139 @@
     align-items: center;
     border-radius: 8px;
     font-size: 1.2em;
-    color: #fff; /* White icon color */
+    color: #FFFFFF;
 }
 
 /* Color definitions based on the design */
 .info-icon-badge.blue {
-    background-color: #3366cc; /* Similar to summary card blue */
+    background-color: #1A1A1A;
+    /* Neutral illustrative */
 }
 
 .info-icon-badge.green {
-    background-color: #28a745; /* Success green */
+    background-color: #00C896;
+    /* Success */
 }
 
 .info-icon-badge.purple {
-    background-color: #6f42c1; /* Lavender/Purple */
+    background-color: #1A1A1A;
+    /* Neutral */
 }
 
 .info-icon-badge.orange {
-    background-color: #fd7e14; /* Warning orange */
+    background-color: #1A1A1A;
+    /* Neutral */
 }
 
-/* --- Quick Actions Styling --- */
-
-/* Row container for the buttons */
-.quick-actions-row {
-    display: flex;
-    gap: 20px; /* Space between buttons */
-    justify-content: flex-start;
+/* --- Recent Activity (transactions) --- */
+.transactions-list {
+    display: grid;
 }
 
-/* Base button style */
-.action-button {
-    flex: 1; /* Allows buttons to share space equally */
-    display: flex;
-    flex-direction: column; /* Stacks icon and text vertically */
+.transaction-row {
+    display: grid;
+    grid-template-columns: 40px 1fr 180px 120px;
+    column-gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid #E0E0E0;
+    align-items: center;
+}
+
+.tx-icon-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 20px 15px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    color: #fff;
-    font-size: 1.1em;
+    background: #FFFFFF;
+    border: 1px solid #E0E0E0;
+}
+
+.tx-icon-circle.credit {
+    color: #00C896;
+}
+
+.tx-icon-circle.debit {
+    color: #E63946;
+}
+
+.tx-icon-svg {
+    width: 16px;
+    height: 16px;
+}
+
+.tx-main {
+    display: flex;
+    flex-direction: column;
+}
+
+.tx-desc {
+    color: #0D0D0D;
     font-weight: 600;
-    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.tx-sub {
+    color: #777;
+    font-size: 12px;
+}
+
+.tx-amount-pill {
+    justify-self: end;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-weight: 800;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 4px;
+    background: #FFFFFF;
+    border: 1px solid #E0E0E0;
+}
+
+.tx-amount-pill.credit {
+    color: #00C896;
+    border-color: #00C896;
+}
+
+.tx-amount-pill.debit {
+    color: #E63946;
+    border-color: #E63946;
+}
+
+.tx-amount-sign {
+    opacity: 0.75;
+}
+
+.tx-amount-value {
+    letter-spacing: .2px;
+}
+
+.tx-type {
+    text-align: right;
+}
+
+.tx-chip {
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 12px;
+}
+
+.tx-chip.credit {
+    background: #FFFFFF;
+    color: #00C896;
+    border: 1px solid #00C896;
+}
+
+.tx-chip.debit {
+    background: #FFFFFF;
+    color: #E63946;
+    border: 1px solid #E63946;
+}
+
+.tx-empty {
     text-align: center;
-}
-
-/* Icon style within the button */
-.action-button svg {
-    font-size: 1.8em;
-    margin-bottom: 8px;
-}
-
-/* Hover/active effects */
-.action-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-}
-
-/* --- Specific Button Colors (Matching the dashboard design) --- */
-
-/* Green Button: Deposit Money */
-.action-button.green-button {
-    background: linear-gradient(45deg, #1b9b59, #33cc66); /* Vibrant green gradient */
-}
-
-/* Dark Blue Button: Transfer Money */
-.action-button.blue-button {
-    background: linear-gradient(45deg, #1A428A, #3366cc); /* Deep blue gradient */
-}
-
-/* Cyan/Light Blue Button: View Transactions */
-.action-button.cyan-button {
-    background: linear-gradient(45deg, #00b0d8, #00d4ff); /* Bright cyan/aqua gradient */
+    color: #595959;
+    padding: 16px;
 }

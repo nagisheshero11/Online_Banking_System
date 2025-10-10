@@ -15,33 +15,36 @@
 /* Add a wrapper class for centering the header content */
 .page-header-wrapper {
     /* Set max-width and center it, matching the cards below (750px) */
-    max-width: 750px; 
-    margin: 0 auto 20px auto; 
+    max-width: 750px;
+    margin: 0 auto 20px auto;
 }
 
-.page-header { 
+.page-header {
     /* Remove original margin-bottom as it's now on the wrapper */
-    margin-bottom: 0; 
+    margin-bottom: 0;
     /* Ensure the text inside the header wrapper aligns to the left */
     text-align: left;
 }
 
-.header-title { 
-    font-size: 1.8em; 
-    color: #023e8a; 
-    margin-bottom: 5px; 
+.header-title {
+    font-size: 1.8em;
+    color: #0D0D0D;
+    margin-bottom: 5px;
 }
 
 /* ... rest of the CSS ... */
-.header-subtitle { font-size: 1em; color: #666; }
+.header-subtitle {
+    font-size: 1em;
+    color: #595959;
+}
 
 .selector-title {
     font-size: 1.2em;
     font-weight: 600;
-    color: #023e8a;
+    color: #0D0D0D;
     margin-bottom: 20px;
     /* --- NEW ALIGNMENT --- */
-    text-align: left; 
+    text-align: left;
     /* The padding is already handled by the .card padding */
 }
 
@@ -50,40 +53,46 @@
 
 .bill-selector-container {
     /* Increased MAX-WIDTH for a more substantial look */
-    max-width: 750px; 
-    
+    max-width: 750px;
+
     /* CENTER THE CONTAINER */
-    margin: 0 auto 30px auto; 
+    margin: 0 auto 30px auto;
 }
 
 .bill-selector-card {
-    margin-bottom: 0; 
+    margin-bottom: 0;
+    background: #FFFFFF;
+    border: 1px solid #E0E0E0;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    padding: 25px;
 }
 
 .bill-type-grid {
     display: flex;
-    gap: 25px; /* Increased gap for better spacing */
+    gap: 25px;
+    /* Increased gap for better spacing */
     justify-content: space-between;
 }
 
 .bill-type-tile {
-    flex: 1; 
+    flex: 1;
     text-align: center;
     padding: 20px 10px;
-    border: 1px solid #e0e0e0;
+    border: 1px solid #E0E0E0;
     border-radius: 10px;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #fcfcfc; 
+    background-color: #FFFFFF;
     position: relative;
 }
 
 /* Base style for icon wrapper (Slightly larger circles) */
 .tile-icon-wrap {
-    width: 65px; 
+    width: 65px;
     height: 65px;
     border-radius: 50%;
     display: flex;
@@ -94,40 +103,58 @@
 }
 
 .tile-icon {
-    font-size: 1.8em; 
-    color: #fff; /* Icons are white for contrast on colored circles */
+    font-size: 1.8em;
+    color: #fff;
+    /* Icons are white for contrast on colored circles */
 }
 
 .tile-label {
-    font-size: 0.9em; 
+    font-size: 0.9em;
     font-weight: 600;
-    color: #555;
+    color: #0D0D0D;
     transition: color 0.2s;
 }
 
 /* Specific COLORS for Each Tile's ICON WRAPPER */
-.bill-type-tile:nth-child(1) .tile-icon-wrap { background-color: #ffc107; } /* Electricity (Yellow) */
-.bill-type-tile:nth-child(2) .tile-icon-wrap { background-color: #00d4ff; } /* Internet (Cyan) */
-.bill-type-tile:nth-child(3) .tile-icon-wrap { background-color: #fd7e14; } /* Gas (Orange) */
-.bill-type-tile:nth-child(4) .tile-icon-wrap { background-color: #28a745; } /* Mobile (Green) */
+.bill-type-tile:nth-child(1) .tile-icon-wrap {
+    background-color: #ffc107;
+}
+
+/* Electricity (Yellow) */
+.bill-type-tile:nth-child(2) .tile-icon-wrap {
+    background-color: #00d4ff;
+}
+
+/* Internet (Cyan) */
+.bill-type-tile:nth-child(3) .tile-icon-wrap {
+    background-color: #fd7e14;
+}
+
+/* Gas (Orange) */
+.bill-type-tile:nth-child(4) .tile-icon-wrap {
+    background-color: #28a745;
+}
+
+/* Mobile (Green) */
 
 
 /* --- Active State & Hover Effects --- */
 .bill-type-tile:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    border-color: #C0A062;
 }
 
 .bill-type-tile.active {
     /* Border color is set dynamically via JS style prop */
-    border: 2px solid; 
-    background-color: #ffffff; 
-    box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1); 
-    transform: translateY(-2px); 
+    border: 2px solid;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
 }
 
 .bill-type-tile.active .tile-label {
-    color: #333; 
+    color: #333;
 }
 
 
@@ -135,19 +162,25 @@
 
 .payment-form-card {
     /* Increased MAX-WIDTH, matching the selector for alignment */
-    max-width: 750px; 
-    
+    max-width: 750px;
+
     /* CENTER THE CARD */
-    margin: 0 auto 30px auto; 
-    
-    padding-top: 0; 
+    margin: 0 auto 30px auto;
+
+    padding-top: 0;
+    background: #FFFFFF;
+    border: 1px solid #E0E0E0;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    padding: 25px;
 }
 
 /* Top Banner inside the Form Card - BACKGROUND IS DYNAMIC VIA JS STYLE PROP */
 .form-header-banner {
-    color: #fff;
+    color: #FFFFFF;
+    background: #1A1A1A;
     padding: 15px 25px;
-    margin: 0 -25px 25px -25px; 
+    margin: 0 -25px 25px -25px;
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
     display: flex;
@@ -166,16 +199,19 @@
 }
 
 .balance-info {
-    margin-left: auto; 
+    margin-left: auto;
     font-size: 0.9em;
     opacity: 0.9;
 }
 
 /* --- Validation Message --- */
 .validation-message {
-    background-color: #ffebe9; /* Light red background */
-    border: 1px solid #ff4d4f; /* Red border */
-    color: #cf1322; /* Darker red text */
+    background-color: #FDECEC;
+    /* Light red background */
+    border: 1px solid #E63946;
+    /* Red border */
+    color: #E63946;
+    /* Theme error text */
     padding: 12px 15px;
     border-radius: 8px;
     margin-bottom: 20px;
@@ -195,13 +231,13 @@
 .bill-payment-form {
     display: flex;
     flex-direction: column;
-    gap: 20px; 
+    gap: 20px;
 }
 
 .form-label {
     font-size: 0.9em;
     font-weight: 600;
-    color: #444;
+    color: #595959;
     margin-bottom: 8px;
     display: block;
 }
@@ -214,17 +250,19 @@
 .form-input {
     width: 100%;
     padding: 12px 15px;
-    border: 1px solid #ccc;
+    border: 1px solid #E0E0E0;
     border-radius: 8px;
     font-size: 1em;
     box-sizing: border-box;
     transition: border-color 0.2s;
+    background: #FFFFFF;
+    color: #0D0D0D;
 }
 
 .form-input:focus {
-    border-color: #3366cc;
+    border-color: #D4AF37;
     outline: none;
-    box-shadow: 0 0 0 3px rgba(51, 102, 204, 0.2);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
 }
 
 .input-group .input-icon {
@@ -232,12 +270,12 @@
     left: 15px;
     top: 50%;
     transform: translateY(-50%);
-    color: #666;
+    color: #595959;
     font-size: 1em;
 }
 
 .input-group .form-input[name="billAmount"] {
-    padding-left: 40px; 
+    padding-left: 40px;
 }
 
 
@@ -249,16 +287,17 @@
     margin-top: 10px;
     border-radius: 8px;
     font-size: 0.9em;
-    color: #555;
+    color: #595959;
     line-height: 1.6;
-    border: 1px solid;
+    border: 1px solid #E0E0E0;
+    background: #FAFAFA;
 }
 
 .summary-title-text {
     font-size: 1.1em;
     font-weight: 700;
-    margin-bottom: 10px; 
-    /* Color is set via JS inline style */
+    margin-bottom: 10px;
+    color: #0D0D0D;
 }
 
 /* Styling for each summary line */
@@ -270,15 +309,17 @@
 
 .payment-summary .summary-label {
     font-weight: 500;
-    color: #666; 
+    color: #595959;
     flex-basis: 35%;
     text-align: left;
 }
 
 .payment-summary .summary-value {
-    font-weight: 800; /* BOLD text for values */
-    color: #333; 
-    font-size: 1.1em; /* Larger font size for values */
+    font-weight: 800;
+    /* BOLD text for values */
+    color: #0D0D0D;
+    font-size: 1.1em;
+    /* Larger font size for values */
     flex-basis: 60%;
     text-align: right;
 }
@@ -286,14 +327,16 @@
 /* Action Buttons */
 .form-actions {
     display: flex;
-    justify-content: flex-end; /* Align buttons to the right */
+    justify-content: flex-end;
+    /* Align buttons to the right */
     gap: 15px;
     padding-top: 20px;
 }
 
-.btn-pay, .btn-cancel {
+.btn-pay,
+.btn-cancel {
     padding: 12px 30px;
-    border: none;
+    border: 1px solid transparent;
     border-radius: 8px;
     font-size: 1em;
     font-weight: 600;
@@ -303,29 +346,33 @@
 
 /* Pay Button - BACKGROUND IS DYNAMIC VIA JS STYLE PROP */
 .btn-pay {
-    color: #fff;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background: #D4AF37;
+    color: #0D0D0D;
+    box-shadow: 0 4px 10px rgba(212, 175, 55, 0.15);
 }
 
 .btn-pay:hover:not(:disabled) {
-    opacity: 0.9;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    background: #C0A062;
+    box-shadow: 0 6px 15px rgba(212, 175, 55, 0.25);
 }
 
 .btn-pay:disabled {
-    background-color: #ccc !important;
+    background-color: #E0E0E0 !important;
+    color: #595959 !important;
     cursor: not-allowed;
-    opacity: 0.7;
+    opacity: 1;
     box-shadow: none;
 }
 
 .btn-cancel {
-    background-color: #f8f9fa; 
-    color: #555;
-    border: 1px solid #ddd;
+    background-color: #FFFFFF;
+    color: #595959;
+    border: 1px solid #E0E0E0;
 }
 
 .btn-cancel:hover {
-    background-color: #eee;
+    background-color: #FAFAFA;
+    border-color: #C0A062;
+    color: #0D0D0D;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }

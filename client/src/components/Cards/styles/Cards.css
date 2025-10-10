@@ -16,10 +16,10 @@
     display: flex;
     flex-direction: column;
     gap: 0px;
-    padding-left: 5pxNo;
+    padding-left: 5px;
     align-items: flex-start;
-    /* right align contents */
-    text-align: right;
+    /* align contents left */
+    text-align: left;
 }
 
 .cards-header-left p {
@@ -35,8 +35,8 @@
 
 .add-card-btn {
     padding: 10px 14px;
-    background: linear-gradient(135deg, #f97316, #ea580c);
-    color: #fff;
+    background: #D4AF37;
+    color: #0D0D0D;
     text-decoration: none;
     border-radius: 10px;
     font-weight: 800;
@@ -44,22 +44,24 @@
     align-items: center;
     /* center label inside */
     justify-content: center;
+    border: 1px solid transparent;
 }
 
 .add-card-btn:hover {
-    box-shadow: 0 8px 18px rgba(249, 115, 22, 0.25);
+    box-shadow: 0 8px 18px rgba(212, 175, 55, 0.25);
     transform: translateY(-1px);
+    background: #C0A062;
 }
 
 .cards-header h2 {
     font-size: 28px;
     font-weight: 800;
-    color: #1e2a3a;
+    color: #0D0D0D;
     margin: 0 0 6px;
 }
 
 .cards-header p {
-    color: #6b7280;
+    color: #595959;
     margin: 0;
 }
 
@@ -70,10 +72,11 @@
 }
 
 .card-item {
-    background: #fff;
-    border-radius: 16px;
+    background: #FFFFFF;
+    border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    border: 1px solid #E0E0E0;
     display: flex;
     flex-direction: column;
     min-height: 420px;
@@ -118,27 +121,28 @@
 .card-meta {
     display: flex;
     justify-content: space-between;
-    color: #374151;
+    color: #595959;
     font-weight: 600;
     font-size: 13px;
 }
 
 .card-type {
-    background: #eef2ff;
-    color: #4338ca;
+    background: #FFFFFF;
+    color: #595959;
     padding: 4px 10px;
     border-radius: 999px;
     font-size: 12px;
+    border: 1px solid #E0E0E0;
 }
 
 .card-fee {
-    color: #0f172a;
+    color: #0D0D0D;
 }
 
 .card-title {
     font-size: 18px;
     font-weight: 800;
-    color: #0f172a;
+    color: #0D0D0D;
     margin: 0;
 }
 
@@ -160,37 +164,41 @@
     flex: 1;
     text-align: center;
     padding: 10px 14px;
-    background: linear-gradient(135deg, #f97316, #ea580c);
-    color: #fff;
+    background: #D4AF37;
+    color: #0D0D0D;
     text-decoration: none;
     border-radius: 10px;
     font-weight: 700;
+    border: 1px solid transparent;
 }
 
 .apply-btn:hover {
-    box-shadow: 0 8px 18px rgba(249, 115, 22, 0.25);
+    box-shadow: 0 8px 18px rgba(212, 175, 55, 0.25);
     transform: translateY(-1px);
+    background: #C0A062;
 }
 
 .learn-btn {
     padding: 10px 14px;
     border-radius: 10px;
-    border: 2px solid #e5e7eb;
-    background: #fff;
-    color: #374151;
+    border: 1px solid #E0E0E0;
+    background: #FFFFFF;
+    color: #595959;
     font-weight: 700;
 }
 
 .learn-btn:hover {
-    background: #f9fafb;
+    background: #FAFAFA;
+    border-color: #C0A062;
+    color: #0D0D0D;
 }
 
 .cards-safety {
     margin-top: 22px;
-    background: #fff;
+    background: #FFFFFF;
     border-radius: 14px;
     padding: 18px 20px;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+    border: 1px solid #E0E0E0;
     display: flex;
     justify-content: center;
     /* center the content */
@@ -204,7 +212,7 @@
 }
 
 .safety-icon {
-    color: #10b981;
+    color: #1A1A1A;
     width: 28px;
     height: 28px;
 }
@@ -232,20 +240,21 @@
 }
 
 .owned-card {
-    background: #fff;
-    border-radius: 16px;
+    background: #FFFFFF;
+    border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
     display: grid;
     grid-template-columns: 320px 1fr;
     align-items: stretch;
-    border: 1px solid rgba(15, 23, 42, 0.04);
+    border: 1px solid #E0E0E0;
     transition: box-shadow 160ms ease, transform 160ms ease;
 }
 
 .owned-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 10px 22px rgba(0, 0, 0, 0.08);
+    border-color: #C0A062;
 }
 
 .owned-card-media {
@@ -305,23 +314,24 @@
     margin: 0;
     font-size: 18px;
     font-weight: 800;
-    color: #0f172a;
+    color: #0D0D0D;
 }
 
 .owned-card-type {
-    background: #eef2ff;
-    color: #4338ca;
+    background: #FFFFFF;
+    color: #595959;
     padding: 4px 10px;
     border-radius: 999px;
     font-size: 12px;
     font-weight: 700;
+    border: 1px solid #E0E0E0;
 }
 
 .owned-card-meta {
     display: flex;
     gap: 12px;
     align-items: center;
-    color: #374151;
+    color: #595959;
     font-weight: 600;
     font-size: 13px;
 }
@@ -335,21 +345,23 @@
     border-radius: 999px;
     font-size: 12px;
     font-weight: 800;
+    background: #FFFFFF;
+    border: 1px solid #E0E0E0;
 }
 
 .status-pill.active {
-    background: #dcfce7;
-    color: #166534;
+    border-color: #00C896;
+    color: #00C896;
 }
 
 .status-pill.blocked {
-    background: #fee2e2;
-    color: #991b1b;
+    border-color: #E63946;
+    color: #E63946;
 }
 
 .owned-card-info {
     margin: 0;
-    color: #334155;
+    color: #595959;
 }
 
 .owned-card-details {
@@ -358,12 +370,12 @@
     margin: 0;
     display: grid;
     gap: 6px;
-    color: #334155;
+    color: #595959;
     font-size: 14px;
 }
 
 .owned-card-details strong {
-    color: #0f172a;
+    color: #0D0D0D;
 }
 
 .owned-card-actions {
@@ -374,29 +386,31 @@
 }
 
 .secondary-btn {
-    background: #fff;
-    color: #374151;
-    border: 2px solid #e5e7eb;
+    background: #FFFFFF;
+    color: #595959;
+    border: 1px solid #E0E0E0;
     padding: 10px 14px;
     border-radius: 10px;
     font-weight: 800;
 }
 
 .secondary-btn:hover {
-    background: #f9fafb;
+    background: #FAFAFA;
+    border-color: #C0A062;
+    color: #0D0D0D;
 }
 
 .danger-btn {
-    background: #fff;
-    color: #991b1b;
-    border: 2px solid #fecaca;
+    background: #FFFFFF;
+    color: #E63946;
+    border: 1px solid #E63946;
     padding: 10px 14px;
     border-radius: 10px;
     font-weight: 800;
 }
 
 .danger-btn:hover {
-    background: #fff1f2;
+    background: #FDECEC;
 }
 
 /* Responsive */
@@ -414,12 +428,12 @@
 .no-cards {
     text-align: center;
     padding: 24px;
-    background: #fff;
+    background: #FFFFFF;
     border-radius: 14px;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+    border: 1px solid #E0E0E0;
 }
 
 .no-cards p {
-    color: #6b7280;
+    color: #595959;
     margin: 0 0 10px;
 }

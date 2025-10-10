@@ -9,29 +9,29 @@
 
 /* Wrapper to center the header content (aligns with cards) */
 .page-header-wrapper {
-    max-width: 750px; 
-    margin: 0 auto 20px auto; 
+    max-width: 750px;
+    margin: 0 auto 20px auto;
     text-align: left;
 }
 
 /* Base Card Style (Used for the main profile card) */
 .card {
-    background-color: #fff;
+    background-color: #FFFFFF;
     padding: 25px;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); 
+    border: 1px solid #E0E0E0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .profile-card {
-    max-width: 750px; 
+    max-width: 750px;
     margin: 0 auto 30px auto;
 }
 
 /* --- 1. Profile Header Card (The Blue Card) --- */
 .profile-header-card {
-    /* Deep blue background matching design */
-    background-color: #1a428a; 
-    color: #fff;
+    background-color: #1A1A1A;
+    color: #FFFFFF;
     padding: 20px;
     border-radius: 10px;
     display: flex;
@@ -74,7 +74,7 @@
 .detail-label {
     font-size: 0.9em;
     font-weight: 600;
-    color: #444;
+    color: #595959;
     margin-bottom: 5px;
     display: flex;
     align-items: center;
@@ -82,7 +82,8 @@
 
 .detail-icon {
     margin-right: 8px;
-    color: #1a428a; /* Blue accent color */
+    color: #1A1A1A;
+    /* Neutral dark accent */
     font-size: 1em;
 }
 
@@ -93,26 +94,31 @@
 .detail-input {
     width: 100%;
     padding: 12px 15px;
-    border: 1px solid #ddd;
+    border: 1px solid #E0E0E0;
     border-radius: 8px;
     font-size: 1em;
     box-sizing: border-box;
-    outline: none; 
+    outline: none;
     transition: all 0.2s;
+    background: #FFFFFF;
+    color: #0D0D0D;
 }
 
 /* Styling for read-only fields */
 .detail-input[readOnly] {
-    background-color: #f7f7f7; /* Light gray background for read-only */
-    color: #333;
+    background-color: #FAFAFA;
+    /* Light gray background for read-only */
+    color: #595959;
     cursor: default;
 }
 
 /* Highlight the input when it becomes editable */
 .detail-input-wrap.editable .detail-input {
-    background-color: #fff; /* White background */
-    border-color: #3366cc; /* Blue border for focus/edit */
-    box-shadow: 0 0 0 1px #3366cc;
+    background-color: #FFFFFF;
+    /* White background */
+    border-color: #D4AF37;
+    /* Gold border for focus/edit */
+    box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.25);
     cursor: text;
 }
 
@@ -122,7 +128,7 @@
     right: 15px;
     transform: translateY(-50%);
     font-size: 0.8em;
-    color: #999;
+    color: #595959;
     font-style: italic;
 }
 
@@ -139,21 +145,22 @@
 }
 
 .btn-edit {
-    background-color: #1a428a; /* Deep blue button */
-    color: #fff;
+    background-color: #D4AF37;
+    color: #0D0D0D;
     padding: 12px 30px;
-    border: none;
+    border: 1px solid transparent;
     border-radius: 8px;
     font-size: 1em;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
-    transition: background-color 0.2s;
-    display: flex; 
+    transition: background-color 0.2s, box-shadow 0.2s;
+    display: flex;
     align-items: center;
 }
 
 .btn-edit:hover {
-    background-color: #0d2a58;
+    background-color: #C0A062;
+    box-shadow: 0 6px 15px rgba(212, 175, 55, 0.25);
 }
 
 .btn-edit .button-icon {
@@ -162,9 +169,11 @@
 
 /* Style for the Save button */
 .btn-edit.btn-save {
-    background-color: #28a745; /* Green for Save */
+    background-color: #00C896;
+    /* Theme success */
+    color: #FFFFFF;
 }
 
 .btn-edit.btn-save:hover {
-    background-color: #1e7e34;
+    background-color: #00B184;
 }

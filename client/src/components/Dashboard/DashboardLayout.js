@@ -1,6 +1,6 @@
 import './styles/DashboardLayout.css';
 import { Link } from 'react-router-dom';
-import { FaMoneyBillWave, FaExchangeAlt, FaRupeeSign, FaPiggyBank, FaArrowDown, FaArrowUp } from 'react-icons/fa';
+import { FaMoneyBillWave, FaExchangeAlt, FaRupeeSign, FaPiggyBank, FaArrowDown, FaArrowUp, FaChevronRight } from 'react-icons/fa';
 
 const currency = (n) =>
   n.toLocaleString(undefined, { style: 'currency', currency: 'INR' });
@@ -17,28 +17,39 @@ const DashboardLayout = ({ accountNumber, currentBalance, transactions }) => {
     <>
       {/* Summary cards row */}
       <section className="summary-row">
-        <div className="summary-card gradient-blue">
-          <div className="summary-title">Account Balance</div>
+        {/* Balance card spans full width of first row */}
+        <div className="summary-card balance">
+          <div className="summary-title">Current Balance</div>
           <div className="summary-value">{currency(currentBalance)}</div>
           <div className="summary-sub">{accountNumber}</div>
+          <FaChevronRight className="balance-chevron" aria-hidden />
         </div>
 
-        <div className="summary-card gradient-green">
-          <div className="summary-title">Total Deposits</div>
-          <div className="summary-value">₹15,000</div>
-          <div className="summary-sub">2 transactions</div>
+        {/* Two mini summary cards */}
+        <div className="summary-card mini income">
+          <div className="mini-icon" aria-hidden>
+            <FaArrowUp />
+          </div>
+          <div className="mini-content">
+            <div className="summary-title">Total Income</div>
+            <div className="summary-value">₹15,000</div>
+          </div>
         </div>
 
-        <div className="summary-card gradient-cyan">
-          <div className="summary-title">Total Spending</div>
-          <div className="summary-value">₹4,350</div>
-          <div className="summary-sub">3 transactions</div>
+        <div className="summary-card mini spending">
+          <div className="mini-icon" aria-hidden>
+            <FaArrowDown />
+          </div>
+          <div className="mini-content">
+            <div className="summary-title">Total Spending</div>
+            <div className="summary-value">₹4,350</div>
+          </div>
         </div>
       </section>
 
       {/* Quick Actions large buttons row */}
       <section className="quick-actions-row card">
-        <div className="qa-title">Quick Actions</div>
+        <div className="qa-title">Smart Actions</div>
         <div className="qa-buttons">
           <Link to="/dashboard/deposit-money" className="qa-btn qa-deposit">
             <FaMoneyBillWave />
@@ -47,7 +58,7 @@ const DashboardLayout = ({ accountNumber, currentBalance, transactions }) => {
 
           <Link to="/dashboard/transfer-money" className="qa-btn qa-transfer">
             <FaExchangeAlt />
-            <span className="qa-label">Transfer Money</span>
+            <span className="qa-label">Transfer Funds</span>
           </Link>
 
           <Link to="/dashboard/pay-bills" className="qa-btn qa-bills">
@@ -66,10 +77,11 @@ const DashboardLayout = ({ accountNumber, currentBalance, transactions }) => {
       <section className="dashboard-section">
         <div className="card recent-transactions">
           <div className="rt-header">
-            <h3 className="card-title">Recent Transactions</h3>
-            <Link className="view-all" to="/dashboard/transactions">
-              View All
-            </Link>
+            <h3 className="card-title">Recent Activity</h3>
+            <div className="rt-controls">
+              <button type="button" className="rt-filter">Filter</button>
+              <Link className="view-all" to="/dashboard/transactions">View All</Link>
+            </div>
           </div>
 
           <div className="transactions-list">

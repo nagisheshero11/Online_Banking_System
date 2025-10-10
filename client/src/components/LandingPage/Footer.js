@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-scroll';
+import { Link as RouterLink } from 'react-router-dom';
 import { FaLinkedin, FaGithub, FaTwitter, FaShieldAlt, FaLightbulb, FaUsers, FaEnvelope, FaPhone, FaMapMarkerAlt } from 'react-icons/fa';
 import './styles/Footer.css';
 
@@ -30,9 +31,9 @@ const Footer = () => {
                         <p className="footer-about-text">
                             BANKIFY is a modern banking platform designed to make financial services simple and accessible. We provide secure account management, instant transfers, and convenient bill payments all in one place.
                         </p>
-                        <Link to="home" className="footer-cta-button" smooth={true} duration={500}>
+                        <RouterLink to="/signup" className="footer-cta-button">
                             Create Account Now
-                        </Link>
+                        </RouterLink>
                     </div>
 
                     <div className="footer-why-col">
