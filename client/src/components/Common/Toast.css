@@ -9,28 +9,25 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    background: #0f172a;
-    /* slate-900 */
-    color: #e5e7eb;
-    /* text-slate-200 */
+    background: rgba(255, 255, 255, 0.9);
+    color: #0D0D0D;
     border-radius: 14px;
     padding: 12px 16px;
-    box-shadow: 0 10px 24px rgba(2, 6, 23, 0.35);
-    border: 1px solid rgba(148, 163, 184, 0.18);
-    /* subtle border */
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+    border: 1px solid #E0E0E0;
     position: relative;
+    backdrop-filter: saturate(160%) blur(6px);
 }
 
 .toast.success {
-    background: #0b2e20;
-    /* dark green tint */
-    color: #d1fae5;
-    /* minty text */
+    background: #FFFFFF;
+    color: #0D0D0D;
+    border-color: #E0E0E0;
 }
 
 .toast-icon {
     font-weight: 800;
-    color: #34d399;
+    color: #00C896;
 }
 
 /* Spinner removed for informational toast */
@@ -48,19 +45,17 @@
     bottom: 0;
     left: auto;
     height: 2px;
-    background: #34d399;
-    /* green for success */
+    background: #D4AF37;
     border-bottom-left-radius: 14px;
     border-bottom-right-radius: 14px;
     width: 100%;
     transform-origin: right center;
-    animation: toast-progress-deplete var(--toast-duration, 5000ms) linear forwards;
+    animation: toast-progress-deplete var(--toast-duration, 2500ms) linear forwards;
 }
 
 /* info variant accent */
 .toast.info .toast-progress {
-    background: #60a5fa;
-    /* blue-400 */
+    background: #C0A062;
 }
 
 @keyframes toast-progress-deplete {

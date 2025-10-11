@@ -42,7 +42,7 @@ const Dashboard = () => {
                     {showLoginToast && (
                         <Toast
                             message="Login successful"
-                            duration={5000}
+                            duration={2500}
                             variant="success"
                             onClose={() => setShowLoginToast(false)}
                         />

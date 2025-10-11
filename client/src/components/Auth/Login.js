@@ -69,7 +69,7 @@ const Login = () => {
                     <form onSubmit={onSubmit}>
                         <div className="form-input-group">
                             <EmailIcon />
-                            <input type="email" placeholder="Email / Username" className="form-input" required />
+                            <input type="name" placeholder="Email / Username" className="form-input" required />
                         </div>
                         <div className="form-input-group">
                             <LockIcon />

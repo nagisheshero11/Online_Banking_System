@@ -203,6 +203,11 @@
     background: #C0A062;
 }
 
+.qa-btn:focus-visible {
+    outline: 2px solid #C0A062;
+    outline-offset: 2px;
+}
+
 .qa-btn svg {
     width: 18px;
     height: 18px;
@@ -232,12 +237,30 @@
     color: #0D0D0D;
 }
 
+.rt-filter:hover {
+    background: #FAFAFA;
+}
+
+.rt-filter:focus-visible {
+    outline: 2px solid #C0A062;
+    outline-offset: 2px;
+}
+
 .view-all {
     color: #0D0D0D;
     border: 1px solid #E0E0E0;
     padding: 6px 10px;
     border-radius: 999px;
     text-decoration: none;
+}
+
+.view-all:hover {
+    background: #FAFAFA;
+}
+
+.view-all:focus-visible {
+    outline: 2px solid #C0A062;
+    outline-offset: 2px;
 }
 
 .transaction-row {
