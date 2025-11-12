@@ -1,12 +1,28 @@
-// client/src/components/Profile/Profile.js - UPDATED FOR EDITING
-
-import React, { useState } from 'react';
-import { FaUser, FaPhone, FaEnvelope, FaCreditCard, FaCalendarAlt, FaSave, FaPen } from 'react-icons/fa'; // Added FaSave and FaPen
+import React, { useState, useEffect } from 'react';
+import {
+    FaUser,
+    FaPhone,
+    FaEnvelope,
+    FaCreditCard,
+    FaCalendarAlt,
+    FaSave,
+    FaPen,
+    FaIdCard
+} from 'react-icons/fa';
 import './styles/Profile.css';
+import { fetchUserProfile, updateUserProfile } from '../../services/profileAPI'; // ✅ Import backend API
 
-// Reusable component for displaying one label-value pair
-const ProfileDetailItem = ({ icon: Icon, label, value, readOnly = true, highlight = false, isEditing, onValueChange, name }) => {
-    // Determine if the input should be editable in the current mode
+// ✅ Reusable Profile Item Component
+const ProfileDetailItem = ({
+    icon: Icon,
+    label,
+    value,
+    readOnly = true,
+    highlight = false,
+    isEditing,
+    onValueChange,
+    name
+}) => {
     const isEditable = isEditing && !readOnly;
 
     return (
@@ -15,141 +31,176 @@ const ProfileDetailItem = ({ icon: Icon, label, value, readOnly = true, highligh
                 <Icon className="detail-icon" />
                 {label}
             </label>
-            <div className={`detail-input-wrap ${highlight ? 'highlight-green' : ''} ${isEditable ? 'editable' : ''}`}>
-                <input 
-                    type="text" 
-                    value={value} 
-                    readOnly={!isEditable} // Input is readOnly unless isEditable is true
+            <div
+                className={`detail-input-wrap ${highlight ? 'highlight-green' : ''} ${isEditable ? 'editable' : ''}`}
+            >
+                <input
+                    type="text"
+                    value={value || ''}
+                    readOnly={!isEditable}
                     className="detail-input"
                     onChange={onValueChange ? (e) => onValueChange(name, e.target.value) : undefined}
                 />
-                {readOnly && label === 'Email Address' && <span className="read-only-text">Email cannot be changed</span>}
+                {readOnly && label === 'Email Address' && (
+                    <span className="read-only-text">Email cannot be changed</span>
+                )}
             </div>
         </div>
     );
 };
 
-const Profile = ({ userData = {} }) => {
-    // 1. STATE FOR EDIT MODE AND FORM DATA
+// ✅ Main Profile Component
+const Profile = () => {
     const [isEditing, setIsEditing] = useState(false);
-    
-    // Initial data from props
-    const initialUserData = {
-        fullName: userData.fullName || "Sravan Kumar",
-        accountType: "Savings Account",
-        phone: userData.phone || "+91 98765 43210",
-        email: userData.email || "sravan@example.com",
-        accountNumber: userData.accountNumber || "BANK10012345",
-        accountCreated: userData.accountCreated || "2023-05-15",
-    };
+    const [formData, setFormData] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-    // State to hold the data currently being edited
-    const [formData, setFormData] = useState(initialUserData);
+    // ✅ Fetch user profile on mount
+    useEffect(() => {
+        const loadProfile = async () => {
+            try {
+                const data = await fetchUserProfile();
+                setFormData(data);
+            } catch (error) {
+                alert(error.message || 'Failed to load profile');
+                // window.location.href = '/login'; // Redirect if token invalid
+            } finally {
+                setLoading(false);
+            }
+        };
+        loadProfile();
+    }, []);
 
-    // 2. HANDLERS
+    // ✅ Handle field updates
     const handleValueChange = (name, value) => {
-        setFormData(prev => ({ ...prev, [name]: value }));
+        setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleEditClick = () => {
-        setIsEditing(true);
+    // ✅ Save profile updates
+    const handleSaveClick = async () => {
+        try {
+            const updated = await updateUserProfile({
+                firstName: formData.firstName,
+                lastName: formData.lastName,
+                phoneNumber: formData.phoneNumber
+            });
+            alert('Profile updated successfully!');
+            setFormData(updated);
+            setIsEditing(false);
+        } catch (error) {
+            alert(error.message || 'Error updating profile');
+        }
     };
 
-    const handleSaveClick = () => {
-        // Here you would typically send formData to a backend API to save the changes.
-        // For now, we'll just log it and switch back to read mode.
-        console.log('Saving profile data:', formData);
-        
-        // **IMPORTANT:** In a real app, you'd confirm success, then update parent state/store.
-        alert(`Profile Saved! New Name: ${formData.fullName}`);
-        
-        setIsEditing(false);
-    };
+    if (loading) {
+        return <div className="profile-loading">Loading profile...</div>;
+    }
+
+    if (!formData) {
+        return <div className="profile-error">Failed to load profile data.</div>;
+    }
 
     return (
         <div className="profile-page">
-            
-            {/* Page Header */}
+            {/* Header */}
             <div className="page-header-wrapper">
                 <div className="page-header">
-                    <h1 className="header-title">Profile Settings</h1>
-                    <p className="header-subtitle">Manage your personal information</p>
+                    {/* <h1 className="header-title">Profile</h1> */}
+                    <p className="header-subtitle">Manage your personal and account details</p>
                 </div>
             </div>
 
-            {/* Main Profile Card Container */}
+            {/* Profile Card */}
             <div className="profile-card card">
-                
-                {/* 1. Profile Header Card (Displays current data) */}
+                {/* Header Section */}
                 <div className="profile-header-card">
                     <FaUser className="user-avatar" />
                     <div className="user-info">
-                        <h2 className="user-name">{formData.fullName}</h2> {/* Uses current form data */}
-                        <p className="account-type">{formData.accountType}</p>
+                        <h2 className="user-name">
+                            {formData.firstName} {formData.lastName}
+                        </h2>
+                        <p className="account-type">User ID: {formData.username}</p>
                     </div>
                 </div>
 
-                {/* 2. Information Grid */}
+                {/* Details Section */}
                 <div className="profile-details-grid">
-                    
-                    {/* Full Name: Editable when isEditing is true */}
-                    <ProfileDetailItem 
-                        icon={FaUser} 
-                        label="Full Name" 
-                        value={formData.fullName}
-                        name="fullName"
-                        readOnly={false} // Make it generally editable
+                    <ProfileDetailItem
+                        icon={FaUser}
+                        label="First Name"
+                        value={formData.firstName}
+                        name="firstName"
+                        readOnly={false}
                         isEditing={isEditing}
                         onValueChange={handleValueChange}
                     />
-                    
-                    {/* Email Address: Always read-only due to design constraint */}
-                    <ProfileDetailItem 
-                        icon={FaEnvelope} 
-                        label="Email Address" 
-                        value={formData.email}
-                        readOnly={true} 
+
+                    <ProfileDetailItem
+                        icon={FaUser}
+                        label="Last Name"
+                        value={formData.lastName}
+                        name="lastName"
+                        readOnly={false}
+                        isEditing={isEditing}
+                        onValueChange={handleValueChange}
                     />
-                    
-                    {/* Phone Number: Read-only */}
-                    <ProfileDetailItem 
-                        icon={FaPhone} 
-                        label="Phone Number" 
-                        value={formData.phone}
-                        readOnly={true}
-                    />
-                    
-                    {/* Account Number: Read-only */}
-                    <ProfileDetailItem 
-                        icon={FaCreditCard} 
-                        label="Account Number" 
-                        value={formData.accountNumber}
+
+                    <ProfileDetailItem
+                        icon={FaUser}
+                        label="Username"
+                        value={formData.username}
                         readOnly={true}
                     />
 
-                    {/* Account Created: Read-only */}
-                    <ProfileDetailItem 
-                        icon={FaCalendarAlt} 
-                        label="Account Created" 
-                        value={formData.accountCreated}
+                    <ProfileDetailItem
+                        icon={FaEnvelope}
+                        label="Email Address"
+                        value={formData.email}
                         readOnly={true}
                     />
-                    
-                    {/* Placeholder to maintain layout */}
-                    <div className="profile-detail-item-placeholder"></div>
+
+                    <ProfileDetailItem
+                        icon={FaPhone}
+                        label="Phone Number"
+                        value={formData.phoneNumber}
+                        name="phoneNumber"
+                        readOnly={!isEditing}
+                        isEditing={isEditing}
+                        onValueChange={handleValueChange}
+                    />
+
+                    <ProfileDetailItem
+                        icon={FaIdCard}
+                        label="PAN Number"
+                        value={formData.panNumber}
+                        readOnly={true}
+                    />
+
+                    <ProfileDetailItem
+                        icon={FaCreditCard}
+                        label="Account Number"
+                        value={formData.accountNumber}
+                        highlight={true}
+                        readOnly={true}
+                    />
+
+                    <ProfileDetailItem
+                        icon={FaCalendarAlt}
+                        label="Account Created"
+                        value={formData.createdAt?.split('T')[0]} // trim timestamp
+                        readOnly={true}
+                    />
                 </div>
 
-                {/* 3. Action Button (Conditional Rendering) */}
+                {/* Action Buttons */}
                 <div className="profile-actions">
                     {isEditing ? (
-                        // SAVE BUTTON VIEW
                         <button className="btn-edit btn-save" onClick={handleSaveClick}>
                             <FaSave className="button-icon" />
                             Save Changes
                         </button>
                     ) : (
-                        // EDIT BUTTON VIEW
-                        <button className="btn-edit" onClick={handleEditClick}>
+                        <button className="btn-edit" onClick={() => setIsEditing(true)}>
                             <FaPen className="button-icon" />
                             Edit Profile
                         </button>
