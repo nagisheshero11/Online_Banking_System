@@ -1,8 +1,10 @@
 package com.banking.server.security;
 
+import com.banking.server.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,13 +22,32 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         http
+                // ✅ New style for CORS (Spring Security 6.2+)
+                .cors(cors -> cors.configurationSource(
+                        new com.banking.server.config.CorsConfig().corsConfigurationSource()
+                ))
+
+                // Disable CSRF (since using JWT)
                 .csrf(csrf -> csrf.disable())
+
+                // Authorization rules
                 .authorizeHttpRequests(auth -> auth
+                        // Allow preflight OPTIONS requests
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                        // Public endpoints
                         .requestMatchers("/api/user/signup", "/api/user/login").permitAll()
+
+                        // Everything else requires authentication
                         .anyRequest().authenticated()
                 )
-                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+                // Stateless session (JWT only)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+                // Add JWT filter before default authentication
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
