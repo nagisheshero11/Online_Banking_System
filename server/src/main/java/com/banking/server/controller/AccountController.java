@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @RestController
@@ -18,7 +19,9 @@ public class AccountController {
     @Autowired
     private AccountRepository accountRepository;
 
-    // ✅ Get account info
+    /**
+     * ✅ Get account info of logged-in user
+     */
     @GetMapping("/me")
     public ResponseEntity<?> getAccountByUsername(Authentication authentication) {
         String username = authentication.getName();
@@ -35,20 +38,24 @@ public class AccountController {
                 .accountNumber(account.getAccountNumber())
                 .firstName(account.getFirstName())
                 .lastName(account.getLastName())
-                .balance(account.getBalance())
+                .balance(account.getBalance().setScale(2, BigDecimal.ROUND_HALF_UP))
                 .ifscCode(account.getIfscCode())
                 .accountType(account.getAccountType())
-                .transactionLimit(account.getTransactionLimit())
+                .transactionLimit(account.getTransactionLimit().setScale(2, BigDecimal.ROUND_HALF_UP))
                 .createdAt(account.getCreatedAt())
                 .build();
 
         return ResponseEntity.ok(response);
     }
 
-    // ✅ Update transaction limit
+    /**
+     * ✅ Update transaction limit (with BigDecimal & business validation)
+     */
     @PutMapping("/limit")
-    public ResponseEntity<?> updateTransactionLimit(Authentication authentication,
-                                                    @RequestBody UpdateTransactionLimitRequest request) {
+    public ResponseEntity<?> updateTransactionLimit(
+            Authentication authentication,
+            @RequestBody UpdateTransactionLimitRequest request) {
+
         String username = authentication.getName();
         Optional<Account> accountOpt = accountRepository.findByUsername(username);
 
@@ -57,22 +64,28 @@ public class AccountController {
         }
 
         Account account = accountOpt.get();
-        double newLimit = request.getNewLimit();
+
+        BigDecimal newLimit = BigDecimal.valueOf(request.getNewLimit());
+        String accountType = account.getAccountType().toUpperCase();
 
         // ✅ Enforce limit rules
-        if ("Savings".equalsIgnoreCase(account.getAccountType()) && newLimit > 50000) {
+        if (accountType.equals("SAVINGS") && newLimit.compareTo(BigDecimal.valueOf(50000)) > 0) {
             return ResponseEntity.badRequest().body("Savings account limit cannot exceed ₹50,000.");
         }
-        if ("Current".equalsIgnoreCase(account.getAccountType()) && newLimit > 200000) {
+        if (accountType.equals("CURRENT") && newLimit.compareTo(BigDecimal.valueOf(200000)) > 0) {
             return ResponseEntity.badRequest().body("Current account limit cannot exceed ₹2,00,000.");
         }
 
+        // ✅ Update limit
         account.setTransactionLimit(newLimit);
         accountRepository.save(account);
 
-        return ResponseEntity.ok("Transaction limit updated successfully to ₹" + newLimit);
+        return ResponseEntity.ok("Transaction limit updated successfully to ₹" + newLimit.setScale(2));
     }
 
+    /**
+     * ✅ Get all accounts (for admin/testing)
+     */
     @GetMapping("/all")
     public ResponseEntity<?> getAllAccounts() {
         return ResponseEntity.ok(accountRepository.findAll());

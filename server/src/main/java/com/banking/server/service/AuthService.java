@@ -13,6 +13,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Service
 public class AuthService {
 
@@ -75,15 +77,17 @@ public class AuthService {
 
         // ✅ Determine account type and transaction limit
         String accountType = upperAcc.contains("SV") ? "SAVINGS" : "CURRENT";
-        double transactionLimit = upperAcc.contains("SV") ? 10000.0 : 50000.0;
+        BigDecimal transactionLimit = upperAcc.contains("SV")
+                ? BigDecimal.valueOf(10000.00)
+                : BigDecimal.valueOf(50000.00);
 
-        // ✅ Create corresponding Account entity
+        // ✅ Create corresponding Account entity with BigDecimal fields
         Account account = Account.builder()
                 .username(user.getUsername())
                 .accountNumber(user.getAccountNumber())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
-                .balance(200000.0)
+                .balance(BigDecimal.valueOf(200000.00))
                 .ifscCode("BKF14369")
                 .accountType(accountType)
                 .transactionLimit(transactionLimit)
