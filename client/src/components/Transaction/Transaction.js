@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { getAllTransactions } from "../../services/transactionAPI";
+import { getAccountDetails } from "../../services/accountAPI";
 import "./styles/Transaction.css";
 
 const Transactions = () => {
@@ -9,28 +10,30 @@ const Transactions = () => {
   const [search, setSearch] = useState("");
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [userAccountNumber, setUserAccountNumber] = useState("");
 
-  // ✅ Fetch real transactions from backend
+  // ✅ Fetch account number & transactions
   useEffect(() => {
-    const fetchTransactions = async () => {
+    const fetchData = async () => {
       try {
+        const user = await getAccountDetails();
+        setUserAccountNumber(user.accountNumber);
+
         const data = await getAllTransactions();
-        // Sort newest first
         const sorted = data.sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         );
         setTransactions(sorted);
       } catch (error) {
         console.error("❌ Error fetching transactions:", error);
-        alert(error.message || "Failed to load transactions. Please try again.");
+        alert(error.message || "Failed to load transactions.");
       } finally {
         setLoading(false);
       }
     };
-    fetchTransactions();
+    fetchData();
   }, []);
 
-  // ✅ Handle loading and empty state
   if (loading)
     return (
       <div className="transactions-container">
@@ -46,10 +49,12 @@ const Transactions = () => {
       </div>
     );
 
-  // ✅ Map transaction type (optional logic)
+  // ✅ Determine Transaction Type (Debited / Credited / Other)
   const getTransactionType = (txn) => {
-    if (txn.fromAccountNumber === txn.toAccountNumber) return "Internal";
-    if (txn.fromAccountNumber && txn.toAccountNumber) return "Transfer";
+    if (!userAccountNumber) return "Transfer";
+
+    if (txn.fromAccountNumber === userAccountNumber) return "Debited";
+    if (txn.toAccountNumber === userAccountNumber) return "Credited";
     return "Other";
   };
 
@@ -80,15 +85,14 @@ const Transactions = () => {
       <div className="transactions-filters">
         <input
           type="text"
-          placeholder="Search by transaction ID or remarks..."
+          placeholder="Search by transaction ID or description..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
         <select value={filter} onChange={(e) => setFilter(e.target.value)}>
           <option>All Transactions</option>
-          <option>Transfer</option>
-          <option>Deposit</option>
-          <option>Received</option>
+          <option>Credited</option>
+          <option>Debited</option>
         </select>
       </div>
 
@@ -100,6 +104,7 @@ const Transactions = () => {
             <tr>
               <th>Transaction ID</th>
               <th>Date & Time</th>
+              <th>Type</th>
               <th>From</th>
               <th>To</th>
               <th>Amount</th>
@@ -108,42 +113,54 @@ const Transactions = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredTransactions.map((txn) => (
-              <tr key={txn.transactionId}>
-                <td>{txn.transactionId}</td>
-                <td>{new Date(txn.createdAt).toLocaleString()}</td>
-                <td>{txn.fromAccountNumber}</td>
-                <td>{txn.toAccountNumber}</td>
+            {filteredTransactions.map((txn) => {
+              const type = getTransactionType(txn);
+              const isDebit = type === "Debited";
+              const isCredit = type === "Credited";
 
-                {/* Amount color logic */}
-                <td
-                  className={`amount ${
-                    txn.status === "FAILED"
-                      ? "failed"
-                      : txn.fromAccountNumber === txn.toAccountNumber
-                      ? "neutral"
-                      : txn.fromAccountNumber
-                      ? "debit"
-                      : "credit"
-                  }`}
-                >
-                  ₹{txn.amount?.toLocaleString()}
-                </td>
+              return (
+                <tr key={txn.transactionId}>
+                  <td>{txn.transactionId}</td>
+                  <td>{new Date(txn.createdAt).toLocaleString()}</td>
+                  <td>
+                    <span
+                      className={`txn-type ${
+                        type.toLowerCase()
+                      }`}
+                    >
+                      {type}
+                    </span>
+                  </td>
+                  <td>{txn.fromAccountNumber}</td>
+                  <td>{txn.toAccountNumber}</td>
 
-                {/* Status */}
-                <td>
-                  <span
-                    className={`status ${
-                      txn.status === "COMPLETED" ? "success" : "failed"
+                  <td
+                    className={`amount ${
+                      isDebit ? "debit" : isCredit ? "credit" : ""
                     }`}
                   >
-                    {txn.status}
-                  </span>
-                </td>
+                    {isCredit
+                      ? `+₹${txn.amount.toLocaleString()}`
+                      : `-₹${txn.amount.toLocaleString()}`}
+                  </td>
 
-                <td>{txn.remarks || "-"}</td>
-              </tr>
-            ))}
+                  <td>
+                    <span
+                      className={`status ${
+                        txn.status === "COMPLETED" ||
+                        txn.status === "Success"
+                          ? "success"
+                          : "failed"
+                      }`}
+                    >
+                      {txn.status}
+                    </span>
+                  </td>
+
+                  <td>{txn.remarks || "-"}</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
