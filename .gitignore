@@ -56,3 +56,9 @@ server/*.log
 
 # Local secrets (use example file instead)
 server/src/main/resources/application.properties
+
+
+**/application.properties
+**/application-*.properties
+**/application.yml
+**/application-*.yml

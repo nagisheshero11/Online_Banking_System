@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -18,10 +20,10 @@ public class AccountResponse {
     private String firstName;
     private String lastName;
 
-    private double balance;
+    private BigDecimal balance;
     private String ifscCode;
     private String accountType;
-    private double transactionLimit;
+    private BigDecimal transactionLimit;
 
     private LocalDateTime createdAt;
 }

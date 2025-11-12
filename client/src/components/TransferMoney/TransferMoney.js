@@ -1,46 +1,80 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaPaperPlane, FaUser } from 'react-icons/fa';
+import { transferMoney, getAccountDetails } from '../../services/accountAPI'; // ✅ new import
 import './styles/TransferMoney.css';
 
 const TransferMoney = () => {
     const [receiverAccount, setReceiverAccount] = useState('');
     const [transferAmount, setTransferAmount] = useState('');
     const [description, setDescription] = useState('');
+    const [userAccount, setUserAccount] = useState('');
+    const [availableBalance, setAvailableBalance] = useState(0);
+    const [loading, setLoading] = useState(false);
 
-    const userAccount = 'BANK10012345';
-    const availableBalance = 45750.50;
+    // ✅ Fetch account info on mount
+    useEffect(() => {
+        const fetchAccount = async () => {
+            try {
+                const accountData = await getAccountDetails();
+                setUserAccount(accountData.accountNumber);
+                setAvailableBalance(accountData.balance);
+            } catch (error) {
+                console.error('Error fetching account info:', error);
+                alert('Failed to load account info. Please log in again.');
+            }
+        };
+        fetchAccount();
+    }, []);
 
-    const handleTransfer = (e) => {
+    const handleTransfer = async (e) => {
         e.preventDefault();
 
-        // Validation
+        // Basic validation
         if (!receiverAccount) {
-            alert('Please enter receiver\'s account number');
+            alert("Please enter receiver's account number");
             return;
         }
-
         if (!transferAmount || parseFloat(transferAmount) <= 0) {
-            alert('Please enter a valid transfer amount');
+            alert("Please enter a valid transfer amount");
             return;
         }
-
         if (parseFloat(transferAmount) > availableBalance) {
-            alert('Insufficient balance for this transfer');
+            alert("Insufficient balance for this transfer");
             return;
         }
-
         if (receiverAccount === userAccount) {
-            alert('Cannot transfer to the same account');
+            alert("Cannot transfer to your own account");
             return;
         }
 
-        // Here you would typically make an API call to process the transfer
-        alert(`Transfer of ₹${parseFloat(transferAmount).toLocaleString()} to ${receiverAccount} processed successfully!`);
+        // ✅ Call backend
+        setLoading(true);
+        try {
+            const transferData = {
+                toAccountNumber: receiverAccount,
+                amount: parseFloat(transferAmount),
+                remarks: description || "",
+            };
 
-        // Reset form
-        setReceiverAccount('');
-        setTransferAmount('');
-        setDescription('');
+            const response = await transferMoney(transferData);
+            alert(
+                `✅ Transfer Successful!\nTransaction ID: ${response.transactionId}\nAmount: ₹${response.amount}\nTo: ${response.toAccountNumber}`
+            );
+
+            // Update balance locally
+            setAvailableBalance(response.fromBalanceAfter);
+            // Reset form
+            setReceiverAccount('');
+            setTransferAmount('');
+            setDescription('');
+        } catch (error) {
+            console.error("Transfer failed:", error);
+            const errMsg =
+                error.response?.data || "Transfer failed. Please try again.";
+            alert(`❌ ${errMsg}`);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleCancel = () => {
@@ -51,28 +85,28 @@ const TransferMoney = () => {
 
     return (
         <div className="transfer-money-container">
-            {/* Header Section */}
             <div className="transfer-header">
-                {/* <h2>Transfer Money</h2> */}
                 <p>Send money to any account instantly</p>
             </div>
 
-            {/* Transfer Card */}
             <div className="transfer-card">
-                {/* Banner Section */}
                 <div className="transfer-banner">
                     <div className="banner-content">
                         <FaPaperPlane className="transfer-icon" />
                         <div className="banner-text">
                             <h3>Transfer Funds</h3>
-                            <p>Available Balance: ₹{availableBalance.toLocaleString()}</p>
+                            <p>
+                                Available Balance: ₹
+                                {availableBalance
+                                    ? availableBalance.toLocaleString()
+                                    : '0.00'}
+                            </p>
                         </div>
                     </div>
                 </div>
 
-                {/* Form Section */}
                 <form onSubmit={handleTransfer} className="transfer-form">
-                    {/* Receiver Account Input */}
+                    {/* Receiver Account */}
                     <div className="form-group">
                         <label htmlFor="receiverAccount" className="form-label">
                             Receiver Account Number *
@@ -83,7 +117,7 @@ const TransferMoney = () => {
                                 type="text"
                                 id="receiverAccount"
                                 value={receiverAccount}
-                                onChange={(e) => setReceiverAccount(e.target.value)}
+                                onChange={(e) => setReceiverAccount(e.target.value.toUpperCase())}
                                 placeholder="Enter receiver's account number"
                                 className="account-input"
                                 required
@@ -91,7 +125,7 @@ const TransferMoney = () => {
                         </div>
                     </div>
 
-                    {/* Transfer Amount Input */}
+                    {/* Amount */}
                     <div className="form-group">
                         <label htmlFor="transferAmount" className="form-label">
                             Transfer Amount *
@@ -106,14 +140,13 @@ const TransferMoney = () => {
                                 placeholder="Enter amount to transfer"
                                 className="amount-input"
                                 min="1"
-                                max={availableBalance}
                                 step="0.01"
                                 required
                             />
                         </div>
                     </div>
 
-                    {/* Description Input */}
+                    {/* Remarks */}
                     <div className="form-group">
                         <label htmlFor="description" className="form-label">
                             Description / Remarks (Optional)
@@ -128,27 +161,29 @@ const TransferMoney = () => {
                         />
                     </div>
 
-                    {/* Transfer Details Summary */}
+                    {/* Transfer Summary */}
                     <div className="transfer-details">
                         <h4>Transfer Details:</h4>
                         <div className="details-row">
                             <span className="detail-label">From:</span>
-                            <span className="detail-value">{userAccount}</span>
+                            <span className="detail-value">{userAccount || "Loading..."}</span>
                         </div>
                         <div className="details-row">
                             <span className="detail-label">To:</span>
-                            <span className="detail-value">{receiverAccount || 'Not entered'}</span>
+                            <span className="detail-value">{receiverAccount || "Not entered"}</span>
                         </div>
                         <div className="details-row">
                             <span className="detail-label">Amount:</span>
-                            <span className="detail-value">₹{transferAmount ? parseFloat(transferAmount).toLocaleString() : '0.00'}</span>
+                            <span className="detail-value">
+                                ₹{transferAmount ? parseFloat(transferAmount).toLocaleString() : '0.00'}
+                            </span>
                         </div>
                     </div>
 
                     {/* Action Buttons */}
                     <div className="form-actions">
-                        <button type="submit" className="transfer-btn">
-                            Transfer Now
+                        <button type="submit" className="transfer-btn" disabled={loading}>
+                            {loading ? "Processing..." : "Transfer Now"}
                         </button>
                         <button type="button" onClick={handleCancel} className="cancel-btn">
                             Cancel

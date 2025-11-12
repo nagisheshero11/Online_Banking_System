@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -22,7 +23,6 @@ public class Account {
     @JoinColumn(name = "user_id")
     private User user;
 
-    // Link to user by username
     @Column(nullable = false, unique = true, length = 50)
     private String username;
 
@@ -35,17 +35,20 @@ public class Account {
     @Column(nullable = false, length = 30)
     private String lastName;
 
-    @Column(nullable = false)
-    private Double balance;
+    @Column(nullable = false, precision = 19, scale = 2)
+    private BigDecimal balance;
 
     @Column(nullable = false, length = 10)
     private String ifscCode;
 
     @Column(nullable = false, length = 20)
-    private String accountType; // "SAVINGS" or "CURRENT"
+    private String accountType;
 
-    @Column(nullable = false)
-    private Double transactionLimit;
+    @Column(nullable = false, precision = 19, scale = 2)
+    private BigDecimal transactionLimit;
+
+    @Version
+    private Long version;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
