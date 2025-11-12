@@ -101,47 +101,63 @@ const Signup = () => {
 
                     <form onSubmit={onSubmit}>
                         <div className="form-input-group">
-                            <UserIcon />
-                            <input type="text" name="firstName" placeholder="First Name" required className="form-input" onChange={handleChange} />
+                            <div className="input-with-icon">
+                                <UserIcon />
+                                <input type="text" name="firstName" placeholder="First Name" required className="form-input" onChange={handleChange} />
+                            </div>
                         </div>
                         <div className="form-input-group">
-                            <UserIcon />
-                            <input type="text" name="lastName" placeholder="Last Name" required className="form-input" onChange={handleChange} />
+                            <div className="input-with-icon">
+                                <UserIcon />
+                                <input type="text" name="lastName" placeholder="Last Name" required className="form-input" onChange={handleChange} />
+                            </div>
                         </div>
                         <div className="form-input-group">
-                            <UsernameIcon />
-                            <input type="text" name="username" placeholder="Username" required className="form-input" onChange={handleChange} />
+                            <div className="input-with-icon">
+                                <UsernameIcon />
+                                <input type="text" name="username" placeholder="Username" required className="form-input" onChange={handleChange} />
+                            </div>
                         </div>
                         <div className="form-input-group">
-                            <EmailIcon />
-                            <input type="email" name="email" placeholder="Email Address" required className="form-input" onChange={handleChange} />
+                            <div className="input-with-icon">
+                                <EmailIcon />
+                                <input type="email" name="email" placeholder="Email Address" required className="form-input" onChange={handleChange} />
+                            </div>
                         </div>
                         <div className="form-input-group">
-                            <PhoneIcon />
-                            <input type="tel" name="phoneNumber" placeholder="Phone Number" required className="form-input" onChange={handleChange} />
+                            <div className="input-with-icon">
+                                <PhoneIcon />
+                                <input type="tel" name="phoneNumber" placeholder="Phone Number" required className="form-input" onChange={handleChange} />
+                            </div>
                         </div>
                         <div className="form-input-group">
-                            <PanIcon />
-                            <input type="text" name="panNumber" placeholder="PAN Number" required className="form-input" onChange={handleChange} />
+                            <div className="input-with-icon">
+                                <PanIcon />
+                                <input type="text" name="panNumber" placeholder="PAN Number" required className="form-input" onChange={handleChange} />
+                            </div>
                         </div>
                         <div className="form-input-group">
-                            <CardIcon />
-                            <input
-                                type="text"
-                                name="accountNumber"
-                                placeholder="Account Number (e.g., BKSV1234567)"
-                                required
-                                value={formData.accountNumber}
-                                className="form-input"
-                                onChange={handleChange}
-                            />
+                            <div className="input-with-icon">
+                                <CardIcon />
+                                <input
+                                    type="text"
+                                    name="accountNumber"
+                                    placeholder="Account Number (e.g., BKSV1234567)"
+                                    required
+                                    value={formData.accountNumber}
+                                    className="form-input"
+                                    onChange={handleChange}
+                                />
+                            </div>
                             <small className="input-hint">
                                 Must start with <strong>BK</strong>, then <strong>SV</strong> or <strong>CR</strong>, followed by <strong>7 digits</strong>.
                             </small>
                         </div>
                         <div className="form-input-group">
-                            <LockIcon />
-                            <input type="password" name="password" placeholder="Password" required className="form-input" onChange={handleChange} />
+                            <div className="input-with-icon">
+                                <LockIcon />
+                                <input type="password" name="password" placeholder="Password" required className="form-input" onChange={handleChange} />
+                            </div>
                         </div>
 
                         <button type="submit" className="form-button">Create Account</button>
