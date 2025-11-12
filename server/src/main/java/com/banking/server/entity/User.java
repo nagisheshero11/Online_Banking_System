@@ -18,6 +18,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Account account;
+
     @Column(nullable = false, length = 50)
     private String firstName;
 

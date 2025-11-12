@@ -1,7 +1,9 @@
 package com.banking.server.service;
 
 import com.banking.server.dto.*;
+import com.banking.server.entity.Account;
 import com.banking.server.entity.User;
+import com.banking.server.repository.AccountRepository;
 import com.banking.server.repository.UserRepository;
 import com.banking.server.security.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,9 @@ public class AuthService {
     private UserRepository userRepository;
 
     @Autowired
+    private AccountRepository accountRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -27,7 +32,7 @@ public class AuthService {
     private JwtUtils jwtUtils;
 
     /**
-     * ✅ Register new user with uppercase account number
+     * ✅ Register new user and auto-create account
      */
     public void registerUser(SignupRequest request) {
 
@@ -62,11 +67,29 @@ public class AuthService {
                 .phoneNumber(request.getPhoneNumber())
                 .panNumber(request.getPanNumber())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .accountNumber(upperAcc) // ✅ store uppercase version
+                .accountNumber(upperAcc)
                 .role("USER")
                 .build();
 
         userRepository.save(user);
+
+        // ✅ Determine account type and transaction limit
+        String accountType = upperAcc.contains("SV") ? "SAVINGS" : "CURRENT";
+        double transactionLimit = upperAcc.contains("SV") ? 10000.0 : 50000.0;
+
+        // ✅ Create corresponding Account entity
+        Account account = Account.builder()
+                .username(user.getUsername())
+                .accountNumber(user.getAccountNumber())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .balance(200000.0)
+                .ifscCode("BKF14369")
+                .accountType(accountType)
+                .transactionLimit(transactionLimit)
+                .build();
+
+        accountRepository.save(account);
     }
 
     /**
