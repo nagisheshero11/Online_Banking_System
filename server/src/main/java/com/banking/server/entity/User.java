@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -40,14 +39,11 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, length = 10)
-    private String role = "USER";
-
-    // ✅ Auto-generated unique account number like BNKSHS12345678
     @Column(nullable = false, unique = true, length = 20)
     private String accountNumber;
 
-    // ✅ Automatically handled timestamps
+    private String role = "USER";
+
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;

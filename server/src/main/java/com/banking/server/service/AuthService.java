@@ -26,10 +26,34 @@ public class AuthService {
     @Autowired
     private JwtUtils jwtUtils;
 
+    /**
+     * ✅ Register new user with uppercase account number
+     */
     public void registerUser(SignupRequest request) {
-        if (userRepository.existsByEmail(request.getEmail()))
-            throw new RuntimeException("Email already exists");
 
+        // Convert account number to uppercase before validation
+        String upperAcc = request.getAccountNumber().toUpperCase();
+
+        // ✅ Validate pattern
+        if (!upperAcc.matches("^BK(SV|CR)\\d{7}$")) {
+            throw new IllegalArgumentException(
+                    "Invalid account number format! Must start with 'BK', followed by 'SV' or 'CR', and 7 digits (e.g., BKSV1234567)."
+            );
+        }
+
+        // ✅ Check uniqueness
+        if (userRepository.existsByEmail(request.getEmail()))
+            throw new RuntimeException("Email already exists!");
+        if (userRepository.existsByUsername(request.getUsername()))
+            throw new RuntimeException("Username already exists!");
+        if (userRepository.existsByPhoneNumber(request.getPhoneNumber()))
+            throw new RuntimeException("Phone number already registered!");
+        if (userRepository.existsByPanNumber(request.getPanNumber()))
+            throw new RuntimeException("PAN number already registered!");
+        if (userRepository.existsByAccountNumber(upperAcc))
+            throw new RuntimeException("Account number already exists!");
+
+        // ✅ Create and save user
         User user = User.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
@@ -38,20 +62,26 @@ public class AuthService {
                 .phoneNumber(request.getPhoneNumber())
                 .panNumber(request.getPanNumber())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .accountNumber(upperAcc) // ✅ store uppercase version
                 .role("USER")
                 .build();
 
         userRepository.save(user);
     }
 
+    /**
+     * ✅ Login user and generate JWT
+     */
     public JwtResponse login(LoginRequest request) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmailOrUsername(), request.getPassword())
         );
 
         String token = jwtUtils.generateToken(request.getEmailOrUsername());
+
         User user = userRepository.findByEmail(request.getEmailOrUsername())
-                .orElse(userRepository.findByUsername(request.getEmailOrUsername()).orElseThrow());
+                .orElse(userRepository.findByUsername(request.getEmailOrUsername())
+                        .orElseThrow(() -> new RuntimeException("User not found!")));
 
         return JwtResponse.builder()
                 .token(token)
