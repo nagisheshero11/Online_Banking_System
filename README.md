@@ -22,7 +22,6 @@ This project simulates core online banking operations — from creating an accou
 12. [Testing Guide](#-testing-guide)
 13. [Future Enhancements](#-future-enhancements)
 14. [Contributors](#-contributors)
-15. [License](#-license)
 
 ---
 
