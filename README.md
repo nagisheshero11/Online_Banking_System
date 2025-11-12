@@ -1,8 +1,3 @@
-Perfect — here’s a **fully professional, detailed, and clean `README.md`** for your BANKIFY project.
-It’s written in a real-world documentation style (as seen in production GitHub repositories).
-
----
-
 # 🏦 BANKIFY — Online Banking System
 
 **BANKIFY** is a full-stack online banking web application built using **React (frontend)** and **Spring Boot (backend)**, featuring secure user authentication, account management, money transfers, and transaction history tracking.
@@ -379,22 +374,11 @@ Frontend runs on:
 
 ## 👥 Contributors
 
-**Project Lead:**
+** Teammate Developers (Backend & Frontend) **
 
-* Hemanth Sai
+* M. Sravan Kumar
+* P. Hemanth Sai
+* Y. Saran Kumar
 
-**Team Members:**
 
-* Teammate Developers (Backend & Frontend)
 
----
-
-## 🪪 License
-
-This project is licensed under the **MIT License**.
-You are free to use, modify, and distribute with attribution.
-
----
-
-Would you like me to format this README with **GitHub-flavored markdown formatting enhancements** (collapsible API sections and syntax-highlighted examples)?
-That makes it even more professional when displayed on your GitHub repository page.
