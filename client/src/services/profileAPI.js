@@ -79,3 +79,29 @@ export async function updateUserProfile(updatedData) {
         throw error;
     }
 }
+
+
+
+export async function getUserProfile() {
+    const token = getToken();
+    if (!token) throw new Error("No token found");
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/profile`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch profile");
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Profile fetch error:", error);
+        throw error;
+    }
+}
