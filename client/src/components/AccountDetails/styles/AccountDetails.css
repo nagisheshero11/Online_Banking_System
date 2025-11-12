@@ -31,7 +31,6 @@
     padding: 25px;
     border-radius: 12px;
     border: 1px solid #E0E0E0;
-    /* Subtle border for light theme */
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
     margin-bottom: 20px;
 }
@@ -43,9 +42,8 @@
     margin-bottom: 16px;
 }
 
-/* --- Account Summary Card Styling (The Blue Card) --- */
+/* --- Account Summary Card Styling --- */
 .account-summary-card {
-    /* Match Dashboard balance gradient card */
     background: linear-gradient(135deg, #F3E7B3 0%, #D9B86A 100%);
     color: #0D0D0D;
     padding: 30px;
@@ -119,7 +117,6 @@
     text-align: right;
 }
 
-/* Chevron on balance card */
 .balance-chevron {
     position: absolute;
     right: 16px;
@@ -135,16 +132,13 @@
     line-height: 1.2;
 }
 
-/* --- Account Information Details Grid Styling --- */
-
-/* Grid container for the 2x2 layout */
+/* --- Account Information Details Grid --- */
 .info-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
 }
 
-/* Individual detail item */
 .info-item {
     display: flex;
     align-items: center;
@@ -159,7 +153,6 @@
     transform: translateY(-1px);
 }
 
-/* Text area for label and value */
 .info-text {
     margin-left: 12px;
 }
@@ -177,13 +170,12 @@
     margin: 0;
 }
 
-/* Special styling for the balance value to match the green text in the design */
+/* Special balance highlight */
 .balance-value {
     color: #D4AF37;
 }
 
-/* --- Icon Badge Styling --- */
-
+/* Icon Badge Styling */
 .info-icon-badge {
     width: 40px;
     height: 40px;
@@ -195,28 +187,23 @@
     color: #FFFFFF;
 }
 
-/* Color definitions based on the design */
 .info-icon-badge.blue {
     background-color: #1A1A1A;
-    /* Neutral illustrative */
 }
 
 .info-icon-badge.green {
     background-color: #00C896;
-    /* Success */
 }
 
 .info-icon-badge.purple {
     background-color: #1A1A1A;
-    /* Neutral */
 }
 
 .info-icon-badge.orange {
     background-color: #1A1A1A;
-    /* Neutral */
 }
 
-/* --- Recent Activity (transactions) --- */
+/* --- Recent Activity --- */
 .transactions-list {
     display: grid;
 }
@@ -327,4 +314,78 @@
     text-align: center;
     color: #595959;
     padding: 16px;
+}
+
+/* === Editable Transaction Limit Section === */
+.editable-limit {
+    position: relative;
+}
+
+.limit-display {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.edit-limit-btn {
+    background: none;
+    border: none;
+    color: #D4AF37;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 4px;
+    transition: color 0.2s ease;
+}
+
+.edit-limit-btn:hover {
+    color: #C0A062;
+}
+
+.limit-edit-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.limit-edit-row input {
+    padding: 6px 10px;
+    border: 1.5px solid #E0E0E0;
+    border-radius: 8px;
+    font-size: 0.95em;
+    width: 120px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.limit-edit-row input:focus {
+    border-color: #D4AF37;
+    box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
+}
+
+.save-limit-btn {
+    background: #D4AF37;
+    border: none;
+    color: #0D0D0D;
+    border-radius: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
+    transition: background 0.3s;
+    font-weight: 600;
+}
+
+.save-limit-btn:hover {
+    background: #C0A062;
+}
+
+.success-msg {
+    color: #00C896;
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+.error-msg {
+    color: #E63946;
+    font-weight: 600;
+    margin-top: 10px;
 }
