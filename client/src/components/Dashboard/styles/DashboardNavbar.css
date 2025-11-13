@@ -38,6 +38,15 @@
     font-weight: 800;
 }
 
+/* New image-based brand logo */
+.brand-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    object-fit: cover;
+    display: inline-block;
+}
+
 .brand-text {
     font-weight: 800;
     color: #0D0D0D;
