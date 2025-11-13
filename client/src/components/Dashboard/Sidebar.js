@@ -34,8 +34,7 @@ const Sidebar = () => {
     <nav className="sidebar" aria-label="Sidebar">
       <div className="sidebar-section">
 
-        {/* Dashboard Main Section */}
-        <NavItem icon={FaTachometerAlt} label="Dashboard" to="/dashboard" />
+        {/* Dashboard Main Section (Dashboard removed) */}
 
         {/* Account and Transactions */}
         <NavItem icon={FaUser} label="Account Details" to="/dashboard/account-details" />

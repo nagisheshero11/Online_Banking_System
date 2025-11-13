@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 // Import all components
 import LandingPage from './components/LandingPage';
 import DashboardPage from './components/Dashboard';
-import DashboardIndex from './components/Dashboard/DashboardIndexRoute';
+// Dashboard overview removed; default route will redirect to account details
 import LoginOverlayPage from './components/Auth/LoginOverlayPage';
 import SignupOverlayPage from './components/Auth/SignupOverlayPage';
 import AccountDetails from './components/AccountDetails/AccountDetails';
@@ -30,8 +30,8 @@ function App() {
 
           {/* Dashboard routes (with nested child pages) */}
           <Route path="/dashboard" element={<DashboardPage />}>
-            {/* Default dashboard overview */}
-            <Route index element={<DashboardIndex />} />
+            {/* Default dashboard overview removed -> redirect to account details */}
+            <Route index element={<Navigate to="account-details" replace />} />
 
             {/* Nested dashboard pages */}
             <Route path="pay-bills" element={<PayBills />} />
