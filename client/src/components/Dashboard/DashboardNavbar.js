@@ -49,7 +49,12 @@ const DashboardNavbar = () => {
             {/* Left Section */}
             <div className="nav-left">
                 <div className="brand">
-                    <div className="brand-logo-mini">B</div>
+                    {/* use image placed in client/public as /logo-money.png */}
+                    <img
+                        src="/logo-money.png"
+                        alt="Logo"
+                        className="brand-logo"
+                    />
                     <div className="brand-text">BANKIFY</div>
                 </div>
             </div>
