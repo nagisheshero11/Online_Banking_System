@@ -16,8 +16,7 @@ public class BillController {
     private BillService billService;
 
     /**
-     * Admin-only (Postman) create bill
-     * Not protected so you can add manually from Postman
+     * ADMIN → Create a bill for a specific user through POSTMAN
      */
     @PostMapping("/create")
     public Bill createBill(@RequestBody Bill bill) {
@@ -25,21 +24,21 @@ public class BillController {
     }
 
     /**
-     * 🔐 Get logged-in user's bills
+     * USER → Fetch logged-in user's bills
      */
     @GetMapping("/my")
-    public List<Bill> getMyBills(Authentication auth) {
-        String username = auth.getName();  // from JWT token
+    public List<Bill> getMyBills(Authentication authentication) {
+        String username = authentication.getName();
         return billService.getBillsForUser(username);
     }
 
     /**
-     * 🔐 Pay (delete) logged-in user's bill
+     * USER → Pay a specific bill
      */
-    @DeleteMapping("/{id}")
-    public String payMyBill(@PathVariable Long id, Authentication auth) {
-        String username = auth.getName();
-        billService.payUserBill(id, username);
-        return "Bill paid & removed successfully";
+    @PostMapping("/pay/{billId}")
+    public String payBill(@PathVariable Long billId, Authentication authentication) {
+        String username = authentication.getName();
+        billService.payBill(billId, username);
+        return "Bill paid successfully";
     }
 }

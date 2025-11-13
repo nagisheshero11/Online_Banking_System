@@ -1,188 +1,80 @@
-// client/src/components/PayBills/PayBills.js
+import React, { useEffect, useState } from "react";
+import { fetchMyBills, payBill } from "../../services/billsAPI";
+import { FaExclamationCircle } from "react-icons/fa";
+import "./styles/PayBills.css";
 
-import React, { useState } from 'react';
-import { FaBolt, FaWifi, FaFire, FaMobileAlt, FaRupeeSign, FaExclamationCircle } from 'react-icons/fa';
-import './styles/PayBills.css';
-
-// Helper function for currency formatting (using INR)
 const currency = (n) =>
-    n.toLocaleString('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 2 });
+    n.toLocaleString("en-IN", { style: "currency", currency: "INR" });
 
-// Data for the Bill Type Selector, now including a specific 'color' for each
-const billTypes = [
-    { id: 'electricity', label: 'Electricity Bill', icon: FaBolt, color: '#ffc107' }, // Yellow/Amber
-    { id: 'internet', label: 'Internet Bill', icon: FaWifi, color: '#00d4ff' },       // Cyan/Blue
-    { id: 'gas', label: 'Gas Bill', icon: FaFire, color: '#fd7e14' },              // Orange
-    { id: 'mobile', label: 'Mobile Recharge', icon: FaMobileAlt, color: '#28a745' }, // Green
-];
+const PayBills = () => {
+    const [bills, setBills] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
 
-const PayBills = ({ currentBalance = 45750.50 }) => {
-    const [selectedBill, setSelectedBill] = useState(null);
-    const [formData, setFormData] = useState({
-        accountNumber: '',
-        billAmount: ''
-    });
-    const [showValidationMessage, setShowValidationMessage] = useState(false);
+    useEffect(() => {
+        loadBills();
+    }, []);
 
-    // Find the full object of the currently selected bill
-    const activeBill = billTypes.find(b => b.id === selectedBill);
-
-    const handleBillSelect = (id) => {
-        setSelectedBill(id);
-        setFormData({ accountNumber: '', billAmount: '' });
-        setShowValidationMessage(false);
-    };
-
-    const handleFormChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-        setShowValidationMessage(false);
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // Client-side validation
-        if (!formData.accountNumber.trim() || !formData.billAmount.trim() || !activeBill) {
-            setShowValidationMessage(true);
-            return;
+    const loadBills = async () => {
+        setLoading(true);
+        try {
+            const data = await fetchMyBills();
+            setBills(data);
+        } catch (err) {
+            setError("Unable to fetch bills");
         }
-        setShowValidationMessage(false);
-        console.log('Paying bill:', activeBill.label, formData);
-        alert(`Attempting to pay ${currency(parseFloat(formData.billAmount))} for ${activeBill.label}`);
-        // In a real app, you would submit data to the backend here
+        setLoading(false);
+    };
+
+    const handlePay = async (id) => {
+        try {
+            await payBill(id);
+            alert("Bill paid successfully!");
+            loadBills();
+        } catch (err) {
+            alert("Payment failed");
+        }
     };
 
     return (
         <div className="pay-bills-page">
 
-            {/* Page Header (WITH NEW WRAPPER FOR CENTERING) */}
             <div className="page-header-wrapper">
                 <div className="page-header">
-                    {/* <h1 className="header-title">Pay Bills</h1> */}
-                    <p className="header-subtitle">Pay your utility bills quickly and securely</p>
+                    <p className="header-subtitle">Manage and pay your pending bills</p>
                 </div>
             </div>
 
-            {/* 1. Bill Type Selector Card (WITH WRAPPER FOR CENTERING) */}
+            {loading && <p>Loading bills...</p>}
+            {error && <p className="validation-message"><FaExclamationCircle /> {error}</p>}
+
             <div className="bill-selector-container">
                 <div className="bill-selector-card card">
-                    <h3 className="selector-title">Select Bill Type</h3>
-                    <div className="bill-type-grid">
-                        {billTypes.map(bill => (
-                            <div
-                                key={bill.id}
-                                className={`bill-type-tile ${selectedBill === bill.id ? 'active' : ''}`}
-                                onClick={() => handleBillSelect(bill.id)}
-                                // DYNAMIC BORDER COLOR for active state
-                                style={selectedBill === bill.id ? { borderColor: bill.color } : {}}
+                    <h3 className="selector-title">Your Pending Bills</h3>
+
+                    {bills.length === 0 && (
+                        <p style={{ textAlign: "center", padding: "20px" }}>
+                            🎉 You have no pending bills!
+                        </p>
+                    )}
+
+                    {bills.length > 0 && bills.map((bill) => (
+                        <div key={bill.id} className="bill-type-tile" style={{ marginBottom: "20px" }}>
+                            <span className="tile-label">{bill.billType}</span>
+                            <span className="summary-value">{currency(bill.amount)}</span>
+
+                            <button
+                                className="btn-pay"
+                                style={{ marginTop: "10px", width: "100%" }}
+                                onClick={() => handlePay(bill.id)}
                             >
-                                <span className="tile-icon-wrap" style={{ backgroundColor: bill.color }}>
-                                    <bill.icon className="tile-icon" />
-                                </span>
-                                <span className="tile-label">{bill.label}</span>
-                            </div>
-                        ))}
-                    </div>
+                                Pay Now
+                            </button>
+                        </div>
+                    ))}
                 </div>
             </div>
 
-            {/* 2. Payment Form Card (CONDITIONAL RENDERING) */}
-            {activeBill && (
-                <div className="payment-form-card card">
-                    {/* Dynamic Header Banner */}
-                    <div
-                        className="form-header-banner"
-                    >
-                        <activeBill.icon />
-                        <span className="bill-name">{activeBill.label}</span>
-                        <span className="balance-info">Available Balance: {currency(currentBalance)}</span>
-                    </div>
-
-                    <form className="bill-payment-form" onSubmit={handleSubmit}>
-
-                        {/* Validation Message (Conditional) */}
-                        {showValidationMessage && (
-                            <div className="validation-message">
-                                <FaExclamationCircle className="validation-icon" />
-                                <span>Please fill in all required fields</span>
-                            </div>
-                        )}
-
-                        {/* Account / Consumer Number Input */}
-                        <label htmlFor="accountNumber" className="form-label">Account / Consumer Number *</label>
-                        <div className="input-group">
-                            <input
-                                type="text"
-                                id="accountNumber"
-                                name="accountNumber"
-                                className="form-input"
-                                value={formData.accountNumber}
-                                onChange={handleFormChange}
-                                placeholder="Enter your account/consumer number"
-                                required
-                            />
-                        </div>
-
-                        {/* Bill Amount Input */}
-                        <label htmlFor="billAmount" className="form-label">Bill Amount *</label>
-                        <div className="input-group">
-                            <span className="input-icon"><FaRupeeSign /></span>
-                            <input
-                                type="number"
-                                id="billAmount"
-                                name="billAmount"
-                                className="form-input"
-                                value={formData.billAmount}
-                                onChange={handleFormChange}
-                                placeholder="Enter bill amount"
-                                required
-                            />
-                        </div>
-
-                        {/* Payment Summary */}
-                        <div
-                            className="payment-summary"
-                        >
-                            <h4
-                                className="summary-title-text"
-                            >
-                                Payment Summary
-                            </h4>
-                            <p className="summary-line">
-                                <span className="summary-label">Bill Type:</span>
-                                <span className="summary-value">{activeBill.label}</span>
-                            </p>
-                            <p className="summary-line">
-                                <span className="summary-label">Account:</span>
-                                <span className="summary-value">{formData.accountNumber || 'Not entered'}</span>
-                            </p>
-                            <p className="summary-line">
-                                <span className="summary-label">Amount:</span>
-                                <span className="summary-value">
-                                    {formData.billAmount ? currency(parseFloat(formData.billAmount)) : '₹0.00'}
-                                </span>
-                            </p>
-                        </div>
-
-                        {/* Action Buttons */}
-                        <div className="form-actions">
-                            <button
-                                type="submit"
-                                className="btn-pay"
-                                disabled={!formData.accountNumber.trim() || !formData.billAmount.trim()}
-                            >
-                                Pay Bill
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => handleBillSelect(null)}
-                                className="btn-cancel"
-                            >
-                                Cancel
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            )}
         </div>
     );
 };
