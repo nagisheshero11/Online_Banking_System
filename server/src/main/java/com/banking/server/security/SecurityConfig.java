@@ -39,6 +39,8 @@ public class SecurityConfig {
 
                         // Public endpoints
                         .requestMatchers("/api/user/signup", "/api/user/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/bills/create").permitAll()
+                        .requestMatchers("/api/bills/**").authenticated()
 
                         // Everything else requires authentication
                         .anyRequest().authenticated()
