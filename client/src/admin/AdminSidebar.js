@@ -5,7 +5,6 @@ import "./styles/AdminSidebar.css";
 const AdminSidebar = () => {
     return (
         <div className="admin-sidebar">
-            <h2 className="admin-logo">BANKIFY Admin</h2>
 
             <nav className="admin-nav">
                 <NavLink to="/admin" end>Dashboard</NavLink>
@@ -18,9 +17,7 @@ const AdminSidebar = () => {
                 <NavLink to="/admin/history/loans">Loans History</NavLink>
             </nav>
 
-            <div className="admin-footer">
-                <NavLink to="/logout">Logout</NavLink>
-            </div>
+            {/* Logout moved to Admin Header navbar */}
         </div>
     );
 };

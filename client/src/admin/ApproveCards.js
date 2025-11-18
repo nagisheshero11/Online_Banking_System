@@ -9,8 +9,6 @@ const mockCards = [
 const ApproveCards = () => {
     return (
         <div className="approve-cards">
-            <h1>Approve Applied Cards</h1>
-
             {mockCards.map((c) => (
                 <div className="card-req-box" key={c.id}>
                     <div className="left">

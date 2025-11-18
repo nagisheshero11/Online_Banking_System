@@ -9,8 +9,6 @@ const mockLoans = [
 const ApproveLoans = () => {
     return (
         <div className="approve-loans">
-            <h1>Approve Loan Applications</h1>
-
             {mockLoans.map((loan) => (
                 <div className="loan-req-box" key={loan.id}>
                     <div>

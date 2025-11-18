@@ -1,16 +1,22 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import AdminSidebar from "./AdminSidebar";
+import AdminHeader from "./AdminHeader";
+import AdminNavbar from "./AdminNavbar";
 import "./styles/AdminLayout.css";
 
 const AdminLayout = () => {
     return (
-        <div className="admin-layout">
-            <AdminSidebar />
-            <div className="admin-content">
-                <Outlet />
+        <>
+            <AdminNavbar />
+            <div className="admin-layout">
+                <AdminSidebar />
+                <div className="admin-content">
+                    <AdminHeader />
+                    <Outlet />
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 

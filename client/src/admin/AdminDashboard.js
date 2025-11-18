@@ -10,8 +10,6 @@ const AdminDashboard = () => {
 
     return (
         <div className="admin-dashboard">
-            <h1>Admin Dashboard</h1>
-
             <div className="admin-summary-boxes">
 
                 <div className="summary-box yellow">

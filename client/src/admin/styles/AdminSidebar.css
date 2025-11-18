@@ -7,13 +7,7 @@
     flex-direction: column;
 }
 
-.admin-logo {
-    font-size: 20px;
-    font-weight: 800;
-    color: #0D0D0D;
-    padding: 20px 16px;
-    border-bottom: 1px solid #E0E0E0;
-}
+/* Brand removed from sidebar; brand lives in top navbar */
 
 .admin-nav a {
     display: block;

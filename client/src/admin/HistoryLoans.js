@@ -9,8 +9,6 @@ const historyLoans = [
 const HistoryLoans = () => {
     return (
         <div className="history-loans">
-            <h1>Loans History</h1>
-
             <table>
                 <thead>
                     <tr>

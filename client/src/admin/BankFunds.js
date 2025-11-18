@@ -8,8 +8,6 @@ const BankFunds = () => {
 
     return (
         <div className="bank-funds">
-            <h1>Bank Funds Overview</h1>
-
             <div className="fund-box">
                 <h2>Total Funds</h2>
                 <p>₹{funds.toLocaleString()}</p>

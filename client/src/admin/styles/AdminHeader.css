@@ -1,0 +1,96 @@
+.admin-navbar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 24px;
+    background: #FFFFFF;
+    border-bottom: 1px solid #E0E0E0;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 800;
+    color: #0D0D0D;
+    letter-spacing: 0.3px;
+}
+
+.brand-logo-mini {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: #1A1A1A;
+    color: #FFFFFF;
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+}
+
+.brand-text {
+    font-weight: 800;
+    color: #0D0D0D;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    line-height: 1.1;
+}
+
+.user-name-strong {
+    font-weight: 700;
+    color: #0D0D0D;
+}
+
+.user-sub {
+    color: #595959;
+    font-size: 12px;
+}
+
+.logout-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 34px;
+    padding: 0 10px;
+    border-radius: 8px;
+    border: 1px solid #D4AF37;
+    color: #0D0D0D;
+    background: #D4AF37;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.logout-btn:hover {
+    background: #C0A062;
+}
+
+.admin-header {
+    margin-bottom: 12px;
+    text-align: left;
+}
+
+.admin-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: #0D0D0D;
+    margin: 0;
+}

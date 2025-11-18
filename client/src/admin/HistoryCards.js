@@ -9,8 +9,6 @@ const historyCards = [
 const HistoryCards = () => {
     return (
         <div className="history-cards">
-            <h1>Cards History</h1>
-
             <table>
                 <thead>
                     <tr>

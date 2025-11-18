@@ -8,4 +8,6 @@
     flex: 1;
     padding: 24px;
     overflow-y: auto;
+    text-align: left;
+    /* Override global .App { text-align: center } */
 }
