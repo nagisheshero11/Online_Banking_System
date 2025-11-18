@@ -1,0 +1,49 @@
+.approve-cards {
+    padding: 20px;
+}
+
+.approve-cards h1 {
+    font-size: 28px;
+    margin-bottom: 25px;
+}
+
+.card-req-box {
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition: 0.2s ease;
+}
+
+.card-req-box:hover {
+    transform: translateY(-2px);
+}
+
+.card-req-box .left h3 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.card-req-box .left p {
+    margin: 4px 0;
+    color: #444;
+}
+
+.approve-btn {
+    padding: 10px 20px;
+    background: #27ae60;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    color: white;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.approve-btn:hover {
+    background: #1d8a4d;
+}

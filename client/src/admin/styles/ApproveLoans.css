@@ -1,0 +1,48 @@
+.approve-loans {
+    padding: 20px;
+}
+
+.approve-loans h1 {
+    font-size: 28px;
+    margin-bottom: 25px;
+}
+
+.loan-req-box {
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.loan-req-box h3 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.loan-req-box p {
+    margin: 6px 0;
+    color: #444;
+}
+
+.loan-req-box small {
+    color: #777;
+}
+
+.approve-btn {
+    padding: 10px 20px;
+    background: #2f80ed;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    color: white;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.approve-btn:hover {
+    background: #1f5db8;
+}

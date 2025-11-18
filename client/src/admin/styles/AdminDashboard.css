@@ -1,0 +1,34 @@
+.admin-dashboard h1 {
+    font-size: 28px;
+    margin-bottom: 25px;
+}
+
+.admin-summary-boxes {
+    display: flex;
+    gap: 20px;
+}
+
+.summary-box {
+    flex: 1;
+    padding: 20px;
+    border-radius: 16px;
+    color: #fff;
+}
+
+.yellow {
+    background: #f5c542;
+}
+
+.blue {
+    background: #2f80ed;
+}
+
+.green {
+    background: #27ae60;
+}
+
+.summary-box p {
+    font-size: 30px;
+    margin-top: 10px;
+    font-weight: bold;
+}
