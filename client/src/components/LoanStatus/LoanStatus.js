@@ -1,35 +1,51 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./styles/LoanStatus.css";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import { getMyLoans } from "../../services/loanAPI";
 
 const LoanStatus = () => {
+  const [loans, setLoans] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  /* ------------------- Fetch Loan Data from Backend ------------------- */
+  useEffect(() => {
+    const fetchLoans = async () => {
+      try {
+        const data = await getMyLoans();
+        setLoans(data);
+      } catch (err) {
+        console.error("Loan Fetch Error:", err);
+        setError("Failed to load loan data");
+      }
+      setLoading(false);
+    };
+
+    fetchLoans();
+  }, []);
+
+  /* ------------------- Summary Calculations ------------------- */
+  const approvedLoans = loans.filter((l) => l.status === "APPROVED");
+  const pendingLoans = loans.filter((l) => l.status === "PENDING");
+
+  const totalApprovedAmount = approvedLoans
+    .reduce((sum, l) => sum + Number(l.loanAmount), 0)
+    .toLocaleString("en-IN", { maximumFractionDigits: 0 });
+
   const loanStats = {
-    approved: 1,
-    pending: 1,
-    total: 2,
-    approvedAmount: "₹2,00,000",
+    approved: approvedLoans.length,
+    pending: pendingLoans.length,
+    total: loans.length,
+    approvedAmount: `₹${totalApprovedAmount}`,
   };
 
-  const loanApplications = [
-    {
-      id: "LOAN001",
-      amount: "₹2,00,000",
-      tenure: "24 months",
-      purpose: "Home Renovation",
-      date: "2025-06-01",
-      rate: "8.5% p.a.",
-      status: "Approved",
-    },
-    {
-      id: "LOAN002",
-      amount: "₹50,000",
-      tenure: "12 months",
-      purpose: "Personal",
-      date: "2025-07-10",
-      rate: "10.5% p.a.",
-      status: "Pending",
-    },
-  ];
+  if (loading) {
+    return <div className="loan-status-container">Loading loan data...</div>;
+  }
+
+  if (error) {
+    return <div className="loan-status-container error">{error}</div>;
+  }
 
   return (
     <div className="loan-status-container">
@@ -50,11 +66,13 @@ const LoanStatus = () => {
           <h2>{loanStats.approved}</h2>
           <span>Total: {loanStats.approvedAmount}</span>
         </div>
+
         <div className="summary-card pending">
           <p>Pending Loans</p>
           <h2>{loanStats.pending}</h2>
           <span>Under review</span>
         </div>
+
         <div className="summary-card total">
           <p>Total Applications</p>
           <h2>{loanStats.total}</h2>
@@ -65,43 +83,50 @@ const LoanStatus = () => {
       {/* Loan Applications Table */}
       <div className="loan-applications">
         <h3>Your Loan Applications</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Loan ID</th>
-              <th>Amount</th>
-              <th>Tenure</th>
-              <th>Purpose</th>
-              <th>Applied Date</th>
-              <th>Interest Rate</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loanApplications.map((loan) => (
-              <tr key={loan.id}>
-                <td>{loan.id}</td>
-                <td>{loan.amount}</td>
-                <td>{loan.tenure}</td>
-                <td>{loan.purpose}</td>
-                <td>{loan.date}</td>
-                <td>{loan.rate}</td>
-                <td>
-                  <span
-                    className={`status-badge ${loan.status === "Approved"
-                      ? "approved"
-                      : loan.status === "Pending"
-                        ? "pending"
-                        : "rejected"
-                      }`}
-                  >
-                    {loan.status}
-                  </span>
-                </td>
+
+        {loans.length === 0 ? (
+          <p>No loan applications found.</p>
+        ) : (
+          <table>
+            <thead>
+              <tr>
+                <th>Loan ID</th>
+                <th>Amount</th>
+                <th>Tenure</th>
+                <th>Type</th>
+                <th>Applied Date</th>
+                <th>Interest Rate</th>
+                <th>Status</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+
+            <tbody>
+              {loans.map((loan) => (
+                <tr key={loan.id}>
+                  <td>{loan.id}</td>
+                  <td>₹{Number(loan.loanAmount).toLocaleString("en-IN")}</td>
+                  <td>{loan.tenureMonths} months</td>
+                  <td>{loan.loanType}</td>
+                  <td>{loan.createdAt?.slice(0, 10)}</td>
+                  <td>{loan.interestRate}% p.a.</td>
+
+                  <td>
+                    <span
+                      className={`status-badge ${loan.status === "APPROVED"
+                        ? "approved"
+                        : loan.status === "PENDING"
+                          ? "pending"
+                          : "rejected"
+                        }`}
+                    >
+                      {loan.status}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
 
       {/* Status Guide */}
@@ -114,7 +139,7 @@ const LoanStatus = () => {
           </div>
           <div className="guide-card approved">
             <strong>Approved</strong>
-            <p>Loan has been approved</p>
+            <p>Your loan has been approved</p>
           </div>
           <div className="guide-card rejected">
             <strong>Rejected</strong>
