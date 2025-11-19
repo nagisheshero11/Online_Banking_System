@@ -107,7 +107,7 @@ public class AuthService {
      */
     public JwtResponse login(LoginRequest request) {
 
-        // Authenticate
+        // Authenticate user
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmailOrUsername(),
@@ -115,19 +115,19 @@ public class AuthService {
                 )
         );
 
-        // Create JWT token
-        String token = jwtUtils.generateToken(request.getEmailOrUsername());
-
-        // Fetch user by email or username
+        // Fetch user
         User user = userRepository.findByEmail(request.getEmailOrUsername())
                 .orElse(userRepository.findByUsername(request.getEmailOrUsername())
                         .orElseThrow(() -> new RuntimeException("User not found!")));
+
+        // Generate JWT with role
+        String token = jwtUtils.generateToken(user.getUsername(), user.getRole());
 
         return JwtResponse.builder()
                 .token(token)
                 .username(user.getUsername())
                 .email(user.getEmail())
-                .role(user.getRole()) // always uppercase (USER / ADMIN / SUPER_ADMIN)
+                .role(user.getRole())
                 .build();
     }
 }
