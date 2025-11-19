@@ -33,37 +33,43 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
-        final String username;
 
-        // Check Bearer
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
         jwt = authHeader.substring(7);
-        username = jwtUtils.extractUsername(jwt);
-        String role = jwtUtils.extractRole(jwt); // extract role
 
-        // Authenticate
+        // Extract username safely
+        String username;
+        try {
+            username = jwtUtils.extractUsername(jwt);
+        } catch (Exception ex) {
+            // invalid token parsing
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        // If not authenticated in context yet
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-            if (jwtUtils.validateToken(jwt)) {
-
+            // Use new validateToken(jwt, userDetails)
+            if (jwtUtils.validateToken(jwt, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(
                                 userDetails,
                                 null,
-                                userDetails.getAuthorities() // authorities from UserDetails
+                                userDetails.getAuthorities()
                         );
 
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-                // Set auth
                 SecurityContextHolder.getContext().setAuthentication(authToken);
-                request.setAttribute("role", role); // attach role to request
+
+                // attach role claim for convenience (optional)
+                String role = jwtUtils.extractRole(jwt);
+                if (role != null) request.setAttribute("role", role);
             }
         }
 

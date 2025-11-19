@@ -35,22 +35,16 @@ public class AuthService {
     private JwtUtils jwtUtils;
 
     /**
-     * ✅ Register new user and auto-create linked account
-     * Default role = USER
+     * Register new user
      */
     public void registerUser(SignupRequest request) {
 
-        // Convert to uppercase before validation
         String upperAcc = request.getAccountNumber().toUpperCase();
 
-        // Validate pattern
         if (!upperAcc.matches("^BK(SV|CR)\\d{7}$")) {
-            throw new IllegalArgumentException(
-                    "Invalid account number format! Must start with 'BK', followed by 'SV' or 'CR', and 7 digits (e.g., BKSV1234567)."
-            );
+            throw new IllegalArgumentException("Invalid account number format!");
         }
 
-        // Uniqueness checks
         if (userRepository.existsByEmail(request.getEmail()))
             throw new RuntimeException("Email already exists!");
 
@@ -66,7 +60,6 @@ public class AuthService {
         if (userRepository.existsByAccountNumber(upperAcc))
             throw new RuntimeException("Account number already exists!");
 
-        // Create user (default role USER)
         User user = User.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
@@ -76,24 +69,22 @@ public class AuthService {
                 .panNumber(request.getPanNumber())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .accountNumber(upperAcc)
-                .role("USER") // always uppercase
+                .role("USER")
                 .build();
 
         userRepository.save(user);
 
-        // Determine account type + transaction limit
         String accountType = upperAcc.contains("SV") ? "SAVINGS" : "CURRENT";
         BigDecimal transactionLimit = upperAcc.contains("SV")
-                ? BigDecimal.valueOf(10000.00)
-                : BigDecimal.valueOf(50000.00);
+                ? BigDecimal.valueOf(10000)
+                : BigDecimal.valueOf(50000);
 
-        // Create Account entity
         Account account = Account.builder()
                 .username(user.getUsername())
                 .accountNumber(user.getAccountNumber())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
-                .balance(BigDecimal.valueOf(200000.00))
+                .balance(BigDecimal.valueOf(200000))
                 .ifscCode("BKF14369")
                 .accountType(accountType)
                 .transactionLimit(transactionLimit)
@@ -103,11 +94,10 @@ public class AuthService {
     }
 
     /**
-     * ✅ Login a user/admin/super-admin and generate JWT
+     * Login + Generate JWT
      */
     public JwtResponse login(LoginRequest request) {
 
-        // Authenticate user
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmailOrUsername(),
@@ -115,19 +105,21 @@ public class AuthService {
                 )
         );
 
-        // Fetch user
         User user = userRepository.findByEmail(request.getEmailOrUsername())
                 .orElse(userRepository.findByUsername(request.getEmailOrUsername())
                         .orElseThrow(() -> new RuntimeException("User not found!")));
 
-        // Generate JWT with role
-        String token = jwtUtils.generateToken(user.getUsername(), user.getRole());
+        // 🔥 FIX: Add ROLE_ prefix for Spring Security compatibility
+        String roleWithPrefix = "ROLE_" + user.getRole();
+
+        // Generate JWT
+        String token = jwtUtils.generateToken(user.getUsername(), roleWithPrefix);
 
         return JwtResponse.builder()
                 .token(token)
                 .username(user.getUsername())
                 .email(user.getEmail())
-                .role(user.getRole())
+                .role(roleWithPrefix)   // send ROLE_USER or ROLE_ADMIN
                 .build();
     }
 }
