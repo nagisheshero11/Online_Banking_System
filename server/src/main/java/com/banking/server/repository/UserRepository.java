@@ -24,4 +24,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByPanNumber(String panNumber);
 
     boolean existsByAccountNumber(String accountNumber);
+
+    // NEW: Role-Based Queries
+    Optional<User> findByRole(String role);
+
+    boolean existsByRole(String role);
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -45,7 +46,14 @@ public class User {
     @Column(nullable = false, unique = true, length = 20)
     private String accountNumber;
 
+    // Role must be stored in UPPERCASE (USER / ADMIN / SUPER_ADMIN)
+    @Column(nullable = false, length = 20)
     private String role = "USER";
+
+    // Ensure role is always uppercase
+    public void setRole(String role) {
+        this.role = (role != null) ? role.toUpperCase() : "USER";
+    }
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)

@@ -6,6 +6,7 @@ import com.banking.server.entity.User;
 import com.banking.server.repository.AccountRepository;
 import com.banking.server.repository.UserRepository;
 import com.banking.server.security.JwtUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -34,33 +35,38 @@ public class AuthService {
     private JwtUtils jwtUtils;
 
     /**
-     * ✅ Register new user and auto-create account
+     * ✅ Register new user and auto-create linked account
+     * Default role = USER
      */
     public void registerUser(SignupRequest request) {
 
-        // Convert account number to uppercase before validation
+        // Convert to uppercase before validation
         String upperAcc = request.getAccountNumber().toUpperCase();
 
-        // ✅ Validate pattern
+        // Validate pattern
         if (!upperAcc.matches("^BK(SV|CR)\\d{7}$")) {
             throw new IllegalArgumentException(
                     "Invalid account number format! Must start with 'BK', followed by 'SV' or 'CR', and 7 digits (e.g., BKSV1234567)."
             );
         }
 
-        // ✅ Check uniqueness
+        // Uniqueness checks
         if (userRepository.existsByEmail(request.getEmail()))
             throw new RuntimeException("Email already exists!");
+
         if (userRepository.existsByUsername(request.getUsername()))
             throw new RuntimeException("Username already exists!");
+
         if (userRepository.existsByPhoneNumber(request.getPhoneNumber()))
             throw new RuntimeException("Phone number already registered!");
+
         if (userRepository.existsByPanNumber(request.getPanNumber()))
             throw new RuntimeException("PAN number already registered!");
+
         if (userRepository.existsByAccountNumber(upperAcc))
             throw new RuntimeException("Account number already exists!");
 
-        // ✅ Create and save user
+        // Create user (default role USER)
         User user = User.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
@@ -70,18 +76,18 @@ public class AuthService {
                 .panNumber(request.getPanNumber())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .accountNumber(upperAcc)
-                .role("USER")
+                .role("USER") // always uppercase
                 .build();
 
         userRepository.save(user);
 
-        // ✅ Determine account type and transaction limit
+        // Determine account type + transaction limit
         String accountType = upperAcc.contains("SV") ? "SAVINGS" : "CURRENT";
         BigDecimal transactionLimit = upperAcc.contains("SV")
                 ? BigDecimal.valueOf(10000.00)
                 : BigDecimal.valueOf(50000.00);
 
-        // ✅ Create corresponding Account entity with BigDecimal fields
+        // Create Account entity
         Account account = Account.builder()
                 .username(user.getUsername())
                 .accountNumber(user.getAccountNumber())
@@ -97,15 +103,22 @@ public class AuthService {
     }
 
     /**
-     * ✅ Login user and generate JWT
+     * ✅ Login a user/admin/super-admin and generate JWT
      */
     public JwtResponse login(LoginRequest request) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmailOrUsername(), request.getPassword())
+
+        // Authenticate
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getEmailOrUsername(),
+                        request.getPassword()
+                )
         );
 
+        // Create JWT token
         String token = jwtUtils.generateToken(request.getEmailOrUsername());
 
+        // Fetch user by email or username
         User user = userRepository.findByEmail(request.getEmailOrUsername())
                 .orElse(userRepository.findByUsername(request.getEmailOrUsername())
                         .orElseThrow(() -> new RuntimeException("User not found!")));
@@ -114,7 +127,7 @@ public class AuthService {
                 .token(token)
                 .username(user.getUsername())
                 .email(user.getEmail())
-                .role(user.getRole())
+                .role(user.getRole()) // always uppercase (USER / ADMIN / SUPER_ADMIN)
                 .build();
     }
 }
