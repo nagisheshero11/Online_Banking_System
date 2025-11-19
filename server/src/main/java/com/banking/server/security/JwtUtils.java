@@ -5,8 +5,10 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
 import java.security.Key;
 import java.util.Date;
+import java.util.Map;
 
 @Component
 public class JwtUtils {
@@ -17,10 +19,11 @@ public class JwtUtils {
     @Value("${jwt.expiration-ms}")
     private long expirationMs;
 
-    // Generate JWT
-    public String generateToken(String username) {
+    // Create JWT with role
+    public String generateToken(String username, String role) {
         return Jwts.builder()
                 .setSubject(username)
+                .addClaims(Map.of("role", role)) // role claim
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
@@ -32,21 +35,26 @@ public class JwtUtils {
         return extractAllClaims(token).getSubject();
     }
 
-    // Validate JWT
+    // Extract role
+    public String extractRole(String token) {
+        return (String) extractAllClaims(token).get("role");
+    }
+
+    // Validate token
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
                     .setSigningKey(getSigningKey())
                     .build()
-                    .parseClaimsJws(token); // ✅ correct method
+                    .parseClaimsJws(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
             System.out.println("Invalid JWT: " + e.getMessage());
+            return false;
         }
-        return false;
     }
 
-    // Extract claims safely
+    // Extract claims
     private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
@@ -55,7 +63,7 @@ public class JwtUtils {
                 .getBody();
     }
 
-    // Decode secret properly
+    // Key generation
     private Key getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         return Keys.hmacShaKeyFor(keyBytes);

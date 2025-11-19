@@ -1,6 +1,5 @@
 package com.banking.server.security;
 
-import com.banking.server.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,41 +23,45 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-                // ✅ New style for CORS (Spring Security 6.2+)
                 .cors(cors -> cors.configurationSource(
                         new com.banking.server.config.CorsConfig().corsConfigurationSource()
                 ))
-
-                // Disable CSRF (since using JWT)
                 .csrf(csrf -> csrf.disable())
 
-                // Authorization rules
                 .authorizeHttpRequests(auth -> auth
-                        // Allow preflight OPTIONS requests
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                        // Public endpoints
+                        // Public
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/user/signup", "/api/user/login").permitAll()
+
+                        // One-time SUPER_ADMIN setup (we create later)
+                        .requestMatchers(HttpMethod.POST, "/api/setup/superadmin").permitAll()
+
+                        // Admin-only routes
+                        .requestMatchers("/api/admin/**").hasAnyAuthority("ADMIN", "SUPER_ADMIN")
+
+                        // Bills (keep your rule)
                         .requestMatchers(HttpMethod.POST, "/api/bills/create").permitAll()
                         .requestMatchers("/api/bills/**").authenticated()
 
-                        // Everything else requires authentication
+                        // User routes
+                        .requestMatchers("/api/user/**").authenticated()
+
+                        // Default
                         .anyRequest().authenticated()
                 )
 
-                // Stateless session (JWT only)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
 
-                // Add JWT filter before default authentication
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+    public PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
