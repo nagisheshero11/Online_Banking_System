@@ -30,24 +30,25 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
 
-                        /* PUBLIC ROUTES */
+                        /* PUBLIC */
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/user/signup", "/api/user/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/setup/superadmin").permitAll()
 
-                        /* ADMIN ROUTES */
+                        /* ADMIN — ROLE BASED */
                         .requestMatchers("/api/admin/**")
-                        .hasRole("ADMIN")        // <- FIXED
-                        // If you want SUPER_ADMIN also:
-                        //.hasAnyRole("ADMIN", "SUPER_ADMIN")
+                        .hasAuthority("ADMIN")
 
                         /* BILLS */
                         .requestMatchers(HttpMethod.POST, "/api/bills/create").permitAll()
                         .requestMatchers("/api/bills/**").authenticated()
 
-                        /* LOANS (USER ONLY) */
-                        .requestMatchers(HttpMethod.POST, "/api/loans/apply").hasRole("USER") // <- FIXED
-                        .requestMatchers(HttpMethod.GET, "/api/loans/my").hasRole("USER")     // <- FIXED
+                        /* LOANS → USER ONLY */
+                        .requestMatchers(HttpMethod.POST, "/api/loans/**")
+                        .hasAuthority("USER")
+
+                        .requestMatchers(HttpMethod.GET, "/api/loans/**")
+                        .hasAuthority("USER")
 
                         /* USER ROUTES */
                         .requestMatchers("/api/user/**").authenticated()
@@ -55,7 +56,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/transfer/**").authenticated()
                         .requestMatchers("/api/profile/**").authenticated()
 
-                        /* ANYTHING ELSE */
+                        /* ANY OTHER */
                         .anyRequest().authenticated()
                 )
 

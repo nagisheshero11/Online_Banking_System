@@ -20,8 +20,15 @@ public class JwtUtils {
     @Value("${jwt.expiration-ms}")
     private long expirationMs;
 
-    // Create JWT with role (role should be like "ROLE_USER")
+    /**
+     * Generate JWT
+     * Stores role exactly as USER / ADMIN
+     */
     public String generateToken(String username, String role) {
+
+        // ensure uppercase but NO ROLE_ prefix
+        role = role.toUpperCase();
+
         return Jwts.builder()
                 .setSubject(username)
                 .addClaims(Map.of("role", role))
@@ -31,32 +38,26 @@ public class JwtUtils {
                 .compact();
     }
 
-    // Extract username
     public String extractUsername(String token) {
         return extractAllClaims(token).getSubject();
     }
 
-    // Extract role
     public String extractRole(String token) {
         Object r = extractAllClaims(token).get("role");
         return r != null ? r.toString() : null;
     }
 
-    // Validate token against user details (checks username + expiration)
     public boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
-        return username != null
-                && username.equals(userDetails.getUsername())
-                && !isTokenExpired(token);
+        return username != null &&
+                username.equals(userDetails.getUsername()) &&
+                !isTokenExpired(token);
     }
 
-    // Check expiration
     private boolean isTokenExpired(String token) {
-        Date exp = extractAllClaims(token).getExpiration();
-        return exp.before(new Date());
+        return extractAllClaims(token).getExpiration().before(new Date());
     }
 
-    // Extract claims (throws if invalid)
     private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
@@ -65,7 +66,6 @@ public class JwtUtils {
                 .getBody();
     }
 
-    // Key generation (expects base64 secret)
     private Key getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         return Keys.hmacShaKeyFor(keyBytes);

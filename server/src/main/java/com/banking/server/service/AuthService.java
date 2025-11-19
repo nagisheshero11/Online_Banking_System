@@ -35,7 +35,7 @@ public class AuthService {
     private JwtUtils jwtUtils;
 
     /**
-     * Register new user
+     * Register new user (role always USER)
      */
     public void registerUser(SignupRequest request) {
 
@@ -69,7 +69,7 @@ public class AuthService {
                 .panNumber(request.getPanNumber())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .accountNumber(upperAcc)
-                .role("USER")
+                .role("USER") // ✔ always store clean role
                 .build();
 
         userRepository.save(user);
@@ -94,10 +94,11 @@ public class AuthService {
     }
 
     /**
-     * Login + Generate JWT
+     * Login and generate JWT
      */
     public JwtResponse login(LoginRequest request) {
 
+        // Authenticate user
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmailOrUsername(),
@@ -105,21 +106,22 @@ public class AuthService {
                 )
         );
 
+        // Load user
         User user = userRepository.findByEmail(request.getEmailOrUsername())
                 .orElse(userRepository.findByUsername(request.getEmailOrUsername())
                         .orElseThrow(() -> new RuntimeException("User not found!")));
 
-        // 🔥 FIX: Add ROLE_ prefix for Spring Security compatibility
-        String roleWithPrefix = "ROLE_" + user.getRole();
+        // ✔ Do NOT add ROLE_ prefix
+        String cleanRole = user.getRole().toUpperCase(); // USER / ADMIN
 
-        // Generate JWT
-        String token = jwtUtils.generateToken(user.getUsername(), roleWithPrefix);
+        // Generate token with clean role
+        String token = jwtUtils.generateToken(user.getUsername(), cleanRole);
 
         return JwtResponse.builder()
                 .token(token)
                 .username(user.getUsername())
                 .email(user.getEmail())
-                .role(roleWithPrefix)   // send ROLE_USER or ROLE_ADMIN
+                .role(cleanRole) // USER or ADMIN
                 .build();
     }
 }

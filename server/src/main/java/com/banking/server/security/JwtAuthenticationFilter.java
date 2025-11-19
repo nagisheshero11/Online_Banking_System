@@ -32,31 +32,30 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         final String authHeader = request.getHeader("Authorization");
-        final String jwt;
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        jwt = authHeader.substring(7);
-
-        // Extract username safely
+        String jwt = authHeader.substring(7);
         String username;
+
         try {
             username = jwtUtils.extractUsername(jwt);
-        } catch (Exception ex) {
-            // invalid token parsing
+        } catch (Exception e) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        // If not authenticated in context yet
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-            // Use new validateToken(jwt, userDetails)
+            // Validate JWT token
             if (jwtUtils.validateToken(jwt, userDetails)) {
+
+                // Authorities already return "USER" or "ADMIN"
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(
                                 userDetails,
@@ -65,11 +64,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         );
 
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                // Set authentication context
                 SecurityContextHolder.getContext().setAuthentication(authToken);
 
-                // attach role claim for convenience (optional)
+                // Attach role from JWT (USER or ADMIN)
                 String role = jwtUtils.extractRole(jwt);
-                if (role != null) request.setAttribute("role", role);
+                if (role != null) {
+                    request.setAttribute("role", role);
+                    request.setAttribute("username", username);
+                }
             }
         }
 

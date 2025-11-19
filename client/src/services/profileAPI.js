@@ -1,3 +1,4 @@
+import axios from "axios";
 
 const API_BASE_URL = "http://localhost:6060/api/user";
 
@@ -7,39 +8,32 @@ function getToken() {
     return localStorage.getItem("token");
 }
 
+// Axios instance with auth header interceptor
+const api = axios.create({ baseURL: API_BASE_URL });
+
+api.interceptors.request.use((config) => {
+    const token = getToken();
+    if (token) {
+        config.headers = config.headers || {};
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+});
+
 //  Fetch logged-in user's profile details
 //  * Endpoint: GET /api/user/profile
 export async function fetchUserProfile() {
-    const token = getToken();
-    if (!token) throw new Error("No authentication token found");
-
     try {
-        const response = await fetch(`${API_BASE_URL}/profile`, {
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                "Content-Type": "application/json",
-            },
-        });
-
-        if (response.status === 401) {
-            // Unauthorized — invalid token
+        const { data } = await api.get("/profile");
+        return data;
+    } catch (error) {
+        if (error.response?.status === 401) {
             localStorage.removeItem("token");
             throw new Error("Session expired. Please log in again.");
         }
-
-        if (!response.ok) {
-            const message = await response.text();
-            throw new Error(message || "Failed to fetch profile");
-        }
-
-        // Parse JSON response
-        const data = await response.json();
-        return data;
-
-    } catch (error) {
-        console.error("Profile Fetch Error:", error.message);
-        throw error;
+        const msg = error.response?.data || error.message || "Failed to fetch profile";
+        console.error("Profile Fetch Error:", msg);
+        throw new Error(msg);
     }
 }
 
@@ -48,60 +42,31 @@ export async function fetchUserProfile() {
 //  Only allows editable fields (e.g., firstName, lastName, phoneNumber)
 
 export async function updateUserProfile(updatedData) {
-    const token = getToken();
-    if (!token) throw new Error("No authentication token found");
-
     try {
-        const response = await fetch(`${API_BASE_URL}/profile/update`, {
-            method: "PUT",
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(updatedData),
+        const { data } = await api.put("/profile/update", updatedData, {
+            headers: { "Content-Type": "application/json" },
         });
-
-        if (response.status === 401) {
+        return data;
+    } catch (error) {
+        if (error.response?.status === 401) {
             localStorage.removeItem("token");
             throw new Error("Session expired. Please log in again.");
         }
-
-        if (!response.ok) {
-            const message = await response.text();
-            throw new Error(message || "Failed to update profile");
-        }
-
-        const data = await response.json();
-        return data;
-
-    } catch (error) {
-        console.error("Profile Update Error:", error.message);
-        throw error;
+        const msg = error.response?.data || error.message || "Failed to update profile";
+        console.error("Profile Update Error:", msg);
+        throw new Error(msg);
     }
 }
 
 
 
 export async function getUserProfile() {
-    const token = getToken();
-    if (!token) throw new Error("No token found");
-
     try {
-        const response = await fetch(`${API_BASE_URL}/profile`, {
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                "Content-Type": "application/json",
-            },
-        });
-
-        if (!response.ok) {
-            throw new Error("Failed to fetch profile");
-        }
-
-        return await response.json();
+        const { data } = await api.get("/profile");
+        return data;
     } catch (error) {
-        console.error("Profile fetch error:", error);
-        throw error;
+        const msg = error.response?.data || error.message || "Failed to fetch profile";
+        console.error("Profile fetch error:", msg);
+        throw new Error(msg);
     }
 }

@@ -1,28 +1,35 @@
+import axios from "axios";
+
 const API_BASE = "http://localhost:6060/api/bills";
 
 const getToken = () => localStorage.getItem("token");
 
-export const fetchMyBills = async () => {
-    const res = await fetch(`${API_BASE}/my`, {
-        headers: {
-            "Authorization": `Bearer ${getToken()}`,
-            "Content-Type": "application/json"
-        }
-    });
+const api = axios.create({ baseURL: API_BASE });
+api.interceptors.request.use((config) => {
+    const token = getToken();
+    if (token) {
+        config.headers = config.headers || {};
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+});
 
-    if (!res.ok) throw new Error("Failed to fetch bills");
-    return res.json();
+export const fetchMyBills = async () => {
+    try {
+        const { data } = await api.get("/my");
+        return data;
+    } catch (error) {
+        const msg = error.response?.data || error.message || "Failed to fetch bills";
+        throw new Error(msg);
+    }
 };
 
 export const payBill = async (billId) => {
-    const res = await fetch(`${API_BASE}/pay/${billId}`, {
-        method: "POST",
-        headers: {
-            "Authorization": `Bearer ${getToken()}`,
-            "Content-Type": "application/json"
-        }
-    });
-
-    if (!res.ok) throw new Error("Payment failed");
-    return res.text();
+    try {
+        const { data } = await api.post(`/pay/${billId}`);
+        return data;
+    } catch (error) {
+        const msg = error.response?.data || error.message || "Payment failed";
+        throw new Error(msg);
+    }
 };
