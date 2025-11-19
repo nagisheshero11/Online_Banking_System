@@ -91,7 +91,7 @@ const RequestLoan = () => {
 
         const loanPayload = {
             loanType,
-            amount: parseFloat(loanAmount),
+            loanAmount: parseFloat(loanAmount),
             tenureMonths: parseInt(loanTenure),
             interestRate: parseFloat(interestRate)
         };

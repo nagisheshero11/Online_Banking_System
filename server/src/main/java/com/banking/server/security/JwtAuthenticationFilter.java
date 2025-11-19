@@ -31,19 +31,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
-        final String authHeader = request.getHeader("Authorization");
+        String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String jwt = authHeader.substring(7);
-        String username;
+        String token = authHeader.substring(7);
 
+        String username;
         try {
-            username = jwtUtils.extractUsername(jwt);
-        } catch (Exception e) {
+            username = jwtUtils.extractUsername(token);
+        } catch (Exception ex) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -52,10 +52,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-            // Validate JWT token
-            if (jwtUtils.validateToken(jwt, userDetails)) {
+            if (jwtUtils.validateToken(token, userDetails)) {
 
-                // Authorities already return "USER" or "ADMIN"
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(
                                 userDetails,
@@ -64,12 +62,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         );
 
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-                // Set authentication context
                 SecurityContextHolder.getContext().setAuthentication(authToken);
 
-                // Attach role from JWT (USER or ADMIN)
-                String role = jwtUtils.extractRole(jwt);
+                String role = jwtUtils.extractRole(token);
                 if (role != null) {
                     request.setAttribute("role", role);
                     request.setAttribute("username", username);
