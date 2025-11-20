@@ -18,9 +18,9 @@ const FeaturesSection = () => {
                         <div className="feature-icon">
                             <FaUserCircle />
                         </div>
-                        <h3 className="feature-title">Account Management</h3>
+                        <h3 className="feature-title">Manage</h3>
                         <p className="feature-description">
-                            Open and manage multiple accounts effortlessly. Monitor your balance, view transaction history, and get detailed statements.
+                            Stay on top of your money with our easy-to-use dashboard. Track spending and set budgets.
                         </p>
                     </div>
 
@@ -28,9 +28,9 @@ const FeaturesSection = () => {
                         <div className="feature-icon">
                             <FaExchangeAlt />
                         </div>
-                        <h3 className="feature-title">Fund Transfers</h3>
+                        <h3 className="feature-title">Transfer</h3>
                         <p className="feature-description">
-                            Send and receive money instantly and securely. Transfer funds between accounts or to other users with just a few clicks.
+                            Send money to friends and family in seconds. It's fast, secure, and free.
                         </p>
                     </div>
 
@@ -38,9 +38,9 @@ const FeaturesSection = () => {
                         <div className="feature-icon">
                             <FaFileInvoiceDollar />
                         </div>
-                        <h3 className="feature-title">Bill Payments</h3>
+                        <h3 className="feature-title">Pay Bills</h3>
                         <p className="feature-description">
-                            Pay utility bills and set up recurring payments. Never miss a deadline with automated payment scheduling.
+                            Pay your utilities, rent, and credit cards from one place. Set up auto-pay and never miss a due date.
                         </p>
                     </div>
 
@@ -48,9 +48,9 @@ const FeaturesSection = () => {
                         <div className="feature-icon">
                             <FaHandHoldingUsd />
                         </div>
-                        <h3 className="feature-title">Loan Requests</h3>
+                        <h3 className="feature-title">Borrow</h3>
                         <p className="feature-description">
-                            Apply for loans and track approval status. Get competitive rates and quick processing for your financial needs.
+                            Need extra cash? Apply for a personal loan with low rates and flexible repayment options.
                         </p>
                     </div>
                 </div>

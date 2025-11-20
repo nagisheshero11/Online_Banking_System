@@ -8,10 +8,10 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Manrope', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
-    color: #0D0D0D;
-    background: #FFFFFF;
+    color: var(--text-dark);
+    background: var(--bg-white);
 }
 
 .landing-page {
@@ -19,14 +19,11 @@ body {
     overflow-x: hidden;
 }
 
-/* Colors that will be used throughout the landing page */
-/* remove previous color variables; using direct dark theme colors */
-
 /* Common utilities */
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 24px;
 }
 
 .section {
@@ -43,38 +40,38 @@ body {
     border: none;
     border-radius: 50px;
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 700;
     font-size: 1rem;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
 }
 
 .btn-primary {
-    background-color: #D4AF37;
-    color: #0D0D0D;
+    background-color: var(--action-blue);
+    color: white;
 }
 
 .btn-primary:hover {
-    background-color: #C0A062;
+    background-color: var(--action-hover);
     transform: translateY(-2px);
 }
 
 .btn-secondary {
     background-color: transparent;
-    color: #0D0D0D;
-    border: 2px solid #E0E0E0;
+    color: var(--action-blue);
+    border: 2px solid var(--action-blue);
 }
 
 .btn-secondary:hover {
-    background-color: #E0E0E0;
-    color: #0D0D0D;
-    border-color: #E0E0E0;
+    background-color: rgba(0, 112, 186, 0.05);
+    color: var(--action-blue);
+    border-color: var(--action-blue);
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
     .container {
-        padding: 0 15px;
+        padding: 0 20px;
     }
 
     .section {
