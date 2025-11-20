@@ -1,14 +1,14 @@
 /* ===== ABOUT SECTION STYLES ===== */
 .about-section {
     padding: 100px 0;
-    background: #FFFFFF;
-    border-top: 1px solid #E0E0E0;
+    background: var(--bg-white);
+    border-top: none;
 }
 
 .about-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 24px;
 }
 
 .about-content {
@@ -23,15 +23,16 @@
 }
 
 .about-title {
-    font-size: 2.8rem;
-    color: #0D0D0D;
+    font-size: 2.5rem;
+    color: var(--primary-blue);
     margin-bottom: 1.5rem;
-    font-weight: bold;
+    font-weight: 800;
+    letter-spacing: -0.5px;
 }
 
 .about-description {
-    font-size: 1.2rem;
-    color: #595959;
+    font-size: 1.15rem;
+    color: var(--text-light);
     line-height: 1.6;
     margin-bottom: 2rem;
 }
@@ -41,10 +42,10 @@
 }
 
 .why-choose-title {
-    font-size: 1.8rem;
-    color: #0D0D0D;
+    font-size: 1.5rem;
+    color: var(--primary-blue);
     margin-bottom: 1.5rem;
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .benefits-grid {
@@ -58,35 +59,36 @@
     align-items: center;
     gap: 1rem;
     padding: 1rem;
-    background: #FFFFFF;
-    border-radius: 15px;
-    box-shadow: none;
-    border: 1px solid #E0E0E0;
-    transition: all 0.3s ease;
+    background: var(--bg-white);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
 }
 
 .benefit-item:hover {
-    transform: translateY(-5px);
-    border-color: #D4AF37;
+    transform: translateY(-3px);
+    border-color: var(--action-blue);
+    box-shadow: var(--shadow-hover);
 }
 
 .benefit-icon {
-    width: 50px;
-    height: 50px;
-    background: #1A1A1A;
-    border: 2px solid #1A1A1A;
+    width: 48px;
+    height: 48px;
+    background: rgba(0, 112, 186, 0.1);
+    border: none;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.2rem;
-    color: #FFFFFF;
+    color: var(--action-blue);
     flex-shrink: 0;
 }
 
 .benefit-text {
-    color: #595959;
-    font-weight: 500;
+    color: var(--text-dark);
+    font-weight: 600;
     font-size: 1rem;
 }
 
@@ -101,18 +103,18 @@
     max-width: 100%;
     height: auto;
     border-radius: 20px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    /* No shadow for cleaner look */
 }
 
 /* About responsive */
-@media (max-width: 768px) {
+@media (max-width: 960px) {
     .about-section {
         padding: 60px 0;
     }
 
     .about-content {
         grid-template-columns: 1fr;
-        gap: 2rem;
+        gap: 3rem;
         text-align: center;
     }
 
@@ -121,23 +123,17 @@
     }
 
     .about-title {
-        font-size: 2.2rem;
-    }
-
-    .about-description {
-        font-size: 1.1rem;
-    }
-
-    .why-choose-title {
-        font-size: 1.6rem;
+        font-size: 2rem;
     }
 
     .benefits-grid {
         grid-template-columns: 1fr;
+        text-align: left;
     }
 
-    .benefit-item {
-        justify-content: center;
-        text-align: left;
+    .about-image {
+        order: -1;
+        max-width: 80%;
+        margin: 0 auto;
     }
 }

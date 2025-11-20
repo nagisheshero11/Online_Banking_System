@@ -1,47 +1,53 @@
 /* ===== CTA BANNER STYLES ===== */
 .cta-banner {
-    background: #FAFAFA;
+    background: var(--bg-cream);
     padding: 80px 0;
     text-align: center;
-    color: #0D0D0D;
-    border-top: 1px solid #E0E0E0;
-    border-bottom: 1px solid #E0E0E0;
+    color: var(--text-dark);
+    border-top: none;
+    border-bottom: none;
 }
 
 .cta-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 24px;
 }
 
 .cta-title {
     font-size: 2.5rem;
-    font-weight: bold;
+    font-weight: 800;
     margin-bottom: 1rem;
+    color: var(--primary-blue);
+    letter-spacing: -1px;
 }
 
 .cta-subtitle {
     font-size: 1.2rem;
     margin-bottom: 2.5rem;
-    color: #595959;
+    color: var(--text-light);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .cta-button {
-    background: #D4AF37;
-    color: #0D0D0D;
-    padding: 18px 40px;
-    border-radius: 50px;
+    background: var(--action-blue);
+    color: white;
+    padding: 16px 48px;
+    border-radius: var(--radius-pill);
     text-decoration: none;
-    font-weight: 600;
-    font-size: 1.2rem;
-    transition: all 0.3s ease;
-    box-shadow: none;
+    font-weight: 700;
+    font-size: 1.1rem;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow-card);
     display: inline-block;
 }
 
 .cta-button:hover {
-    transform: translateY(-3px);
-    background: #C0A062;
+    transform: translateY(-2px);
+    background: var(--action-hover);
+    box-shadow: var(--shadow-hover);
 }
 
 /* CTA Banner responsive */
@@ -55,11 +61,6 @@
     }
 
     .cta-subtitle {
-        font-size: 1.1rem;
-    }
-
-    .cta-button {
-        padding: 15px 30px;
         font-size: 1.1rem;
     }
 }

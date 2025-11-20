@@ -1,37 +1,45 @@
 import React from 'react';
 import { Link } from 'react-scroll';
 import { Link as RouterLink } from 'react-router-dom';
-import heroImage from '../../assets/landing_home_img.png';
 import './styles/HeroSection.css';
 
 const HeroSection = () => {
     return (
         <section id="home" className="hero-section">
+            <div className="hero-globe">
+                <div className="globe-continent c1"></div>
+                <div className="globe-continent c2"></div>
+                <div className="globe-continent c3"></div>
+            </div>
             <div className="hero-container">
-                <div className="hero-content">
-                    <h1 className="hero-title">
-                        Banking Made Simple,<br />
-                        Secure & Smart
-                    </h1>
-                    <p className="hero-subtitle">
-                        Manage accounts, transfer funds, pay bills, and request loans — all in one secure platform.
-                    </p>
-                    <div className="hero-buttons">
-                        <RouterLink to="/signup" className="hero-btn-primary">
-                            Get Started
-                        </RouterLink>
-                        <Link to="features" className="hero-btn-secondary" smooth={true} duration={500} offset={-80}>
-                            Learn More
-                        </Link>
+                {/* CSS Credit Card */}
+                <div className="hero-card-container">
+                    <div className="hero-card">
+                        <div className="card-content">
+                            <div className="card-logo">BANKIFY</div>
+                            <div className="card-chip"></div>
+                            <div className="card-number">•••• •••• •••• 4242</div>
+                            <div className="card-details">
+                                <div className="card-name">Nagi Seishiro</div>
+                                <div className="card-brand">VISA</div>
+                            </div>
+                        </div>
+                        <div className="card-shine"></div>
                     </div>
                 </div>
 
-                <div className="hero-image">
-                    <img
-                        src={heroImage}
-                        alt="Banking Platform"
-                        className="hero-img"
-                    />
+                <div className="hero-content">
+                    <h1 className="hero-title">
+                        Money on Bankify<br />can buy anything.
+                    </h1>
+                    <p className="hero-subtitle">
+                        With Bankify , you can spend your balance Without Any Conflicts
+                    </p>
+                    <div className="hero-buttons">
+                        <RouterLink to="/signup" className="btn btn-primary hero-cta">
+                            signup
+                        </RouterLink>
+                    </div>
                 </div>
             </div>
         </section>

@@ -1,114 +1,326 @@
-/* ===== HOW IT WORKS SECTION STYLES ===== */
+/* ===== BENTO GRID SECTION STYLES ===== */
 .how-it-works-section {
     padding: 100px 0;
-    background: #FAFAFA;
-    border-top: 1px solid #E0E0E0;
+    background: var(--bg-white);
+    border-top: none;
+    overflow: hidden;
 }
 
 .how-it-works-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 24px;
 }
 
-.how-it-works-header {
-    text-align: center;
-    margin-bottom: 60px;
-}
-
-.how-it-works-title {
-    font-size: 2.8rem;
-    color: #0D0D0D;
-    margin-bottom: 1rem;
-    font-weight: bold;
-}
-
-.how-it-works-subtitle {
-    font-size: 1.2rem;
-    color: #595959;
-    max-width: 600px;
-    margin: 0 auto;
-    line-height: 1.6;
-}
-
-.steps-container {
+.bento-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 3rem;
-    margin-top: 50px;
-    position: relative;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: auto auto;
+    gap: 2rem;
+    align-items: start;
 }
 
-.step-card {
-    text-align: center;
+/* Common Card Styles */
+.bento-card {
+    background: #FFFFFF;
+    border-radius: 30px;
+    padding: 24px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
     position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease;
 }
 
-.step-number {
-    width: 80px;
-    height: 80px;
-    background: #1A1A1A;
-    color: #FFFFFF;
-    border: 2px solid #1A1A1A;
-    border-radius: 50%;
+.bento-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.08);
+}
+
+/* --- Card 1: Total Balance (Top Right) --- */
+.balance-card {
+    grid-column: 8 / 13;
+    grid-row: 1 / 3;
+    background: #FF7F50;
+    /* Coral Orange from reference */
+    color: white;
+    min-height: 400px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    text-align: center;
+}
+
+.balance-card .card-header {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    margin-bottom: 1rem;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 1rem;
+}
+
+.balance-amount {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+}
+
+.income-badge {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+}
+
+.chart-placeholder {
+    width: 100%;
+    height: 120px;
+    margin-top: auto;
+    position: relative;
+    overflow: visible;
+}
+
+.chart-line {
+    width: 110%;
+    /* Extend slightly beyond container */
+    height: 100%;
+    margin-left: -5%;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+    overflow: visible;
+}
+
+.chart-line path {
+    stroke: white;
+    stroke-width: 6;
+    /* Thicker line */
+    stroke-linecap: round;
+    fill: none;
+    vector-effect: non-scaling-stroke;
+}
+
+.card-floating-badge {
+    position: absolute;
+    top: 60%;
+    left: 20%;
+    background: #FF9F80;
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+/* --- Card 2: Text Content (Center) --- */
+.bento-text-content {
+    grid-column: 5 / 8;
+    grid-row: 1 / 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem 0;
+    position: relative;
+    z-index: 2;
+    /* Ensure text is above image */
+}
+
+.bento-title {
     font-size: 2rem;
-    font-weight: bold;
-    margin: 0 auto 1.5rem;
+    font-weight: 800;
+    color: var(--primary-blue);
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+}
+
+.bento-subtitle {
+    font-size: 1rem;
+    color: var(--text-light);
+}
+
+/* --- Card 3: Your Cards (Bottom Left) --- */
+.cards-preview-card {
+    grid-column: 1 / 5;
+    grid-row: 1 / 3;
+    background: #F5F7FA;
+    min-height: 350px;
+}
+
+.card-header-simple {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 1.5rem;
+}
+
+.preview-card-visual {
+    background: linear-gradient(135deg, #2E8B57 0%, #3CB371 100%);
+    /* Sea Green */
+    border-radius: 20px;
+    padding: 20px;
+    color: white;
+    margin-bottom: 1.5rem;
+    position: relative;
+    height: 180px;
+    box-shadow: 0 10px 20px rgba(46, 139, 87, 0.3);
+}
+
+.visual-card-content {
     position: relative;
     z-index: 2;
 }
 
-.step-icon {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 1.2rem;
+.vc-balance {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.vc-number {
+    font-size: 0.9rem;
     opacity: 0.8;
 }
 
-.step-title {
-    font-size: 1.5rem;
-    color: #0D0D0D;
-    margin-bottom: 1rem;
-    font-weight: 600;
+.vc-chart-donut {
+    position: absolute;
+    bottom: -10px;
+    right: -10px;
+    width: 80px;
+    height: 80px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-dark);
+    font-size: 0.8rem;
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.step-description {
-    color: #595959;
-    line-height: 1.6;
-    font-size: 1.1rem;
+.donut-text {
+    text-align: center;
+    line-height: 1.2;
 }
 
-/* How It Works responsive */
-@media (max-width: 768px) {
-    .how-it-works-section {
-        padding: 60px 0;
-    }
+.donut-text span {
+    font-size: 0.6rem;
+    color: var(--text-light);
+    font-weight: 500;
+}
 
-    .how-it-works-title {
-        font-size: 2.2rem;
-    }
+.card-stats-row {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
 
-    .how-it-works-subtitle {
-        font-size: 1.1rem;
-    }
+.stat-label {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-light);
+    margin-bottom: 4px;
+}
 
-    .steps-container {
+.stat-val {
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+/* --- Card 4: Expenses (Small Floating) --- */
+.expenses-card {
+    grid-column: 6 / 8;
+    grid-row: 2 / 3;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 16px;
+    align-self: end;
+}
+
+.expense-icon {
+    width: 40px;
+    height: 40px;
+    background: #FFE4E1;
+    color: #FF7F50;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+.expense-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.expense-label {
+    font-size: 0.8rem;
+    color: var(--text-light);
+}
+
+.expense-amount {
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+/* --- Card 5: Image Placeholder (Person) --- */
+.image-card {
+    grid-column: 5 / 8;
+    grid-row: 1 / 3;
+    background: transparent;
+    /* Remove background color */
+    z-index: 1;
+    /* Bring to front */
+    padding: 0;
+    /* Remove padding */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+    /* Allow image to overflow if needed */
+    box-shadow: none;
+    /* Remove shadow from container if image has it or if transparent */
+    pointer-events: none;
+    /* Allow clicking through to things behind if needed */
+}
+
+.bento-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Ensure it fills the space */
+    display: block;
+    border-radius: 30px;
+    /* Match card radius */
+}
+
+/* Responsive Bento */
+@media (max-width: 960px) {
+    .bento-grid {
         grid-template-columns: 1fr;
-        gap: 2rem;
+        grid-template-rows: auto;
     }
 
-    .step-number {
-        width: 70px;
-        height: 70px;
-        font-size: 1.8rem;
+    .balance-card,
+    .bento-text-content,
+    .cards-preview-card,
+    .expenses-card,
+    .image-card {
+        grid-column: 1 / -1;
+        grid-row: auto;
     }
 
-    .step-title {
-        font-size: 1.3rem;
+    .balance-card {
+        min-height: 300px;
+    }
+
+    .expenses-card {
+        justify-self: start;
     }
 }
