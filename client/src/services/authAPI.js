@@ -48,8 +48,13 @@ export async function login(credentials) {
         const { data } = await api.post("/login", credentials, {
             headers: { "Content-Type": "application/json" },
         });
+
         if (!data?.token) throw new Error("Invalid credentials");
+
+        // Store token + role
         localStorage.setItem("token", data.token);
+        localStorage.setItem("role", data.role); // <<< ADD THIS
+
         return data; // { token, username, email, role }
     } catch (error) {
         const msg = error.response?.data || "Invalid credentials";
