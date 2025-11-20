@@ -5,6 +5,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.security.Key;
 import java.util.Date;
@@ -19,42 +20,44 @@ public class JwtUtils {
     @Value("${jwt.expiration-ms}")
     private long expirationMs;
 
-    // Create JWT with role
+    /**
+     * Generate JWT
+     * Stores role exactly as USER / ADMIN
+     */
     public String generateToken(String username, String role) {
+
+        // ensure uppercase but NO ROLE_ prefix
+        role = role.toUpperCase();
+
         return Jwts.builder()
                 .setSubject(username)
-                .addClaims(Map.of("role", role)) // role claim
+                .addClaims(Map.of("role", role))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    // Extract username
     public String extractUsername(String token) {
         return extractAllClaims(token).getSubject();
     }
 
-    // Extract role
     public String extractRole(String token) {
-        return (String) extractAllClaims(token).get("role");
+        Object r = extractAllClaims(token).get("role");
+        return r != null ? r.toString() : null;
     }
 
-    // Validate token
-    public boolean validateToken(String token) {
-        try {
-            Jwts.parserBuilder()
-                    .setSigningKey(getSigningKey())
-                    .build()
-                    .parseClaimsJws(token);
-            return true;
-        } catch (JwtException | IllegalArgumentException e) {
-            System.out.println("Invalid JWT: " + e.getMessage());
-            return false;
-        }
+    public boolean validateToken(String token, UserDetails userDetails) {
+        final String username = extractUsername(token);
+        return username != null &&
+                username.equals(userDetails.getUsername()) &&
+                !isTokenExpired(token);
     }
 
-    // Extract claims
+    private boolean isTokenExpired(String token) {
+        return extractAllClaims(token).getExpiration().before(new Date());
+    }
+
     private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
@@ -63,7 +66,6 @@ public class JwtUtils {
                 .getBody();
     }
 
-    // Key generation
     private Key getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         return Keys.hmacShaKeyFor(keyBytes);

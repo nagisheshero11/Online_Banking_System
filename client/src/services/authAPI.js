@@ -1,3 +1,4 @@
+import axios from "axios";
 
 const API_BASE_URL = "http://localhost:6060/api/user";
 
@@ -9,25 +10,33 @@ function getToken() {
 }
 
 // --------------------------------------------------
+// Axios instance with auth header interceptor
+// --------------------------------------------------
+const api = axios.create({ baseURL: API_BASE_URL });
+
+api.interceptors.request.use((config) => {
+    const token = getToken();
+    if (token) {
+        config.headers = config.headers || {};
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+});
+
+// --------------------------------------------------
 // Signup API (Public)
 // --------------------------------------------------
 export async function signup(userData) {
     try {
-        const response = await fetch(`${API_BASE_URL}/signup`, {
-            method: "POST",
+        const { data } = await api.post("/signup", userData, {
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(userData),
+            transformResponse: [(d) => d], // allow plain text responses
         });
-
-        if (!response.ok) {
-            const message = await response.text();
-            throw new Error(message || "Signup failed");
-        }
-
-        return await response.text(); // "User registered successfully"
+        return data; // e.g., "User registered successfully"
     } catch (error) {
-        console.error("Signup Error:", error.message);
-        throw error;
+        const msg = error.response?.data || error.message || "Signup failed";
+        console.error("Signup Error:", msg);
+        throw new Error(msg);
     }
 }
 
@@ -36,22 +45,21 @@ export async function signup(userData) {
 // --------------------------------------------------
 export async function login(credentials) {
     try {
-        const response = await fetch(`${API_BASE_URL}/login`, {
-            method: "POST",
+        const { data } = await api.post("/login", credentials, {
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(credentials),
         });
 
-        if (!response.ok) {
-            throw new Error("Invalid credentials");
-        }
+        if (!data?.token) throw new Error("Invalid credentials");
 
-        const data = await response.json();
-        localStorage.setItem("token", data.token); // store JWT token
-        return data; // returns { token, username, email, role }
+        // Store token + role
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("role", data.role); // <<< ADD THIS
+
+        return data; // { token, username, email, role }
     } catch (error) {
-        console.error("Login Error:", error.message);
-        throw error;
+        const msg = error.response?.data || "Invalid credentials";
+        console.error("Login Error:", msg);
+        throw new Error(msg);
     }
 }
 
@@ -62,25 +70,13 @@ export async function login(credentials) {
 export async function verifyToken() {
     const token = getToken();
     if (!token) return false;
-
     try {
-        const response = await fetch(`${API_BASE_URL}/profile`, {
-            method: "GET",
-            headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-            },
-        });
-
-        if (response.ok) {
-            return true; // token valid
-        } else {
-            localStorage.removeItem("token"); // clear invalid token
-            return false;
-        }
+        await api.get("/profile");
+        return true;
     } catch (error) {
-        console.error("Token verification failed:", error);
-        localStorage.removeItem("token");
+        if (error.response?.status === 401) {
+            localStorage.removeItem("token");
+        }
         return false;
     }
 }

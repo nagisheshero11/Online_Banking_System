@@ -40,16 +40,26 @@ const Login = () => {
     };
 
     // Handle login submit
+    // Handle login submit
     const onSubmit = async (e) => {
         e.preventDefault();
         try {
-            const data = await login(formData); // backend login
-            const valid = await verifyToken(); // token check
-            if (valid) {
+            const data = await login(formData); // backend login returns token + role
+
+            // Store role in localStorage
+            localStorage.setItem("role", data.role);
+
+            const role = data.role;
+
+            // 🔥 Role-based redirect
+            if (role === "ADMIN") {
+                navigate('/admin/dashboard', { state: { showLoginSuccess: true } });
+            } else if (role === "USER") {
                 navigate('/dashboard', { state: { showLoginSuccess: true } });
             } else {
-                alert('Invalid token! Please login again.');
+                alert("Invalid role received from server");
             }
+
         } catch (error) {
             alert(error.message || 'Login failed!');
         }

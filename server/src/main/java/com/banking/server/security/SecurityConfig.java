@@ -30,24 +30,33 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
 
-                        // Public
+                        /* PUBLIC */
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/user/signup", "/api/user/login").permitAll()
-
-                        // One-time SUPER_ADMIN setup (we create later)
                         .requestMatchers(HttpMethod.POST, "/api/setup/superadmin").permitAll()
 
-                        // Admin-only routes
-                        .requestMatchers("/api/admin/**").hasAnyAuthority("ADMIN", "SUPER_ADMIN")
+                        /* ADMIN — ROLE BASED */
+                        .requestMatchers("/api/admin/**")
+                        .hasAuthority("ADMIN")
 
-                        // Bills (keep your rule)
+                        /* BILLS */
                         .requestMatchers(HttpMethod.POST, "/api/bills/create").permitAll()
                         .requestMatchers("/api/bills/**").authenticated()
 
-                        // User routes
-                        .requestMatchers("/api/user/**").authenticated()
+                        /* LOANS → USER ONLY */
+                        .requestMatchers(HttpMethod.POST, "/api/loans/**")
+                        .hasAuthority("USER")
 
-                        // Default
+                        .requestMatchers(HttpMethod.GET, "/api/loans/**")
+                        .hasAuthority("USER")
+
+                        /* USER ROUTES */
+                        .requestMatchers("/api/user/**").authenticated()
+                        .requestMatchers("/api/account/**").authenticated()
+                        .requestMatchers("/api/transfer/**").authenticated()
+                        .requestMatchers("/api/profile/**").authenticated()
+
+                        /* ANY OTHER */
                         .anyRequest().authenticated()
                 )
 
@@ -61,7 +70,9 @@ public class SecurityConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
