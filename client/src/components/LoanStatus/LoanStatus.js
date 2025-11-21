@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./styles/LoanStatus.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getMyLoans } from "../../services/loanAPI";
 
 const LoanStatus = () => {
@@ -8,7 +8,9 @@ const LoanStatus = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  /* ------------------- Fetch Loan Data from Backend ------------------- */
+  const navigate = useNavigate();
+
+  /* ------------------- Fetch Loan Data ------------------- */
   useEffect(() => {
     const fetchLoans = async () => {
       try {
@@ -39,21 +41,20 @@ const LoanStatus = () => {
     approvedAmount: `₹${totalApprovedAmount}`,
   };
 
-  if (loading) {
-    return <div className="loan-status-container">Loading loan data...</div>;
-  }
-
-  if (error) {
-    return <div className="loan-status-container error">{error}</div>;
-  }
+  /* ------------------- Loading / Error UI ------------------- */
+  if (loading) return <div className="loan-status-container">Loading loan data...</div>;
+  if (error) return <div className="loan-status-container error">{error}</div>;
 
   return (
     <div className="loan-status-container">
+
+      {/* Page Header */}
       <div className="loan-status-header">
         <div>
           <h2>Loan Status</h2>
           <p>Track your loan applications</p>
         </div>
+
         <Link to="/dashboard/request-loan">
           <button className="request-loan-btn">+ Request New Loan</button>
         </Link>
@@ -97,6 +98,7 @@ const LoanStatus = () => {
                 <th>Applied Date</th>
                 <th>Interest Rate</th>
                 <th>Status</th>
+                <th>Actions</th>
               </tr>
             </thead>
 
@@ -113,15 +115,30 @@ const LoanStatus = () => {
                   <td>
                     <span
                       className={`status-badge ${loan.status === "APPROVED"
-                        ? "approved"
-                        : loan.status === "PENDING"
-                          ? "pending"
-                          : "rejected"
+                          ? "approved"
+                          : loan.status === "PENDING"
+                            ? "pending"
+                            : "rejected"
                         }`}
                     >
                       {loan.status}
                     </span>
                   </td>
+
+                  {/* ACTION BUTTONS */}
+                  <td>
+                    {loan.status === "APPROVED" ? (
+                      <button
+                        className="view-bills-btn"
+                        onClick={() => navigate(`/dashboard/pay-bills?loanId=${loan.id}`)}
+                      >
+                        View Bills
+                      </button>
+                    ) : (
+                      <button className="view-bills-btn disabled">No Bills</button>
+                    )}
+                  </td>
+
                 </tr>
               ))}
             </tbody>
@@ -137,10 +154,12 @@ const LoanStatus = () => {
             <strong>Pending</strong>
             <p>Application is under review</p>
           </div>
+
           <div className="guide-card approved">
             <strong>Approved</strong>
             <p>Your loan has been approved</p>
           </div>
+
           <div className="guide-card rejected">
             <strong>Rejected</strong>
             <p>Application was not approved</p>

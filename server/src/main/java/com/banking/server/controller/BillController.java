@@ -3,6 +3,7 @@ package com.banking.server.controller;
 import com.banking.server.entity.Bill;
 import com.banking.server.service.BillService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,29 +17,37 @@ public class BillController {
     private BillService billService;
 
     /**
-     * ADMIN → Create a bill for a specific user through POSTMAN
-     */
-    @PostMapping("/create")
-    public Bill createBill(@RequestBody Bill bill) {
-        return billService.createBill(bill);
-    }
-
-    /**
-     * USER → Fetch logged-in user's bills
+     * GET /api/bills/my
      */
     @GetMapping("/my")
-    public List<Bill> getMyBills(Authentication authentication) {
+    public ResponseEntity<?> getMyBills(Authentication authentication) {
         String username = authentication.getName();
-        return billService.getBillsForUser(username);
+        List<Bill> bills = billService.getBillsForUser(username);
+        return ResponseEntity.ok(bills);
     }
 
     /**
-     * USER → Pay a specific bill
+     * POST /api/bills/pay/{id}
      */
-    @PostMapping("/pay/{billId}")
-    public String payBill(@PathVariable Long billId, Authentication authentication) {
+    @PostMapping("/pay/{id}")
+    public ResponseEntity<?> payBill(@PathVariable Long id, Authentication authentication) {
         String username = authentication.getName();
-        billService.payBill(billId, username);
-        return "Bill paid successfully";
+        Bill paid = billService.payBill(id, username);
+        return ResponseEntity.ok(paid);
+    }
+
+    /**
+     * GET /api/bills/loan/{loanId}
+     * Returns all bills linked to a specific loan
+     */
+    @GetMapping("/loan/{loanId}")
+    public ResponseEntity<?> getBillsByLoan(@PathVariable Long loanId,
+                                            Authentication authentication) {
+
+        String username = authentication.getName();
+
+        List<Bill> bills = billService.getBillsByLoan(loanId, username);
+
+        return ResponseEntity.ok(bills);
     }
 }

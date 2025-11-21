@@ -1,35 +1,81 @@
 import axios from "axios";
 
-const API_BASE = "http://localhost:6060/api/bills";
+const API_URL = "http://localhost:6060/api/bills";
 
+/* ------------------------- TOKEN HELPER ------------------------- */
 const getToken = () => localStorage.getItem("token");
 
-const api = axios.create({ baseURL: API_BASE });
-api.interceptors.request.use((config) => {
+/* ------------------------- GET USER BILLS ------------------------ */
+/*
+  GET /api/bills/my
+*/
+export const getMyBills = async () => {
     const token = getToken();
-    if (token) {
-        config.headers = config.headers || {};
-        config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-});
+    if (!token) throw new Error("No token found");
 
-export const fetchMyBills = async () => {
     try {
-        const { data } = await api.get("/my");
-        return data;
-    } catch (error) {
-        const msg = error.response?.data || error.message || "Failed to fetch bills";
-        throw new Error(msg);
+        const res = await axios({
+            method: "GET",
+            url: `${API_URL}/my`,
+            headers: {
+                Authorization: `Bearer ${token}`,
+                Accept: "application/json",
+            },
+        });
+
+        return res.data;
+    } catch (err) {
+        console.error("❌ Get Bills Error:", err?.response || err);
+        throw new Error(err?.response?.data || "Failed to fetch bills");
     }
 };
 
+/* ------------------------- PAY A BILL --------------------------- */
+/*
+  POST /api/bills/pay/{id}
+*/
 export const payBill = async (billId) => {
+    const token = getToken();
+    if (!token) throw new Error("No token found");
+
     try {
-        const { data } = await api.post(`/pay/${billId}`);
-        return data;
-    } catch (error) {
-        const msg = error.response?.data || error.message || "Payment failed";
-        throw new Error(msg);
+        const res = await axios({
+            method: "POST",
+            url: `${API_URL}/pay/${billId}`,   // ✔ backend match
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+        });
+
+        return res.data;
+    } catch (err) {
+        console.error("❌ Pay Bill Error:", err?.response || err);
+        throw new Error(err?.response?.data || "Failed to pay bill");
+    }
+};
+
+/* ------------------------- GET BILLS BY LOAN --------------------- */
+/*
+  GET /api/bills/loan/{loanId}
+*/
+export const getBillsByLoan = async (loanId) => {
+    const token = getToken();
+    if (!token) throw new Error("No token found");
+
+    try {
+        const res = await axios({
+            method: "GET",
+            url: `${API_URL}/loan/${loanId}`,
+            headers: {
+                Authorization: `Bearer ${token}`,
+                Accept: "application/json",
+            },
+        });
+
+        return res.data;
+    } catch (err) {
+        console.error("❌ Get Bills by Loan Error:", err?.response || err);
+        throw new Error(err?.response?.data || "Failed to fetch loan bills");
     }
 };

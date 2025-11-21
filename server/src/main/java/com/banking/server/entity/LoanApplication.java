@@ -38,6 +38,7 @@ public class LoanApplication {
     @Column(nullable = false, precision = 5, scale = 2)
     private BigDecimal interestRate; // auto-filled from loanType
 
+    @Builder.Default
     @Column(nullable = false, length = 20)
     private String status = "PENDING"; // PENDING, APPROVED, REJECTED
 
