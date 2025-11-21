@@ -1,0 +1,193 @@
+.perfect-card-section {
+    padding: 120px 0 20px 0;
+    background: var(--bg-white);
+    overflow: hidden;
+    text-align: center;
+}
+
+.perfect-card-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.perfect-card-header {
+    margin-bottom: 140px;
+    /* Increased from 60px to prevent overlap */
+}
+
+.pc-tag {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.pc-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: var(--text-dark);
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+}
+
+.pc-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-light);
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Cards Stack */
+.cards-stack-wrapper {
+    position: relative;
+    width: 400px;
+    height: 350px;
+    /* Height of the stack */
+    display: flex;
+    justify-content: center;
+    /* The cards will be absolutely positioned relative to this, or stacked with transforms */
+    margin-top: 40px;
+    /* Increased margin */
+}
+
+.pc-card {
+    width: 380px;
+    height: 240px;
+    border-radius: 20px;
+    padding: 30px;
+    position: absolute;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.1s linear;
+    /* Smooth scroll update */
+    transform-origin: center bottom;
+}
+
+/* Green Card (Back) */
+.card-green {
+    background: #4FB39C;
+    /* Muted Green */
+    top: -110px;
+    /* Increased gap (was -80px) */
+    /* Start higher */
+    z-index: 1;
+    color: white;
+}
+
+/* Blue Card (Middle) */
+.card-blue {
+    background: #34495E;
+    /* Dark Blue/Grey */
+    top: -55px;
+    /* Increased gap (was -40px) */
+    z-index: 2;
+    color: white;
+}
+
+/* Gold Card (Front) */
+.card-gold {
+    background: #E0C090;
+    /* Beige/Gold */
+    top: 0;
+    z-index: 3;
+    color: white;
+}
+
+.pc-card-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.pc-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pc-logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.pc-icon {
+    font-size: 1.5rem;
+    transform: rotate(90deg);
+}
+
+.pc-card-number {
+    font-family: 'Courier New', monospace;
+    font-size: 1.4rem;
+    letter-spacing: 2px;
+    margin-top: auto;
+    margin-bottom: 20px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.pc-card-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.pc-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.pc-label {
+    font-size: 0.6rem;
+    opacity: 0.8;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.pc-value {
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.pc-mastercard {
+    display: flex;
+}
+
+.mc-circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.mc-circle:first-child {
+    margin-right: -15px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .pc-title {
+        font-size: 2.5rem;
+    }
+
+    .cards-stack-wrapper {
+        width: 300px;
+        height: 300px;
+    }
+
+    .pc-card {
+        width: 280px;
+        height: 180px;
+    }
+}

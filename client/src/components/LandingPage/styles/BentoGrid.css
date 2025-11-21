@@ -1,0 +1,308 @@
+/* ===== BENTO GRID SECTION STYLES ===== */
+.how-it-works-section {
+    padding: 100px 0;
+    background: var(--bg-white);
+    border-top: none;
+    overflow: hidden;
+}
+
+.how-it-works-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.bento-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1.4fr;
+    /* Left, Center, Right */
+    gap: 2rem;
+    align-items: stretch;
+    /* Stretch to same height */
+    min-height: 500px;
+}
+
+/* Common Card Styles */
+.bento-card {
+    background: #FFFFFF;
+    border-radius: 30px;
+    padding: 24px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.bento-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.08);
+}
+
+/* --- Left Column: Your Cards --- */
+.cards-preview-card {
+    background: #F5F7FA;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card-header-simple {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 1.5rem;
+}
+
+.preview-card-visual {
+    background: linear-gradient(135deg, #2E8B57 0%, #3CB371 100%);
+    /* Sea Green */
+    border-radius: 20px;
+    padding: 20px;
+    color: white;
+    margin-bottom: 1.5rem;
+    position: relative;
+    height: 180px;
+    box-shadow: 0 10px 20px rgba(46, 139, 87, 0.3);
+}
+
+.visual-card-content {
+    position: relative;
+    z-index: 2;
+}
+
+.vc-balance {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.vc-number {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.vc-chart-donut {
+    position: absolute;
+    bottom: -10px;
+    right: -10px;
+    width: 80px;
+    height: 80px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-dark);
+    font-size: 0.8rem;
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.donut-text {
+    text-align: center;
+    line-height: 1.2;
+}
+
+.donut-text span {
+    font-size: 0.6rem;
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+.card-stats-row {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-light);
+    margin-bottom: 4px;
+}
+
+.stat-val {
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+/* --- Center Column: Container --- */
+.bento-center-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    justify-content: space-between;
+}
+
+.bento-text-content {
+    text-align: center;
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 2;
+}
+
+.bento-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--primary-blue);
+    margin-bottom: 0.5rem;
+    line-height: 1.1;
+}
+
+.bento-subtitle {
+    font-size: 1rem;
+    color: var(--text-light);
+}
+
+.bento-image-container {
+    flex-grow: 1;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+    margin-top: -20px;
+    /* Pull image up slightly closer to text */
+}
+
+.bento-image {
+    width: 100%;
+    max-height: 350px;
+    object-fit: contain;
+    object-position: bottom center;
+}
+
+.expenses-card {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 12px 24px;
+    border-radius: 50px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    white-space: nowrap;
+}
+
+.expense-icon {
+    width: 36px;
+    height: 36px;
+    background: #FFE4E1;
+    color: #FF7F50;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+.expense-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.expense-label {
+    font-size: 0.75rem;
+    color: var(--text-light);
+}
+
+.expense-amount {
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+/* --- Right Column: Total Balance --- */
+.balance-card {
+    background: #FF7F50;
+    /* Coral Orange */
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
+}
+
+.balance-card .card-header {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 1rem;
+}
+
+.balance-amount {
+    font-size: 3rem;
+    font-weight: 800;
+    margin: 1rem 0;
+}
+
+.income-badge {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.chart-placeholder {
+    width: 100%;
+    height: 150px;
+    margin-top: auto;
+    position: relative;
+    overflow: visible;
+}
+
+.chart-line {
+    width: 110%;
+    height: 100%;
+    margin-left: -5%;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+    overflow: visible;
+}
+
+.chart-line path {
+    stroke: white;
+    stroke-width: 6;
+    stroke-linecap: round;
+    fill: none;
+    vector-effect: non-scaling-stroke;
+}
+
+.card-floating-badge {
+    position: absolute;
+    top: 55%;
+    left: 15%;
+    background: #FF9F80;
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+/* Responsive Bento */
+@media (max-width: 960px) {
+    .bento-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+
+    .bento-center-column {
+        order: -1;
+        /* Show text/image first on mobile */
+    }
+
+    .bento-image {
+        max-height: 300px;
+    }
+}

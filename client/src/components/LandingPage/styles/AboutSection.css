@@ -1,6 +1,6 @@
 /* ===== ABOUT SECTION STYLES ===== */
 .about-section {
-    padding: 100px 0;
+    padding: 40px 0 100px 0;
     background: var(--bg-white);
     border-top: none;
 }
@@ -92,18 +92,201 @@
     font-size: 1rem;
 }
 
-.about-image {
+.about-visual {
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
+    height: 400px;
 }
 
-.about-img {
-    max-width: 100%;
-    height: auto;
+.security-card-container {
+    position: relative;
+    width: 320px;
+    height: 320px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Main Security Card */
+.security-card {
+    width: 240px;
+    height: 280px;
+    background: white;
+    border-radius: 30px;
+    box-shadow: 0 30px 60px rgba(0, 48, 135, 0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    position: relative;
+    z-index: 2;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.shield-icon-wrapper {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, #003087 0%, #0070BA 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 20px rgba(0, 112, 186, 0.3);
+    animation: pulse 3s infinite ease-in-out;
+}
+
+.shield-icon-large {
+    font-size: 3rem;
+    color: white;
+}
+
+.security-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #F5F7FA;
+    padding: 8px 16px;
     border-radius: 20px;
-    /* No shadow for cleaner look */
+    margin-bottom: 20px;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    background: #2E8B57;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px rgba(46, 139, 87, 0.2);
+}
+
+.status-text {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.security-progress {
+    width: 100%;
+    height: 6px;
+    background: #F0F0F0;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 100%;
+    background: #2E8B57;
+    border-radius: 3px;
+    animation: scan 2s infinite linear;
+    transform-origin: left;
+}
+
+/* Floating Badges */
+.floating-badge {
+    position: absolute;
+    background: white;
+    padding: 12px 20px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 3;
+    animation: float 4s ease-in-out infinite;
+}
+
+.badge-icon {
+    width: 36px;
+    height: 36px;
+    background: #F5F7FA;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-blue);
+}
+
+.badge-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.badge-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.badge-subtitle {
+    font-size: 0.7rem;
+    color: var(--text-light);
+}
+
+/* Badge Positions */
+.badge-encryption {
+    top: 20px;
+    right: -20px;
+    animation-delay: 0s;
+}
+
+.badge-users {
+    bottom: 40px;
+    left: -30px;
+    animation-delay: 1s;
+}
+
+.badge-speed {
+    top: 50%;
+    right: -50px;
+    animation-delay: 2s;
+}
+
+/* Animations */
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 10px 20px rgba(0, 112, 186, 0.3);
+    }
+
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 15px 30px rgba(0, 112, 186, 0.4);
+    }
+
+    100% {
+        transform: scale(1);
+        box-shadow: 0 10px 20px rgba(0, 112, 186, 0.3);
+    }
+}
+
+@keyframes scan {
+    0% {
+        transform: scaleX(0);
+    }
+
+    50% {
+        transform: scaleX(1);
+    }
+
+    100% {
+        transform: scaleX(1);
+        opacity: 0;
+    }
 }
 
 /* About responsive */

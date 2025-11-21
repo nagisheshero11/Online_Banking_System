@@ -2,7 +2,8 @@ import React from 'react';
 import Navbar from './LandingPage/Navbar';
 import HeroSection from './LandingPage/HeroSection';
 import FeaturesSection from './LandingPage/FeaturesSection';
-import HowItWorksSection from './LandingPage/HowItWorksSection';
+import HowItWorksSection from './LandingPage/BentoGrid';
+import PerfectCardSection from './LandingPage/PerfectCardSection';
 import AboutSection from './LandingPage/AboutSection';
 import CTABanner from './LandingPage/CTABanner';
 import Footer from './LandingPage/Footer';
@@ -15,6 +16,7 @@ const LandingPage = () => {
             <HeroSection />
             <FeaturesSection />
             <HowItWorksSection />
+            <PerfectCardSection />
             <AboutSection />
             <CTABanner />
             <Footer />
