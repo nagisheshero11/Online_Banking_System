@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-scroll';
+
 import { Link as RouterLink } from 'react-router-dom';
 import './styles/HeroSection.css';
 
@@ -18,7 +18,7 @@ const HeroSection = () => {
                         <div className="card-content">
                             <div className="card-logo">BANKIFY</div>
                             <div className="card-chip"></div>
-                            <div className="card-number">•••• •••• •••• 4242</div>
+                            <div className="card-number">•••• •••• •••• 1644</div>
                             <div className="card-details">
                                 <div className="card-name">Nagi Seishiro</div>
                                 <div className="card-brand">VISA</div>
