@@ -20,7 +20,7 @@ const HeroSection = () => {
                             <div className="card-chip"></div>
                             <div className="card-number">•••• •••• •••• 1644</div>
                             <div className="card-details">
-                                <div className="card-name">Nagi Seishiro</div>
+                                <div className="card-name">Lewis Hamilton</div>
                                 <div className="card-brand">VISA</div>
                             </div>
                         </div>
