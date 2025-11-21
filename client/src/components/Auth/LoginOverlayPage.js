@@ -4,7 +4,6 @@ import Login from './Login';
 
 const LoginOverlayPage = () => (
     <>
-        <LandingPage />
         <Login />
     </>
 );

@@ -1,29 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { FaEnvelope, FaLock, FaCheck, FaCreditCard, FaUser, FaUniversity, FaWifi } from 'react-icons/fa';
 import './styles/Login.css';
-import Toast from '../Common/Toast';
-import { login, verifyToken } from '../../services/authAPI'; // added backend integration
-
-// Icons
-const Icon = ({ path, className }) => (
-    <svg className={className} fill="currentColor" viewBox="0 0 20 20">
-        <path fillRule="evenodd" d={path} clipRule="evenodd" />
-    </svg>
-);
-
-const EmailIcon = () => (
-    <Icon
-        className="form-input-icon"
-        path="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884zM18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"
-    />
-);
-
-const LockIcon = () => (
-    <Icon
-        className="form-input-icon"
-        path="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-    />
-);
+import { login } from '../../services/authAPI';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -40,18 +19,14 @@ const Login = () => {
     };
 
     // Handle login submit
-    // Handle login submit
     const onSubmit = async (e) => {
         e.preventDefault();
+        console.log("Login form submitted", formData);
         try {
-            const data = await login(formData); // backend login returns token + role
-
-            // Store role in localStorage
+            const data = await login(formData);
             localStorage.setItem("role", data.role);
-
             const role = data.role;
 
-            // 🔥 Role-based redirect
             if (role === "ADMIN") {
                 navigate('/admin/dashboard', { state: { showLoginSuccess: true } });
             } else if (role === "USER") {
@@ -66,76 +41,121 @@ const Login = () => {
     };
 
     return (
-        <div className="auth-page">
-            <div className="auth-card">
-                <div className="auth-brand-panel">
-                    <h2>BANKIFY</h2>
-                    <p>Welcome back! Sign in to continue.</p>
-                    <svg
-                        className="brand-icon"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={1}
-                            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                        />
-                    </svg>
-                </div>
+        <div className="login-page-split">
+            {/* --- Left Side: Login Form --- */}
+            <div className="login-left-panel">
+                <div className="login-form-wrapper">
+                    <div className="login-header">
+                        <h2 className="login-title">Sign in</h2>
+                        <p className="login-subtitle">Use your email and password.</p>
+                        <button
+                            type="button"
+                            className="back-to-landing"
+                            onClick={() => navigate('/')}
+                            aria-label="Back to landing page"
+                            title="Back"
+                        >
+                            ←
+                        </button>
+                    </div>
 
-                <div className="auth-form-panel">
-                    <button
-                        type="button"
-                        aria-label="Close"
-                        className="auth-modal-close-btn"
-                        onClick={() => navigate('/')}
-                    >
-                        &times;
-                    </button>
-
-                    <h3>Sign in</h3>
-                    <p className="form-subtitle">Use your email and password.</p>
-
-                    <form onSubmit={onSubmit}>
-                        <div className="form-input-group">
-                            <EmailIcon />
+                    <form onSubmit={onSubmit} className="login-form">
+                        <div className="input-group-split">
+                            <FaEnvelope className="input-icon" />
                             <input
                                 type="text"
                                 name="emailOrUsername"
                                 placeholder="Email / Username"
-                                className="form-input"
+                                className="split-input"
                                 required
                                 onChange={handleChange}
                             />
                         </div>
 
-                        <div className="form-input-group">
-                            <LockIcon />
+                        <div className="input-group-split">
+                            <FaLock className="input-icon" />
                             <input
                                 type="password"
                                 name="password"
                                 placeholder="Password"
-                                className="form-input"
+                                className="split-input"
                                 required
                                 onChange={handleChange}
                             />
                         </div>
 
-                        <button type="submit" className="form-button">
+                        <button type="submit" className="split-btn-primary">
                             Login
                         </button>
                     </form>
 
-                    <p className="form-switch-text">
-                        New here?{' '}
-                        <Link to="/signup" className="form-switch-link">
-                            Create an account
-                        </Link>
-                    </p>
+                    <div className="login-footer">
+                        <p>New here? <Link to="/signup" className="link-highlight">Create an account</Link></p>
+                    </div>
+                </div>
+            </div>
+
+            {/* --- Right Side: Visual Grid --- */}
+            <div className="login-right-panel">
+                <div className="visual-grid-container">
+
+                    {/* Floating Card 1: User Profile */}
+                    <div className="floating-card card-profile">
+                        <div className="profile-avatar">
+                            <FaUser />
+                        </div>
+                        <div className="profile-info">
+                            <span className="p-name">Lewis Hamilton</span>
+                            <span className="p-tag">Premium User</span>
+                        </div>
+                    </div>
+
+                    {/* Floating Card 2: Transaction Success */}
+                    <div className="floating-card card-transaction">
+                        <div className="trans-icon-box">
+                            <FaCheck />
+                        </div>
+                        <div className="trans-details">
+                            <span className="t-title">Successful transaction</span>
+                            <span className="t-amount">₹ 1,250.00</span>
+                        </div>
+                    </div>
+
+                    {/* Floating Card 3: Bank Selection */}
+                    <div className="floating-card card-banks">
+                        <span className="bank-label">Select bank Type</span>
+                        <div className="bank-logos">
+                            <div className="bank-logo"><FaUniversity /></div>
+                            <div className="bank-logo">Current</div>
+                            <div className="bank-logo">Savings</div>
+                        </div>
+                    </div>
+
+                    {/* Floating Card 4: Credit Card */}
+                    <div className="floating-card card-credit">
+                        <div className="cc-top">
+                            <span className="cc-chip"></span>
+                            <FaWifi className="cc-wifi" />
+                        </div>
+                        <div className="cc-number">**** 1644</div>
+                        <div className="cc-bottom">
+                            <span>Lewis Hamilton</span>
+                            <span className="cc-brand">VISA</span>
+                        </div>
+                    </div>
+
+                    {/* Floating Card 5: Savings Goal */}
+                    <div className="floating-card card-savings">
+                        <div className="savings-header">
+                            <span className="s-title">Vacation Fund</span>
+                            <span className="s-amount">85%</span>
+                        </div>
+                        <div className="savings-bar-bg">
+                            <div className="savings-bar-fill"></div>
+                        </div>
+                        <span className="s-target">₹8,500 / ₹10k</span>
+                    </div>
+
                 </div>
             </div>
         </div>
