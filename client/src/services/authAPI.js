@@ -1,17 +1,16 @@
+// client/src/services/authAPI.js
 import axios from "axios";
 
 const API_BASE_URL = "http://localhost:6060/api/user";
 
-// --------------------------------------------------
-// Helper: Get JWT token from localStorage
-// --------------------------------------------------
-function getToken() {
-    return localStorage.getItem("token");
-}
+/* -------------------------
+   Token helper
+------------------------- */
+export const getToken = () => localStorage.getItem("token");
 
-// --------------------------------------------------
-// Axios instance with auth header interceptor
-// --------------------------------------------------
+/* -------------------------
+   Axios instance (with Authorization header)
+------------------------- */
 const api = axios.create({ baseURL: API_BASE_URL });
 
 api.interceptors.request.use((config) => {
@@ -23,67 +22,90 @@ api.interceptors.request.use((config) => {
     return config;
 });
 
-// --------------------------------------------------
-// Signup API (Public)
-// --------------------------------------------------
+/* -------------------------
+   SIGNUP (Public)
+   POST /api/user/signup
+------------------------- */
 export async function signup(userData) {
     try {
-        const { data } = await api.post("/signup", userData, {
-            headers: { "Content-Type": "application/json" },
-            transformResponse: [(d) => d], // allow plain text responses
-        });
-        return data; // e.g., "User registered successfully"
+        const { data } = await axios.post(
+            `${API_BASE_URL}/signup`,
+            userData,
+            {
+                headers: { "Content-Type": "application/json" },
+            }
+        );
+        return data;
     } catch (error) {
-        const msg = error.response?.data || error.message || "Signup failed";
-        console.error("Signup Error:", msg);
-        throw new Error(msg);
+        throw new Error(
+            error.response?.data || error.message || "Signup failed"
+        );
     }
 }
 
-// --------------------------------------------------
-// Login API (Public)
-// --------------------------------------------------
+/* -------------------------
+   LOGIN (Public)
+   POST /api/user/login
+------------------------- */
 export async function login(credentials) {
     try {
-        const { data } = await api.post("/login", credentials, {
-            headers: { "Content-Type": "application/json" },
-        });
+        const { data } = await axios.post(
+            `${API_BASE_URL}/login`,
+            credentials,
+            {
+                headers: { "Content-Type": "application/json" },
+            }
+        );
 
-        if (!data?.token) throw new Error("Invalid credentials");
+        if (!data?.token) throw new Error("Invalid login response");
 
         // Store token + role
         localStorage.setItem("token", data.token);
-        localStorage.setItem("role", data.role); // <<< ADD THIS
+        localStorage.setItem("role", (data.role || "USER").toUpperCase());
 
-        return data; // { token, username, email, role }
+        return data; // {token, username, email, role}
     } catch (error) {
-        const msg = error.response?.data || "Invalid credentials";
+        const msg =
+            error.response?.data ||
+            error.response?.statusText ||
+            error.message ||
+            "Login failed";
         console.error("Login Error:", msg);
         throw new Error(msg);
     }
 }
 
-// --------------------------------------------------
-// Token Verification API (Private)
-// Verifies if stored token is still valid by calling a protected endpoint
-// --------------------------------------------------
+/* -------------------------
+   Verify Token (Private)
+   GET /api/user/profile
+------------------------- */
 export async function verifyToken() {
     const token = getToken();
     if (!token) return false;
+
     try {
         await api.get("/profile");
         return true;
     } catch (error) {
-        if (error.response?.status === 401) {
+        if ([401, 403].includes(error.response?.status)) {
             localStorage.removeItem("token");
+            localStorage.removeItem("role");
         }
         return false;
     }
 }
 
-// --------------------------------------------------
-// Logout (local only)
-// --------------------------------------------------
+/* -------------------------
+   Logout
+------------------------- */
 export function logout() {
     localStorage.removeItem("token");
+    localStorage.removeItem("role");
+}
+
+/* -------------------------
+   Role Getter
+------------------------- */
+export function getRole() {
+    return localStorage.getItem("role") || null;
 }
