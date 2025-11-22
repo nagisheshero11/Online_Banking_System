@@ -38,13 +38,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        String token = authHeader.substring(7);
+        String token = authHeader.substring(7).trim();
+        String username = null;
 
-        String username;
         try {
             username = jwtUtils.extractUsername(token);
         } catch (Exception ex) {
-            filterChain.doFilter(request, response);
+            System.out.println("❌ JWT parsing failed: " + ex.getMessage());
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 
@@ -64,11 +65,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
 
-                String role = jwtUtils.extractRole(token);
-                if (role != null) {
-                    request.setAttribute("role", role);
-                    request.setAttribute("username", username);
-                }
+                request.setAttribute("username", username);
+                request.setAttribute("role", jwtUtils.extractRole(token));
+
+            } else {
+                System.out.println("❌ JWT VALIDATION FAILED");
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
             }
         }
 

@@ -112,4 +112,23 @@ public class BillService {
     public List<Bill> getBillsByLoan(Long loanId, String username) {
         return billRepository.findByLoanIdAndUsername(loanId, username);
     }
+
+    @Transactional
+    public Bill createBillForLoan(String username,
+                                  String accountNumber,
+                                  Long loanId,
+                                  BigDecimal amount,
+                                  LocalDate dueDate) {
+
+        Bill bill = Bill.builder()
+                .username(username)
+                .accountNumber(accountNumber)
+                .loanId(loanId)
+                .amount(amount)
+                .dueDate(dueDate)
+                .status("UNPAID")
+                .build();
+
+        return billRepository.save(bill);
+    }
 }

@@ -30,49 +30,46 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
 
-                        /* PUBLIC */
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        // ⭐ CORS PRE-FLIGHT FIX
+                        .requestMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
+                        .requestMatchers("/error").permitAll()
+
+                        // Public
                         .requestMatchers("/api/user/signup", "/api/user/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/setup/superadmin").permitAll()
 
-                        /* ADMIN — ROLE BASED */
+                        // Loans
+                        .requestMatchers(HttpMethod.POST, "/api/loans/apply")
+                        .hasAuthority("USER")
+
+                        .requestMatchers(HttpMethod.GET, "/api/loans/my")
+                        .hasAuthority("USER")
+
+                        // Admin APIs
                         .requestMatchers("/api/admin/**")
                         .hasAuthority("ADMIN")
 
-                        /* BILLS */
+                        // Bills
                         .requestMatchers(HttpMethod.POST, "/api/bills/create").permitAll()
                         .requestMatchers("/api/bills/**").authenticated()
 
-                        /* LOANS → USER ONLY */
-                        .requestMatchers(HttpMethod.POST, "/api/loans/**")
-                        .hasAuthority("USER")
-
-                        .requestMatchers(HttpMethod.GET, "/api/loans/**")
-                        .hasAuthority("USER")
-
-                        /* USER ROUTES */
+                        // Other authenticated APIs
                         .requestMatchers("/api/user/**").authenticated()
                         .requestMatchers("/api/account/**").authenticated()
                         .requestMatchers("/api/transfer/**").authenticated()
                         .requestMatchers("/api/profile/**").authenticated()
 
-                        /* ANY OTHER */
                         .anyRequest().authenticated()
                 )
 
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+    public PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
