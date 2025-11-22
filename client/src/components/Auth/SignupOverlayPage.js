@@ -4,7 +4,6 @@ import Signup from './Signup';
 
 const SignupOverlayPage = () => (
     <>
-        <LandingPage />
         <Signup />
     </>
 );
