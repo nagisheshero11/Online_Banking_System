@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { FaPaperPlane, FaUser } from 'react-icons/fa';
-import { transferMoney, getAccountDetails } from '../../services/accountAPI'; // ✅ new import
+import { FaPaperPlane, FaCheckCircle } from 'react-icons/fa';
+import { transferMoney, getAccountDetails } from '../../services/accountAPI';
 import './styles/TransferMoney.css';
 
 const TransferMoney = () => {
@@ -10,8 +10,8 @@ const TransferMoney = () => {
     const [userAccount, setUserAccount] = useState('');
     const [availableBalance, setAvailableBalance] = useState(0);
     const [loading, setLoading] = useState(false);
+    const [success, setSuccess] = useState('');
 
-    // ✅ Fetch account info on mount
     useEffect(() => {
         const fetchAccount = async () => {
             try {
@@ -20,7 +20,6 @@ const TransferMoney = () => {
                 setAvailableBalance(accountData.balance);
             } catch (error) {
                 console.error('Error fetching account info:', error);
-                alert('Failed to load account info. Please log in again.');
             }
         };
         fetchAccount();
@@ -29,7 +28,6 @@ const TransferMoney = () => {
     const handleTransfer = async (e) => {
         e.preventDefault();
 
-        // Basic validation
         if (!receiverAccount) {
             alert("Please enter receiver's account number");
             return;
@@ -47,7 +45,6 @@ const TransferMoney = () => {
             return;
         }
 
-        // ✅ Call backend
         setLoading(true);
         try {
             const transferData = {
@@ -57,88 +54,75 @@ const TransferMoney = () => {
             };
 
             const response = await transferMoney(transferData);
-            alert(
-                `✅ Transfer Successful!\nTransaction ID: ${response.transactionId}\nAmount: ₹${response.amount}\nTo: ${response.toAccountNumber}`
-            );
-
-            // Update balance locally
+            setSuccess(`Transferred ₹${response.amount} to ${response.toAccountNumber}`);
             setAvailableBalance(response.fromBalanceAfter);
-            // Reset form
             setReceiverAccount('');
             setTransferAmount('');
             setDescription('');
+
+            setTimeout(() => setSuccess(''), 4000);
         } catch (error) {
             console.error("Transfer failed:", error);
-            const errMsg =
-                error.response?.data || "Transfer failed. Please try again.";
+            const errMsg = error.response?.data || "Transfer failed. Please try again.";
             alert(`❌ ${errMsg}`);
         } finally {
             setLoading(false);
         }
     };
 
-    const handleCancel = () => {
-        setReceiverAccount('');
-        setTransferAmount('');
-        setDescription('');
-    };
+    const currency = (n) => n ? n.toLocaleString('en-IN', { style: 'currency', currency: 'INR' }) : '₹0.00';
 
     return (
-        <div className="transfer-money-container">
-            <div className="transfer-header">
-                <p>Send money to any account instantly</p>
-            </div>
+        <div className="transfer-container">
+            {/* Left: Visual Guide */}
+            <div className="transfer-visual">
+                <div className="visual-bg"></div>
 
-            <div className="transfer-card">
-                <div className="transfer-banner">
-                    <div className="banner-content">
-                        <FaPaperPlane className="transfer-icon" />
-                        <div className="banner-text">
-                            <h3>Transfer Funds</h3>
-                            <p>
-                                Available Balance: ₹
-                                {availableBalance
-                                    ? availableBalance.toLocaleString()
-                                    : '0.00'}
-                            </p>
+                <div className="visual-content">
+                    <div>
+                        <div className="visual-title">Send Money<br />Securely</div>
+                        <div className="visual-subtitle">Instant transfers to any bank account.</div>
+
+                        <div className="current-balance-card">
+                            <div className="balance-label">Available Balance</div>
+                            <div className="balance-value">{currency(availableBalance)}</div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <form onSubmit={handleTransfer} className="transfer-form">
-                    {/* Receiver Account */}
-                    <div className="form-group">
-                        <label htmlFor="receiverAccount" className="form-label">
-                            Receiver Account Number *
-                        </label>
-                        <div className="account-input-container">
-                            <FaUser className="account-icon" />
-                            <input
-                                type="text"
-                                id="receiverAccount"
-                                value={receiverAccount}
-                                onChange={(e) => setReceiverAccount(e.target.value.toUpperCase())}
-                                placeholder="Enter receiver's account number"
-                                className="account-input"
-                                required
-                            />
-                        </div>
+            {/* Right: Input Form */}
+            <div className="transfer-form-card">
+                <div className="form-header">
+                    <div className="form-title">Transfer Details</div>
+                    <div className="form-desc">Please verify the receiver's account number carefully.</div>
+                </div>
+
+                <form onSubmit={handleTransfer}>
+                    {/* Receiver */}
+                    <div className="input-group">
+                        <label className="input-label">Receiver Account Number</label>
+                        <input
+                            type="text"
+                            className="zen-input"
+                            value={receiverAccount}
+                            onChange={(e) => setReceiverAccount(e.target.value.toUpperCase())}
+                            placeholder="e.g. BANK12345678"
+                            required
+                        />
                     </div>
 
                     {/* Amount */}
-                    <div className="form-group">
-                        <label htmlFor="transferAmount" className="form-label">
-                            Transfer Amount *
-                        </label>
-                        <div className="amount-input-container">
-                            <span className="currency-symbol">₹</span>
+                    <div className="input-group">
+                        <label className="input-label">Amount (INR)</label>
+                        <div className="amount-wrapper">
+                            <span className="currency-sign">₹</span>
                             <input
                                 type="number"
-                                id="transferAmount"
+                                className="big-amount-input"
                                 value={transferAmount}
                                 onChange={(e) => setTransferAmount(e.target.value)}
-                                placeholder="Enter amount to transfer"
-                                className="amount-input"
+                                placeholder="0"
                                 min="1"
                                 step="0.01"
                                 required
@@ -147,48 +131,24 @@ const TransferMoney = () => {
                     </div>
 
                     {/* Remarks */}
-                    <div className="form-group">
-                        <label htmlFor="description" className="form-label">
-                            Description / Remarks (Optional)
-                        </label>
-                        <textarea
-                            id="description"
+                    <div className="input-group">
+                        <label className="input-label">Remarks (Optional)</label>
+                        <input
+                            type="text"
+                            className="zen-input"
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
-                            placeholder="Add a note for this transfer"
-                            className="description-input"
-                            rows="3"
+                            placeholder="What's this for?"
                         />
                     </div>
 
-                    {/* Transfer Summary */}
-                    <div className="transfer-details">
-                        <h4>Transfer Details:</h4>
-                        <div className="details-row">
-                            <span className="detail-label">From:</span>
-                            <span className="detail-value">{userAccount || "Loading..."}</span>
-                        </div>
-                        <div className="details-row">
-                            <span className="detail-label">To:</span>
-                            <span className="detail-value">{receiverAccount || "Not entered"}</span>
-                        </div>
-                        <div className="details-row">
-                            <span className="detail-label">Amount:</span>
-                            <span className="detail-value">
-                                ₹{transferAmount ? parseFloat(transferAmount).toLocaleString() : '0.00'}
-                            </span>
-                        </div>
-                    </div>
+                    <button type="submit" className="transfer-submit-btn" disabled={loading}>
+                        {loading ? "Processing..." : (success ? "Transfer Successful!" : "Send Securely")}
+                        {!loading && !success && <FaPaperPlane />}
+                        {success && <FaCheckCircle />}
+                    </button>
 
-                    {/* Action Buttons */}
-                    <div className="form-actions">
-                        <button type="submit" className="transfer-btn" disabled={loading}>
-                            {loading ? "Processing..." : "Transfer Now"}
-                        </button>
-                        <button type="button" onClick={handleCancel} className="cancel-btn">
-                            Cancel
-                        </button>
-                    </div>
+                    {success && <div style={{ textAlign: 'center', marginTop: '15px', color: '#16A34A', fontWeight: '600' }}>{success}</div>}
                 </form>
             </div>
         </div>

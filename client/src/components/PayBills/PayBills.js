@@ -1,254 +1,163 @@
-// client/src/components/PayBills/PayBills.jsx
 import React, { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import "./styles/PayBills.css";
-
-// ✅ Correct import (your file name is billAPI.js)
+import { FaBolt, FaWifi, FaMobileAlt, FaFire, FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
 import { getMyBills, payBill, getBillsByLoan } from "../../services/billsAPI";
-
-const formatCurrency = (value) =>
-    Number(value).toLocaleString("en-IN", { maximumFractionDigits: 2 });
+import "./styles/PayBills.css";
 
 const PayBills = () => {
     const [bills, setBills] = useState([]);
     const [loading, setLoading] = useState(true);
     const [payingBillId, setPayingBillId] = useState(null);
-    const [error, setError] = useState(null);
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 
     const loanIdParam = searchParams.get("loanId");
 
-    /* ---------------- Fetch Bills ---------------- */
     useEffect(() => {
-        const load = async () => {
-            setLoading(true);
-            setError(null);
-
-            try {
-                let data;
-
-                if (loanIdParam) {
-                    data = await getBillsByLoan(loanIdParam);
-                } else {
-                    data = await getMyBills();
-                }
-
-                setBills(
-                    (data || []).map((b) => ({
-                        ...b,
-                        amount: Number(b.amount),
-                        dueDate: b.dueDate ? String(b.dueDate) : null,
-                    }))
-                );
-            } catch (err) {
-                console.error("Bills fetch error:", err);
-                setError(err.message || "Failed to fetch bills");
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        load();
+        fetchBills();
     }, [loanIdParam]);
 
-    /* ---------------- Summary ---------------- */
-    const totalDue = bills
-        .filter((b) => b.status === "UNPAID" || b.status === "OVERDUE")
-        .reduce((sum, b) => sum + Number(b.amount), 0);
-
-    /* ---------------- Pay One Bill ---------------- */
-    const handlePay = async (billId) => {
-        if (!window.confirm("Do you want to pay this bill?")) return;
-
-        setPayingBillId(billId);
-
+    const fetchBills = async () => {
+        setLoading(true);
         try {
-            await payBill(billId); // ✅ now matches backend
-            const refreshed = loanIdParam
+            const data = loanIdParam
                 ? await getBillsByLoan(loanIdParam)
                 : await getMyBills();
 
-            setBills(
-                refreshed.map((b) => ({
-                    ...b,
-                    amount: Number(b.amount),
-                }))
-            );
-
-            alert("Payment successful!");
+            setBills((data || []).map(b => ({
+                ...b,
+                amount: Number(b.amount),
+                dueDate: b.dueDate ? String(b.dueDate) : null,
+            })));
         } catch (err) {
-            console.error("Pay bill error:", err);
+            console.error("Bills fetch error:", err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handlePay = async (billId) => {
+        setPayingBillId(billId);
+        try {
+            await payBill(billId);
+            await fetchBills();
+            // Optional: Show success toast
+        } catch (err) {
             alert(err.message || "Payment failed");
         } finally {
             setPayingBillId(null);
         }
     };
 
-    if (loading) return <div className="pay-bills-page">Loading bills...</div>;
-    if (error) return <div className="pay-bills-page">{error}</div>;
+    const handlePayAll = async () => {
+        const outstanding = bills.filter(b => b.status === "UNPAID" || b.status === "OVERDUE");
+        if (outstanding.length === 0) return;
+        if (!window.confirm(`Pay all ${outstanding.length} bills?`)) return;
+
+        for (let b of outstanding) {
+            try {
+                setPayingBillId(b.id);
+                await payBill(b.id);
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        await fetchBills();
+        setPayingBillId(null);
+    };
+
+    const totalDue = bills
+        .filter(b => b.status === "UNPAID" || b.status === "OVERDUE")
+        .reduce((sum, b) => sum + Number(b.amount), 0);
+
+    const currency = (n) => n.toLocaleString('en-IN', { style: 'currency', currency: 'INR' });
+
+    const getBillIcon = (type) => {
+        // Simple heuristic for icons based on bill type/name (mock logic)
+        // In a real app, bill type would be a field.
+        const t = (type || "").toLowerCase();
+        if (t.includes("electric")) return <FaBolt />;
+        if (t.includes("internet") || t.includes("wifi")) return <FaWifi />;
+        if (t.includes("mobile") || t.includes("phone")) return <FaMobileAlt />;
+        if (t.includes("gas")) return <FaFire />;
+        return <FaBolt />; // Default
+    };
 
     return (
-        <div className="pay-bills-page">
+        <div className="pay-bills-container">
+            {/* Left: Visual Guide */}
+            <div className="bills-visual">
+                <div className="visual-bg"></div>
 
-            {/* Header */}
-            <div className="page-header-wrapper">
-                <div className="page-header">
-                    <h1 className="header-title">Pay Bills</h1>
-                    <p className="header-subtitle">Pay EMI / monthly interest for approved loans.</p>
+                <div className="visual-content">
+                    <div>
+                        <div className="visual-title">Manage<br />Obligations</div>
+                        <div className="visual-subtitle">Stay on top of your dues with a single tap.</div>
+                    </div>
+
+                    <div className="total-due-card">
+                        <div className="due-label">Total Outstanding</div>
+                        <div className="due-value">{currency(totalDue)}</div>
+
+                        {totalDue > 0 && (
+                            <button className="pay-all-btn" onClick={handlePayAll}>
+                                Pay All Dues
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
 
-            {/* Outstanding Summary */}
-            <div className="bill-selector-container">
-                <div className="bill-selector-card">
-
-                    <div style={{ display: "flex", alignItems: "center" }}>
-                        <h3 className="selector-title">Outstanding Summary</h3>
-                        <div style={{ marginLeft: "auto", fontWeight: 700 }}>
-                            Total Due: ₹{formatCurrency(totalDue)}
-                        </div>
-                    </div>
-
-                    <div className="payment-summary" style={{ marginTop: 15 }}>
-                        <div className="summary-title-text">Quick Info</div>
-
-                        <div className="summary-line">
-                            <div className="summary-label">Unpaid Bills</div>
-                            <div className="summary-value">
-                                {bills.filter((b) => b.status === "UNPAID").length}
-                            </div>
-                        </div>
-
-                        <div className="summary-line">
-                            <div className="summary-label">Overdue</div>
-                            <div className="summary-value">
-                                {bills.filter((b) => b.status === "OVERDUE").length}
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-            {/* Bill List */}
-            <div className="payment-form-card">
-                <div className="form-header-banner" style={{ background: "#1A1A1A" }}>
-                    <div className="bill-name">Your Bills</div>
-                    <div className="balance-info">Pay on time to avoid penalties</div>
+            {/* Right: Bill List */}
+            <div className="bills-list">
+                <div className="list-header">
+                    <div className="list-title">Your Bills</div>
                 </div>
 
-                {bills.length === 0 ? (
-                    <div style={{ padding: 20 }}>
-                        <p>No bills found.</p>
-                        <button
-                            className="btn-cancel"
-                            onClick={() => navigate("/dashboard/loan-status")}
-                        >
-                            Back to Loan Status
-                        </button>
-                    </div>
+                {loading ? (
+                    <div className="empty-state">Loading bills...</div>
+                ) : bills.length === 0 ? (
+                    <div className="empty-state">No bills found. You're all caught up! 🎉</div>
                 ) : (
-                    <>
-                        <table style={{ width: "100%", borderCollapse: "collapse" }}>
-                            <thead>
-                                <tr style={{ borderBottom: "1px solid #eee" }}>
-                                    <th>Bill ID</th>
-                                    <th>Loan ID</th>
-                                    <th>Amount</th>
-                                    <th>Due Date</th>
-                                    <th>Status</th>
-                                    <th style={{ textAlign: "right" }}>Action</th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                {bills.map((b) => (
-                                    <tr key={b.id} style={{ borderBottom: "1px solid #f3f3f3" }}>
-                                        <td>{b.id}</td>
-                                        <td>{b.loanId || "-"}</td>
-                                        <td>₹{formatCurrency(b.amount)}</td>
-                                        <td>{b.dueDate || "-"}</td>
-                                        <td>{b.status}</td>
-
-                                        <td style={{ textAlign: "right" }}>
-                                            {b.status === "UNPAID" || b.status === "OVERDUE" ? (
-                                                <button
-                                                    className="btn-pay"
-                                                    onClick={() => handlePay(b.id)}
-                                                    disabled={payingBillId === b.id}
-                                                >
-                                                    {payingBillId === b.id
-                                                        ? "Processing..."
-                                                        : "Pay Now"}
-                                                </button>
-                                            ) : (
-                                                <button className="btn-cancel" disabled>
-                                                    Paid
-                                                </button>
-                                            )}
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-
-                        {/* Payment Summary */}
-                        <div className="payment-summary" style={{ marginTop: 20 }}>
-                            <div className="summary-title-text">Payment Summary</div>
-
-                            <div className="summary-line">
-                                <div className="summary-label">Total Due</div>
-                                <div className="summary-value">₹{formatCurrency(totalDue)}</div>
+                    bills.map(bill => (
+                        <div key={bill.id} className="bill-card">
+                            <div className="bill-icon">
+                                {getBillIcon(bill.type || "Electricity")}
                             </div>
 
-                            <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 20 }}>
-                                <button
-                                    className="btn-pay"
-                                    onClick={async () => {
-                                        if (!window.confirm("Pay ALL outstanding bills?")) return;
+                            <div className="bill-details">
+                                <div className="bill-type">Bill #{bill.id}</div>
+                                <div className="bill-meta">
+                                    <span className={`status-pill status-${bill.status.toLowerCase()}`}>
+                                        {bill.status}
+                                    </span>
+                                    {bill.dueDate && <span>Due: {bill.dueDate}</span>}
+                                </div>
+                            </div>
 
-                                        const outstanding = bills.filter(
-                                            (x) => x.status === "UNPAID" || x.status === "OVERDUE"
-                                        );
+                            <div className="bill-amount">
+                                <div className="amount-text">{currency(bill.amount)}</div>
+                            </div>
 
-                                        for (let b of outstanding) {
-                                            try {
-                                                setPayingBillId(b.id);
-                                                await payBill(b.id);
-                                            } catch {
-                                                alert("Failed to pay bill " + b.id);
-                                            }
-                                        }
-
-                                        const refreshed = loanIdParam
-                                            ? await getBillsByLoan(loanIdParam)
-                                            : await getMyBills();
-
-                                        setBills(
-                                            refreshed.map((r) => ({ ...r, amount: Number(r.amount) }))
-                                        );
-
-                                        alert("All bills paid.");
-                                        setPayingBillId(null);
-                                    }}
-                                >
-                                    Pay All (₹{formatCurrency(totalDue)})
-                                </button>
-
-                                <button
-                                    className="btn-cancel"
-                                    style={{ marginLeft: 12 }}
-                                    onClick={() => navigate("/dashboard/loan-status")}
-                                >
-                                    Back
-                                </button>
+                            <div className="bill-action">
+                                {bill.status === "PAID" ? (
+                                    <div style={{ color: '#16A34A', display: 'flex', alignItems: 'center', gap: '5px', fontWeight: '600' }}>
+                                        <FaCheckCircle /> Paid
+                                    </div>
+                                ) : (
+                                    <button
+                                        className="pay-btn"
+                                        onClick={() => handlePay(bill.id)}
+                                        disabled={payingBillId === bill.id}
+                                    >
+                                        {payingBillId === bill.id ? 'Processing...' : 'Pay Now'}
+                                    </button>
+                                )}
                             </div>
                         </div>
-                    </>
+                    ))
                 )}
             </div>
-
         </div>
     );
 };

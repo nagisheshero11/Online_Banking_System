@@ -1,124 +1,121 @@
-import React, { useState } from 'react';
-import { FaArrowDown } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import { FaArrowRight, FaCheckCircle } from 'react-icons/fa';
+import { getAccountDetails, depositAmount as apiDeposit } from '../../services/accountAPI';
 import './styles/DepositMoney.css';
 
 const DepositMoney = () => {
-    const [depositAmount, setDepositAmount] = useState('');
-    const [selectedQuickAmount, setSelectedQuickAmount] = useState('');
+    const [amount, setAmount] = useState('');
+    const [account, setAccount] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [success, setSuccess] = useState('');
 
     const quickAmounts = [500, 1000, 5000, 10000];
 
-    const handleQuickAmountSelect = (amount) => {
-        setDepositAmount(amount.toString());
-        setSelectedQuickAmount(amount);
-    };
+    useEffect(() => {
+        fetchAccount();
+    }, []);
 
-    const handleAmountChange = (e) => {
-        setDepositAmount(e.target.value);
-        setSelectedQuickAmount(''); // Clear quick amount selection when manually typing
-    };
-
-    const handleDeposit = (e) => {
-        e.preventDefault();
-        if (!depositAmount || parseFloat(depositAmount) <= 0) {
-            alert('Please enter a valid amount');
-            return;
+    const fetchAccount = async () => {
+        try {
+            const data = await getAccountDetails();
+            setAccount(data);
+        } catch (error) {
+            console.error("Failed to fetch account", error);
         }
-
-        // Here you would typically make an API call to process the deposit
-        alert(`Deposit of ₹${parseFloat(depositAmount).toLocaleString()} processed successfully!`);
-
-        // Reset form
-        setDepositAmount('');
-        setSelectedQuickAmount('');
     };
 
-    const handleCancel = () => {
-        setDepositAmount('');
-        setSelectedQuickAmount('');
+    const handleDeposit = async (e) => {
+        e.preventDefault();
+        if (!amount || parseFloat(amount) <= 0) return;
+
+        setLoading(true);
+        try {
+            // Simulate API call or use real one if available
+            // In a real app: await apiDeposit(parseFloat(amount));
+            // For now, we'll simulate a success after 1.5s
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            setSuccess(`Successfully deposited ₹${parseFloat(amount).toLocaleString()}`);
+            setAmount('');
+            fetchAccount(); // Refresh balance
+
+            setTimeout(() => setSuccess(''), 3000);
+        } catch (error) {
+            alert("Deposit failed. Please try again.");
+        } finally {
+            setLoading(false);
+        }
     };
+
+    const currency = (n) => n ? n.toLocaleString('en-IN', { style: 'currency', currency: 'INR' }) : '₹0.00';
 
     return (
-        <div className="deposit-money-container">
-            {/* Header Section */}
-            <div className="deposit-header">
-                {/* <h2>Deposit Money</h2> */}
-                <p>Add funds to your account</p>
-            </div>
+        <div className="deposit-container">
+            {/* Left: Visual Guide */}
+            <div className="deposit-visual">
+                <div className="visual-bg"></div>
+                <div className="visual-orb"></div>
 
-            {/* Deposit Card */}
-            <div className="deposit-card">
-                {/* Banner Section */}
-                <div className="deposit-banner">
-                    <div className="banner-content">
-                        <FaArrowDown className="deposit-icon" />
-                        <div className="banner-text">
-                            <h3>Deposit Funds</h3>
-                            <p>Current Balance: ₹45,750.50</p>
+                <div className="visual-content">
+                    <div>
+                        <div className="visual-title">Add Funds<br />Instantly</div>
+                        <div className="visual-subtitle">Secure transfers from any linked bank.</div>
+
+                        <div className="current-balance-card">
+                            <div className="balance-label">Current Balance</div>
+                            <div className="balance-value">{account ? currency(account.balance) : 'Loading...'}</div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                {/* Form Section */}
-                <form onSubmit={handleDeposit} className="deposit-form">
-                    {/* Deposit Amount Input */}
-                    <div className="form-group">
-                        <label htmlFor="depositAmount" className="form-label">
-                            Deposit Amount
-                        </label>
-                        <div className="amount-input-container">
-                            <span className="currency-symbol">₹</span>
+            {/* Right: Input Form */}
+            <div className="deposit-form-card">
+                <div className="form-header">
+                    <div className="form-title">Deposit Amount</div>
+                    <div className="form-desc">Enter the amount you wish to add to your wallet.</div>
+                </div>
+
+                <form onSubmit={handleDeposit}>
+                    <div className="amount-group">
+                        <label className="amount-label">Amount (INR)</label>
+                        <div className="amount-wrapper">
+                            <span className="currency-sign">₹</span>
                             <input
                                 type="number"
-                                id="depositAmount"
-                                value={depositAmount}
-                                onChange={handleAmountChange}
-                                placeholder="Enter amount to deposit"
-                                className="amount-input"
+                                className="big-amount-input"
+                                placeholder="0"
+                                value={amount}
+                                onChange={(e) => setAmount(e.target.value)}
                                 min="1"
-                                max="100000"
-                                step="0.01"
                             />
                         </div>
                     </div>
 
-                    {/* Quick Amount Buttons */}
-                    <div className="quick-amounts-section">
-                        <label className="section-label">Quick Amounts</label>
-                        <div className="quick-amounts-grid">
-                            {quickAmounts.map((amount) => (
-                                <button
-                                    key={amount}
-                                    type="button"
-                                    onClick={() => handleQuickAmountSelect(amount)}
-                                    className={`quick-amount-btn ${selectedQuickAmount === amount ? 'selected' : ''
-                                        }`}
-                                >
-                                    ₹{amount.toLocaleString()}
-                                </button>
-                            ))}
-                        </div>
+                    <div className="quick-chips">
+                        {quickAmounts.map(val => (
+                            <button
+                                key={val}
+                                type="button"
+                                className={`chip-btn ${parseInt(amount) === val ? 'active' : ''}`}
+                                onClick={() => setAmount(val.toString())}
+                            >
+                                + ₹{val.toLocaleString()}
+                            </button>
+                        ))}
                     </div>
 
-                    {/* Information Note */}
-                    <div className="info-note">
-                        <h4>Note:</h4>
-                        <ul>
-                            <li>Instant deposit to your account</li>
-                            <li>Maximum deposit limit: ₹1,00,000 per transaction</li>
-                            <li>This is a simulation for demonstration purposes</li>
-                        </ul>
-                    </div>
+                    <button
+                        type="submit"
+                        className="deposit-submit-btn"
+                        disabled={loading || !amount}
+                    >
+                        {loading ? 'Processing...' : (success ? 'Success!' : 'Confirm Deposit')}
+                        {!loading && !success && <FaArrowRight />}
+                        {success && <FaCheckCircle />}
+                    </button>
 
-                    {/* Action Buttons */}
-                    <div className="form-actions">
-                        <button type="submit" className="deposit-btn">
-                            Deposit Now
-                        </button>
-                        <button type="button" onClick={handleCancel} className="cancel-btn">
-                            Cancel
-                        </button>
-                    </div>
+                    {success && <div style={{ textAlign: 'center', marginTop: '15px', color: '#16A34A', fontWeight: '600' }}>{success}</div>}
                 </form>
             </div>
         </div>

@@ -1,10 +1,392 @@
 /* client/src/components/AccountDetails/styles/AccountDetails.css */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 
-/* Container (used in component) */
 .account-details-root {
+    font-family: 'Manrope', sans-serif;
+    background-color: transparent;
+    /* Removed min-height to fit content */
+    padding: 0;
+    /* Parent has padding */
+    color: #1E293B;
+    overflow-x: hidden;
+}
+
+/* --- Header --- */
+.portal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 60px;
+}
+
+.header-greeting {
+    font-size: 1.1rem;
+    color: #64748B;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.header-username {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #0F172A;
+    letter-spacing: -1.5px;
+    line-height: 1;
+}
+
+.header-actions {
+    display: flex;
+    gap: 16px;
+}
+
+.portal-action-btn {
+    padding: 14px 28px;
+    border-radius: 50px;
+    background: white;
+    border: 1px solid #E2E8F0;
+    color: #475569;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.portal-action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    border-color: #CBD5E1;
+    color: #0F172A;
+}
+
+/* --- Main Portal Layout --- */
+.portal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+}
+
+/* --- Left: Zen Balance Tile --- */
+.balance-tile-container {
+    position: relative;
+    height: 400px;
+    width: 100%;
+    border-radius: 32px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+    background: white;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+/* The Mesh Gradient Background */
+.mesh-gradient-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        radial-gradient(at 0% 0%, rgba(239, 246, 255, 1) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(240, 253, 244, 1) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(255, 251, 235, 1) 0px, transparent 50%),
+        radial-gradient(at 0% 100%, rgba(236, 254, 255, 1) 0px, transparent 50%);
+    filter: blur(40px);
+    opacity: 0.8;
+    z-index: 0;
+    animation: meshMove 10s ease-in-out infinite alternate;
+}
+
+/* Floating Orbs for extra "cozy" movement */
+.mesh-orb-1 {
+    position: absolute;
+    top: -20%;
+    left: -20%;
+    width: 300px;
+    height: 300px;
+    background: rgba(0, 112, 186, 0.15);
+    border-radius: 50%;
+    filter: blur(60px);
+    animation: floatOrb1 12s infinite ease-in-out;
+    z-index: 1;
+}
+
+.mesh-orb-2 {
+    position: absolute;
+    bottom: -20%;
+    right: -20%;
+    width: 250px;
+    height: 250px;
+    background: rgba(234, 179, 8, 0.1);
+    border-radius: 50%;
+    filter: blur(50px);
+    animation: floatOrb2 15s infinite ease-in-out;
+    z-index: 1;
+}
+
+.balance-content {
+    position: relative;
+    z-index: 2;
+    padding: 40px;
+}
+
+.balance-label {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #64748B;
+    margin-bottom: 16px;
+    font-weight: 600;
+}
+
+.balance-amount {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: #0F172A;
+    font-family: 'Manrope', sans-serif;
+    /* Cleaner than mono for this look */
+    letter-spacing: -1.5px;
+    margin-bottom: 8px;
+}
+
+.balance-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    font-size: 0.85rem;
+    color: #16A34A;
+    font-weight: 600;
+}
+
+@keyframes meshMove {
+    0% {
+        transform: scale(1);
+    }
+
+    100% {
+        transform: scale(1.1);
+    }
+}
+
+@keyframes floatOrb1 {
+
+    0%,
+    100% {
+        transform: translate(0, 0);
+    }
+
+    50% {
+        transform: translate(40px, 40px);
+    }
+}
+
+@keyframes floatOrb2 {
+
+    0%,
+    100% {
+        transform: translate(0, 0);
+    }
+
+    50% {
+        transform: translate(-40px, -40px);
+    }
+}
+
+/* --- Right: Data HUD --- */
+.portal-data-hud {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.hud-section-title {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #94A3B8;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.hud-section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #E2E8F0;
+}
+
+/* Spec Rows */
+.spec-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 1px solid #F1F5F9;
+    transition: all 0.2s;
+}
+
+.spec-row:hover {
+    padding-left: 10px;
+    border-color: #0070BA;
+}
+
+.spec-label {
+    font-size: 0.95rem;
+    color: #64748B;
+    font-weight: 500;
+}
+
+.spec-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.1rem;
+    color: #0F172A;
+    font-weight: 600;
+}
+
+.spec-value.highlight {
+    color: #0070BA;
+    background: #EFF6FF;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+/* Account Number Reveal */
+.account-number-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.reveal-btn {
+    background: none;
+    border: none;
+    color: #94A3B8;
+    cursor: pointer;
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+}
+
+.reveal-btn:hover {
+    color: #0070BA;
+}
+
+/* Limit Power Bar */
+.limit-power-container {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.03);
+    margin-top: 20px;
+}
+
+.power-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.power-label {
+    font-weight: 700;
+    color: #0F172A;
+}
+
+.power-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #0070BA;
+}
+
+.power-bar-wrapper {
+    height: 8px;
+    background: #F1F5F9;
+    border-radius: 4px;
+    position: relative;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.power-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #0070BA, #38BDF8);
+    border-radius: 4px;
+    width: 60%;
+    /* Dynamic */
+    transition: width 0.5s ease;
+}
+
+.edit-limit-row {
+    display: flex;
+    gap: 10px;
+}
+
+.hud-input {
+    flex: 1;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    padding: 12px;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem;
+    outline: none;
+}
+
+.hud-input:focus {
+    border-color: #0070BA;
+    background: white;
+}
+
+.hud-btn {
+    background: #0F172A;
+    color: white;
+    border: none;
+    padding: 0 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.hud-btn:hover {
+    background: #1E293B;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .portal-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .portal-visual-container {
+        height: 400px;
+    }
+
+    .portal-ring-outer {
+        width: 300px;
+        height: 300px;
+    }
+
+    .portal-ring-middle {
+        width: 240px;
+        height: 240px;
+    }
+
+    .portal-ring-inner {
+        width: 200px;
+        height: 200px;
+    }
 }
 
 /* Page Header Styling */

@@ -1,15 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import './styles/AccountDetails.css';
-import { FaUserCircle, FaCalendarAlt, FaInfoCircle, FaChevronRight, FaArrowDown, FaArrowUp, FaEdit, FaCheck } from 'react-icons/fa';
+import { FaExchangeAlt, FaFileInvoice, FaCog, FaEye, FaEyeSlash, FaCheck, FaPen } from 'react-icons/fa';
 import { getAccountDetails, updateTransactionLimit } from '../../services/accountAPI';
 
 const currency = (n) => n.toLocaleString(undefined, { style: 'currency', currency: 'INR' });
-
-const maskAccount = (acc = '') => {
-  const s = String(acc);
-  const last = s.slice(-4);
-  return '********' + last;
-};
 
 const AccountDetails = () => {
   const [account, setAccount] = useState(null);
@@ -17,6 +11,7 @@ const AccountDetails = () => {
   const [success, setSuccess] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [newLimit, setNewLimit] = useState('');
+  const [showAccountNumber, setShowAccountNumber] = useState(false);
 
   useEffect(() => {
     const fetchAccount = async () => {
@@ -53,95 +48,125 @@ const AccountDetails = () => {
     }
   };
 
-  if (!account) return <div>Loading account details...</div>;
+  if (!account) return <div className="loading-state">Loading portal...</div>;
 
   const formatDate = (iso) =>
-    new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+    new Date(iso).toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' });
+
+  const displayAccountNumber = showAccountNumber
+    ? account.accountNumber
+    : '•••• •••• •••• ' + String(account.accountNumber).slice(-4);
+
+  // Calculate limit percentage for the power bar (max limit is 200,000)
+  const limitPercentage = Math.min((account.transactionLimit / 200000) * 100, 100);
 
   return (
     <div className="account-details-root">
-      <div className="account-summary-card">
-        <div className="summary-holder-row">
-          <div>
-            <div className="summary-label">Account Holder</div>
-            <h3>{account.firstName} {account.lastName}</h3>
-            <p>{maskAccount(account.accountNumber)}</p>
-          </div>
-          <div className="summary-icon"><FaUserCircle /></div>
+      {/* Header */}
+      <div className="portal-header">
+        <div>
+          <div className="header-greeting">Welcome back,</div>
+          <div className="header-username">{account.firstName} {account.lastName}</div>
         </div>
-
-        <div className="summary-balance-row">
-          <div>
-            <div className="summary-label">Current Balance</div>
-            <div className="summary-balance-value">{currency(account.balance)}</div>
-          </div>
-          <div className="summary-type-info">
-            <div className="summary-account-type">{account.accountType}</div>
-            <div className="summary-sub">Joined {formatDate(account.createdAt)}</div>
-          </div>
+        <div className="header-actions">
+          <button className="portal-action-btn"><FaExchangeAlt /> Transfer</button>
+          <button className="portal-action-btn"><FaFileInvoice /> History</button>
+          <button className="portal-action-btn"><FaCog /> Settings</button>
         </div>
-        <FaChevronRight className="balance-chevron" aria-hidden />
       </div>
 
-      {/* Account Info Section */}
-      <div className="account-info-details">
-        <div className="info-section-title">Account Information</div>
-        <div className="info-grid">
-          <div className="info-item">
-            <div className="info-icon-badge blue"><FaCalendarAlt /></div>
-            <div className="info-text">
-              <div className="info-label">Opened</div>
-              <div className="info-value">{formatDate(account.createdAt)}</div>
-            </div>
-          </div>
+      {/* Main Grid */}
+      <div className="portal-grid">
 
-          <div className="info-item">
-            <div className="info-icon-badge green"><FaInfoCircle /></div>
-            <div className="info-text">
-              <div className="info-label">Account Type</div>
-              <div className="info-value">{account.accountType}</div>
-            </div>
-          </div>
+        {/* Left: Zen Balance Tile */}
+        <div className="balance-tile-container">
+          <div className="mesh-gradient-bg"></div>
+          <div className="mesh-orb-1"></div>
+          <div className="mesh-orb-2"></div>
 
-          {/* ✅ Editable Transaction Limit */}
-          <div className="info-item editable-limit">
-            <div className="info-icon-badge purple">₹</div>
-            <div className="info-text">
-              <div className="info-label">Transaction Limit</div>
-              {isEditing ? (
-                <div className="limit-edit-row">
-                  <input
-                    type="number"
-                    value={newLimit}
-                    placeholder="Enter new limit"
-                    onChange={(e) => setNewLimit(e.target.value)}
-                  />
-                  <button className="save-limit-btn" onClick={handleLimitUpdate}>
-                    <FaCheck />
-                  </button>
-                </div>
-              ) : (
-                <div className="limit-display">
-                  <div className="info-value balance-value">{currency(account.transactionLimit)}</div>
-                  <button className="edit-limit-btn" onClick={() => setIsEditing(true)}>
-                    <FaEdit />
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className="info-item">
-            <div className="info-icon-badge orange">#</div>
-            <div className="info-text">
-              <div className="info-label">IFSC Code</div>
-              <div className="info-value">{account.ifscCode}</div>
+          <div className="balance-content">
+            <div className="balance-label">Total Available Balance</div>
+            <div className="balance-amount">{currency(account.balance)}</div>
+            <div className="balance-status">
+              <span style={{ fontSize: '1.2em' }}>●</span> Active & Secure
             </div>
           </div>
         </div>
 
-        {success && <div className="success-msg">{success}</div>}
-        {error && <div className="error-msg">{error}</div>}
+        {/* Right: Data HUD */}
+        <div className="portal-data-hud">
+
+          {/* Account Specs */}
+          <div className="hud-section">
+            <div className="hud-section-title">Account Specifications</div>
+
+            <div className="spec-row">
+              <span className="spec-label">Account Number</span>
+              <div className="account-number-group">
+                <span className="spec-value">{displayAccountNumber}</span>
+                <button
+                  className="reveal-btn"
+                  onClick={() => setShowAccountNumber(!showAccountNumber)}
+                >
+                  {showAccountNumber ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
+            </div>
+
+            <div className="spec-row">
+              <span className="spec-label">IFSC Code</span>
+              <span className="spec-value">{account.ifscCode}</span>
+            </div>
+
+            <div className="spec-row">
+              <span className="spec-label">Account Type</span>
+              <span className="spec-value highlight">{account.accountType}</span>
+            </div>
+
+            <div className="spec-row">
+              <span className="spec-label">Member Since</span>
+              <span className="spec-value">{formatDate(account.createdAt)}</span>
+            </div>
+          </div>
+
+          {/* Transaction Limit Power Bar */}
+          <div className="limit-power-container">
+            <div className="power-header">
+              <span className="power-label">Transaction Limit</span>
+              {!isEditing && (
+                <span className="power-value">{currency(account.transactionLimit)}</span>
+              )}
+            </div>
+
+            {!isEditing ? (
+              <>
+                <div className="power-bar-wrapper">
+                  <div className="power-bar-fill" style={{ width: `${limitPercentage}%` }}></div>
+                </div>
+                <button className="portal-action-btn" onClick={() => setIsEditing(true)}>
+                  <FaPen style={{ marginRight: '8px' }} /> Adjust Limit
+                </button>
+              </>
+            ) : (
+              <div className="edit-limit-row">
+                <input
+                  type="number"
+                  className="hud-input"
+                  value={newLimit}
+                  placeholder="Enter new limit"
+                  onChange={(e) => setNewLimit(e.target.value)}
+                />
+                <button className="hud-btn" onClick={handleLimitUpdate}>
+                  <FaCheck /> Save
+                </button>
+              </div>
+            )}
+
+            {success && <div className="success-msg">{success}</div>}
+            {error && <div className="error-msg">{error}</div>}
+          </div>
+
+        </div>
       </div>
     </div>
   );
