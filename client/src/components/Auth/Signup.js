@@ -143,18 +143,38 @@ const Signup = () => {
                     <h2 className="visual-title">Join the Future.</h2>
                     <p className="visual-subtitle">Experience banking without boundaries.</p>
 
-                    {/* Central Visual: Premium Black Card */}
-                    <div className="visual-card-container">
-                        <div className="premium-black-card">
-                            <div className="card-chip"></div>
-                            <div className="card-logo">Bankify</div>
-                            <div className="card-number">•••• •••• •••• 1644</div>
-                            <div className="card-holder">
-                                <span>Lewis Hamilton</span>
-                                <span>16/44</span>
+                    {/* Central Visual: Dynamic Glass Dashboard */}
+                    <div className="visual-dashboard-container">
+                        <div className="glass-dashboard">
+                            <div className="dashboard-header">
+                                <span className="dash-title">Total Wealth</span>
+                                <span className="dash-amount">$124,500.00</span>
+                                <span className="dash-growth">+12.5% 📈</span>
+                            </div>
+
+                            {/* Animated Graph */}
+                            <div className="dashboard-graph">
+                                <svg viewBox="0 0 300 100" className="growth-line">
+                                    <path d="M0,80 C50,80 50,40 100,40 C150,40 150,70 200,70 C250,70 250,10 300,10"
+                                        fill="none" stroke="#0070BA" strokeWidth="3" strokeLinecap="round" />
+                                    <area /> {/* Placeholder for potential gradient fill */}
+                                </svg>
+                                <div className="graph-dot dot-1"></div>
+                                <div className="graph-dot dot-2"></div>
+                                <div className="graph-dot dot-3"></div>
+                            </div>
+
+                            {/* Floating Widgets */}
+                            <div className="floating-widget widget-1">
+                                <span className="widget-icon">🎯</span>
+                                <span className="widget-text">Goal Reached</span>
+                            </div>
+                            <div className="floating-widget widget-2">
+                                <span className="widget-icon">💰</span>
+                                <span className="widget-text">Savings +5%</span>
                             </div>
                         </div>
-                        <div className="card-glow"></div>
+                        <div className="dashboard-glow"></div>
                     </div>
                 </div>
 
