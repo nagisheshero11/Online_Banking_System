@@ -20,17 +20,14 @@ public class Bill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // which user this bill belongs to
     @Column(nullable = false)
     private String username;
 
     @Column(nullable = false)
     private String accountNumber;
 
-    // linked loan id (nullable if generic bill)
     private Long loanId;
 
-    // amount to pay (interest for the period)
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal amount;
 
@@ -38,7 +35,13 @@ public class Bill {
     private LocalDate dueDate;
 
     @Column(nullable = false, length = 20)
-    private String status = "UNPAID"; // UNPAID, PAID, OVERDUE
+    private String status = "UNPAID";
+
+    @Column(name = "bill_type", nullable = false)
+    private String billType = "EMI";
+
+    @Column(nullable = false)
+    private boolean paid = false;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

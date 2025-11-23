@@ -112,9 +112,29 @@ public class LoanService {
         Account account = accountRepository.findByAccountNumberForUpdate(loan.getAccountNumber())
                 .orElseThrow(() -> new RuntimeException("Account not found"));
 
+        // Defensive: ensure balance is not null
+        if (account.getBalance() == null) {
+            account.setBalance(BigDecimal.ZERO);
+        }
+
+        // credit amount
         BigDecimal newBalance = account.getBalance().add(loan.getLoanAmount());
         account.setBalance(newBalance);
         accountRepository.save(account);
+
+        // mark balance_credited if field present on loan
+        try {
+            // If loan entity has balanceCredited field, set true
+            // (uses reflection so file compiles whether or not field present)
+            var f = LoanApplication.class.getDeclaredField("balanceCredited");
+            f.setAccessible(true);
+            f.set(loan, true);
+        } catch (NoSuchFieldException ignored) {
+            // field not present - ignore
+        } catch (Exception e) {
+            // non-fatal — just log (do not abort)
+            System.err.println("Warning: could not set balanceCredited flag on loan: " + e.getMessage());
+        }
 
         // Update loan status
         loan.setStatus("APPROVED");

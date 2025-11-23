@@ -65,16 +65,12 @@ public class BillService {
         accountRepository.save(account);
 
         bill.setStatus("PAID");
+        bill.setPaid(true);
         return billRepository.save(bill);
     }
 
     /**
      * Generate monthly EMI bills for a loan application.
-     *
-     * We'll create `tenureMonths` bills where each bill amount = monthly EMI,
-     * and dueDate spaced by 1 month from now.
-     *
-     * This method is transactional and used after loan approval.
      */
     @Transactional
     public void generateMonthlyEmiBills(LoanApplication loan, String username, String accountNumber) {
@@ -86,7 +82,7 @@ public class BillService {
         // monthlyInterestRate = annualRate / 12 / 100
         BigDecimal monthlyRate = annualRate.divide(BigDecimal.valueOf(12 * 100), 10, BigDecimal.ROUND_HALF_UP);
 
-        // EMI formula: E = P * r * (1+r)^n / ((1+r)^n -1)
+        // EMI formula
         BigDecimal onePlusRPowerN = BigDecimal.ONE.add(monthlyRate).pow(tenureMonths);
         BigDecimal numerator = principal.multiply(monthlyRate).multiply(onePlusRPowerN);
         BigDecimal denominator = onePlusRPowerN.subtract(BigDecimal.ONE);
@@ -96,6 +92,7 @@ public class BillService {
         LocalDate nextDue = LocalDate.now().plusMonths(1);
 
         for (int i = 0; i < tenureMonths; i++) {
+
             Bill bill = Bill.builder()
                     .username(username)
                     .accountNumber(accountNumber)
@@ -103,6 +100,8 @@ public class BillService {
                     .amount(emi)
                     .dueDate(nextDue.plusMonths(i))
                     .status("UNPAID")
+                    .billType("EMI")    // REQUIRED
+                    .paid(false)        // REQUIRED
                     .build();
 
             billRepository.save(bill);
@@ -127,6 +126,8 @@ public class BillService {
                 .amount(amount)
                 .dueDate(dueDate)
                 .status("UNPAID")
+                .billType("MANUAL")
+                .paid(false)
                 .build();
 
         return billRepository.save(bill);

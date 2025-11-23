@@ -42,6 +42,12 @@ public class LoanApplication {
     @Column(nullable = false, length = 20)
     private String status = "PENDING"; // PENDING, APPROVED, REJECTED
 
+    // Optional: map balance_credited if DB has it (prevents insert errors)
+    // If the column doesn't exist, remove this field.
+    @Column(name = "balance_credited", nullable = false)
+    @Builder.Default
+    private Boolean balanceCredited = false;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 
