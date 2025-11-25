@@ -15,7 +15,6 @@ import RequestLoan from './components/RequestLoan/RequestLoan';
 import PayBills from './components/PayBills/PayBills';
 import Profile from './components/Profile/Profile';
 import Cards from './components/Cards/Cards';
-import ApplyCard from './components/ApplyCard/ApplyCard';
 
 // Admin Components
 import AdminLayout from './admin/AdminLayout';
@@ -48,7 +47,6 @@ function App() {
             <Route path="deposit-money" element={<DepositMoney />} />
             <Route path="transfer-money" element={<TransferMoney />} />
             <Route path="pay-bills" element={<PayBills />} />
-            <Route path="apply-card" element={<ApplyCard />} />
             <Route path="cards" element={<Cards />} />
             <Route path="request-loan" element={<RequestLoan />} />
             <Route path="loan-status" element={<LoanStatus />} />
