@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import AddBillModal from "./AddBillModal";
 import { getAllUsers } from "./services/userAPI";
 import { FaSearch, FaUserCircle, FaMoneyBillWave, FaIdCard } from "react-icons/fa";
 import "./styles/UserManagement.css";
@@ -8,6 +9,7 @@ const UserManagement = () => {
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
     const [debouncedSearch, setDebouncedSearch] = useState("");
+    const [selectedUserForBill, setSelectedUserForBill] = useState(null); // For Add Bill Modal
 
     // Debounce search input
     useEffect(() => {
@@ -70,7 +72,9 @@ const UserManagement = () => {
                                 <th>Account Details</th>
                                 <th>Balance</th>
                                 <th>Role</th>
+                                <th>Role</th>
                                 <th>Joined</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -113,12 +117,37 @@ const UserManagement = () => {
                                     <td>
                                         {new Date(user.createdAt).toLocaleDateString()}
                                     </td>
+                                    <td>
+                                        <button
+                                            className="action-btn"
+                                            onClick={() => setSelectedUserForBill(user)}
+                                            style={{
+                                                background: '#0F172A', color: 'white', border: 'none',
+                                                padding: '8px 12px', borderRadius: '8px', cursor: 'pointer',
+                                                display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', fontWeight: '600'
+                                            }}
+                                        >
+                                            <FaMoneyBillWave /> Add Bill
+                                        </button>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
                 )}
             </div>
+
+            {/* Add Bill Modal */}
+            {selectedUserForBill && (
+                <AddBillModal
+                    user={selectedUserForBill}
+                    onClose={() => setSelectedUserForBill(null)}
+                    onSuccess={() => {
+                        // Optional: Refresh users or show toast
+                        alert("Bill created successfully!");
+                    }}
+                />
+            )}
         </div>
     );
 };

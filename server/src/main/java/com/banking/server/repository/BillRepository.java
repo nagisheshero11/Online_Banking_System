@@ -11,4 +11,7 @@ public interface BillRepository extends JpaRepository<Bill, Long> {
     List<Bill> findByLoanId(Long loanId);
     List<Bill> findByDueDateBeforeAndStatus(LocalDate date, String status);
     List<Bill> findByLoanIdAndUsername(Long loanId, String username);
+
+    @org.springframework.data.jpa.repository.Query("SELECT b FROM Bill b WHERE b.username = :username AND (b.billType != 'EMI' OR b.dueDate <= :cutoffDate) ORDER BY b.dueDate ASC")
+    List<Bill> findUpcomingBills(@org.springframework.data.repository.query.Param("username") String username, @org.springframework.data.repository.query.Param("cutoffDate") LocalDate cutoffDate);
 }

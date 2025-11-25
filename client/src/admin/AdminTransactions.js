@@ -29,7 +29,7 @@ const AdminTransactions = () => {
         <div className="bank-funds">
             <div className="header-row" style={{ marginBottom: '30px' }}>
                 <h1 style={{ fontSize: '1.5rem', fontWeight: '800', color: '#0F172A', margin: 0 }}>
-                    Global Transaction History
+                    User Transactions
                 </h1>
                 <p style={{ color: '#64748B', marginTop: '4px' }}>View all user transactions.</p>
             </div>

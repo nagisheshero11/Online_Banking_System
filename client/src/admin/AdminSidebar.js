@@ -11,7 +11,8 @@ const AdminSidebar = () => {
                 <NavLink to="/admin/approve-cards">Approve Cards</NavLink>
                 <NavLink to="/admin/approve-loans">Approve Loans</NavLink>
                 <NavLink to="/admin/bank-funds">Bank Funds</NavLink>
-                <NavLink to="/admin/transactions">Transactions</NavLink>
+                <NavLink to="/admin/bank-funds/history">Bank Transactions</NavLink>
+                <NavLink to="/admin/transactions">User Transactions</NavLink>
                 <NavLink to="/admin/users">User Management</NavLink>
 
                 <div className="admin-subtitle">History</div>

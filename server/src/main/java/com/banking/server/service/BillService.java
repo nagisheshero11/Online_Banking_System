@@ -32,7 +32,9 @@ public class BillService {
     private BankFundService bankFundService;
 
     public List<Bill> getBillsForUser(String username) {
-        return billRepository.findByUsername(username);
+        // Show EMIs only if due within next 30 days
+        LocalDate cutoffDate = LocalDate.now().plusDays(30);
+        return billRepository.findUpcomingBills(username, cutoffDate);
     }
 
     public Optional<Bill> getBillById(Long id) {
