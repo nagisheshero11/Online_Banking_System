@@ -25,6 +25,7 @@ import ApproveLoans from './admin/ApproveLoans';
 import BankFunds from './admin/BankFunds';
 import HistoryCards from './admin/HistoryCards';
 import HistoryLoans from './admin/HistoryLoans';
+import UserManagement from './admin/UserManagement';
 
 import './App.css';
 
@@ -68,6 +69,7 @@ function App() {
             <Route path="approve-cards" element={<ApproveCards />} />
             <Route path="approve-loans" element={<ApproveLoans />} />
             <Route path="bank-funds" element={<BankFunds />} />
+            <Route path="users" element={<UserManagement />} />
 
             {/* History */}
             <Route path="history/cards" element={<HistoryCards />} />

@@ -27,6 +27,16 @@ public class UserService {
     }
 
     /**
+     * Search users by keyword
+     */
+    public List<User> searchUsers(String keyword) {
+        if (keyword == null || keyword.isBlank()) {
+            return userRepository.findAll();
+        }
+        return userRepository.searchUsers(keyword);
+    }
+
+    /**
      * Find user by username
      */
     public User getUserByUsername(String username) {
