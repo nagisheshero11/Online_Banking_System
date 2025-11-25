@@ -22,8 +22,11 @@ import AdminDashboard from './admin/AdminDashboard';
 import ApproveCards from './admin/ApproveCards';
 import ApproveLoans from './admin/ApproveLoans';
 import BankFunds from './admin/BankFunds';
+import BankFundsHistory from './admin/BankFundsHistory';
+import AdminTransactions from './admin/AdminTransactions';
 import HistoryCards from './admin/HistoryCards';
 import HistoryLoans from './admin/HistoryLoans';
+import UserManagement from './admin/UserManagement';
 
 import './App.css';
 
@@ -66,6 +69,9 @@ function App() {
             <Route path="approve-cards" element={<ApproveCards />} />
             <Route path="approve-loans" element={<ApproveLoans />} />
             <Route path="bank-funds" element={<BankFunds />} />
+            <Route path="bank-funds/history" element={<BankFundsHistory />} />
+            <Route path="transactions" element={<AdminTransactions />} />
+            <Route path="users" element={<UserManagement />} />
 
             {/* History */}
             <Route path="history/cards" element={<HistoryCards />} />

@@ -88,6 +88,7 @@ public class AuthService {
                 .ifscCode("BKF14369")
                 .accountType(accountType)
                 .transactionLimit(transactionLimit)
+                .user(user) // Link user relationship
                 .build();
 
         accountRepository.save(account);
