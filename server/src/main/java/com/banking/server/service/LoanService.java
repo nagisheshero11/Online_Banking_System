@@ -32,6 +32,9 @@ public class LoanService {
     @Autowired
     private BillService billService;
 
+    @Autowired
+    private BankFundService bankFundService;
+
     // interest rate map (string based)
     private BigDecimal getInterestRate(String loanType) {
 
@@ -142,6 +145,9 @@ public class LoanService {
 
         // Generate EMI bills
         billService.generateMonthlyEmiBills(loan, loan.getUsername(), loan.getAccountNumber());
+
+        // Debit Bank Funds
+        bankFundService.debitFunds(loan.getLoanAmount(), "Loan Disbursal - Loan #" + loan.getId());
 
         return LoanApplicationResponse.builder()
                 .id(loan.getId())

@@ -21,4 +21,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     // ✅ All transactions involving this account (sent OR received)
     @Query("SELECT t FROM Transaction t WHERE t.fromAccountNumber = :accountNumber OR t.toAccountNumber = :accountNumber ORDER BY t.createdAt DESC")
     List<Transaction> findAllByAccountNumber(@Param("accountNumber") String accountNumber);
+
+    // ✅ All transactions (Admin only)
+    List<Transaction> findAllByOrderByCreatedAtDesc();
 }

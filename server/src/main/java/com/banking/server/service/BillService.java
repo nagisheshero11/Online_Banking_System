@@ -28,6 +28,9 @@ public class BillService {
     @Autowired
     private TransactionRepository transactionRepository;
 
+    @Autowired
+    private BankFundService bankFundService;
+
     public List<Bill> getBillsForUser(String username) {
         return billRepository.findByUsername(username);
     }
@@ -85,6 +88,11 @@ public class BillService {
                 .build();
 
         transactionRepository.save(transaction);
+
+        // Credit Bank Funds if EMI
+        if ("EMI".equalsIgnoreCase(bill.getBillType())) {
+            bankFundService.creditFunds(bill.getAmount(), "EMI Payment - Bill #" + bill.getId());
+        }
 
         return savedBill;
     }
