@@ -7,10 +7,11 @@ import {
     FaCalendarAlt,
     FaSave,
     FaPen,
-    FaIdCard
+    FaIdCard,
+    FaCheckCircle
 } from 'react-icons/fa';
 import './styles/Profile.css';
-import { fetchUserProfile, updateUserProfile } from '../../services/profileAPI'; // ✅ Import backend API
+import { fetchUserProfile, updateUserProfile } from '../../services/profileAPI';
 
 // ✅ Reusable Profile Item Component
 const ProfileDetailItem = ({
@@ -26,23 +27,23 @@ const ProfileDetailItem = ({
     const isEditable = isEditing && !readOnly;
 
     return (
-        <div className="profile-detail-item">
-            <label className="detail-label">
-                <Icon className="detail-icon" />
+        <div className="zen-profile-item">
+            <label className="zen-detail-label">
+                <Icon className="zen-detail-icon" />
                 {label}
             </label>
             <div
-                className={`detail-input-wrap ${highlight ? 'highlight-green' : ''} ${isEditable ? 'editable' : ''}`}
+                className={`zen-input-wrap ${highlight ? 'highlight' : ''} ${isEditable ? 'editable' : ''}`}
             >
                 <input
                     type="text"
                     value={value || ''}
                     readOnly={!isEditable}
-                    className="detail-input"
+                    className="zen-detail-input"
                     onChange={onValueChange ? (e) => onValueChange(name, e.target.value) : undefined}
                 />
                 {readOnly && label === 'Email Address' && (
-                    <span className="read-only-text">Email cannot be changed</span>
+                    <span className="zen-readonly-text">Cannot be changed</span>
                 )}
             </div>
         </div>
@@ -54,6 +55,7 @@ const Profile = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [successMsg, setSuccessMsg] = useState('');
 
     // ✅ Fetch user profile on mount
     useEffect(() => {
@@ -62,8 +64,7 @@ const Profile = () => {
                 const data = await fetchUserProfile();
                 setFormData(data);
             } catch (error) {
-                alert(error.message || 'Failed to load profile');
-                // window.location.href = '/login'; // Redirect if token invalid
+                console.error('Failed to load profile', error);
             } finally {
                 setLoading(false);
             }
@@ -84,47 +85,69 @@ const Profile = () => {
                 lastName: formData.lastName,
                 phoneNumber: formData.phoneNumber
             });
-            alert('Profile updated successfully!');
+            setSuccessMsg('Profile updated successfully!');
             setFormData(updated);
             setIsEditing(false);
+            setTimeout(() => setSuccessMsg(''), 3000);
         } catch (error) {
             alert(error.message || 'Error updating profile');
         }
     };
 
     if (loading) {
-        return <div className="profile-loading">Loading profile...</div>;
+        return <div className="zen-profile-loading">Loading profile...</div>;
     }
 
     if (!formData) {
-        return <div className="profile-error">Failed to load profile data.</div>;
+        return <div className="zen-profile-error">Failed to load profile data.</div>;
     }
 
     return (
-        <div className="profile-page">
+        <div className="zen-profile-page">
             {/* Header */}
-            <div className="page-header-wrapper">
-                <div className="page-header">
-                    {/* <h1 className="header-title">Profile</h1> */}
-                    <p className="header-subtitle">Manage your personal and account details</p>
-                </div>
+            <div className="zen-profile-header">
+                <h1>My Profile</h1>
+                <p>Manage your personal information and account details.</p>
             </div>
 
             {/* Profile Card */}
-            <div className="profile-card card">
-                {/* Header Section */}
-                <div className="profile-header-card">
-                    <FaUser className="user-avatar" />
-                    <div className="user-info">
-                        <h2 className="user-name">
+            <div className="zen-profile-card">
+                {/* User Info Header */}
+                <div className="zen-user-header">
+                    <div className="zen-avatar-circle">
+                        <span className="zen-avatar-initials">
+                            {formData.firstName?.[0]}{formData.lastName?.[0]}
+                        </span>
+                    </div>
+                    <div className="zen-user-info">
+                        <h2 className="zen-user-name">
                             {formData.firstName} {formData.lastName}
                         </h2>
-                        <p className="account-type">User ID: {formData.username}</p>
+                        <p className="zen-user-id">User ID: {formData.username}</p>
+                    </div>
+
+                    {/* Action Buttons (Desktop) */}
+                    <div className="zen-actions-desktop">
+                        {isEditing ? (
+                            <button className="zen-btn-save" onClick={handleSaveClick}>
+                                <FaSave /> Save Changes
+                            </button>
+                        ) : (
+                            <button className="zen-btn-edit" onClick={() => setIsEditing(true)}>
+                                <FaPen /> Edit Profile
+                            </button>
+                        )}
                     </div>
                 </div>
 
-                {/* Details Section */}
-                <div className="profile-details-grid">
+                {successMsg && (
+                    <div className="zen-success-msg">
+                        <FaCheckCircle /> {successMsg}
+                    </div>
+                )}
+
+                {/* Details Grid */}
+                <div className="zen-details-grid">
                     <ProfileDetailItem
                         icon={FaUser}
                         label="First Name"
@@ -186,23 +209,21 @@ const Profile = () => {
 
                     <ProfileDetailItem
                         icon={FaCalendarAlt}
-                        label="Account Created"
-                        value={formData.createdAt?.split('T')[0]} // trim timestamp
+                        label="Member Since"
+                        value={formData.createdAt?.split('T')[0]}
                         readOnly={true}
                     />
                 </div>
 
-                {/* Action Buttons */}
-                <div className="profile-actions">
+                {/* Action Buttons (Mobile) */}
+                <div className="zen-actions-mobile">
                     {isEditing ? (
-                        <button className="btn-edit btn-save" onClick={handleSaveClick}>
-                            <FaSave className="button-icon" />
-                            Save Changes
+                        <button className="zen-btn-save full-width" onClick={handleSaveClick}>
+                            <FaSave /> Save Changes
                         </button>
                     ) : (
-                        <button className="btn-edit" onClick={() => setIsEditing(true)}>
-                            <FaPen className="button-icon" />
-                            Edit Profile
+                        <button className="zen-btn-edit full-width" onClick={() => setIsEditing(true)}>
+                            <FaPen /> Edit Profile
                         </button>
                     )}
                 </div>

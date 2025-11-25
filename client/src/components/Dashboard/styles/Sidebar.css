@@ -1,43 +1,44 @@
-/* ─────────── Sidebar Styles (Fixed Layout) ─────────── */
+/* Zen Aesthetic - Sidebar Styles */
 
 .sidebar {
     position: fixed;
     left: 0;
     top: 64px;
-    /* height of top navbar */
     height: calc(100vh - 64px);
     width: 260px;
-    /* fixed width */
     display: flex;
     flex-direction: column;
     background: #FFFFFF;
-    color: #595959;
-    padding: 12px 0 12px;
-    border-right: 1px solid #E0E0E0;
+    color: #64748B;
+    padding: 20px 12px;
+    border-right: 1px solid #F1F5F9;
     overflow-y: auto;
-    /* scroll only inside sidebar */
     z-index: 999;
-    /* keep above content */
+    font-family: 'Manrope', sans-serif;
+    transition: transform 0.3s ease;
 }
 
-/* Remove scrollbar visibility (optional) */
+/* Scrollbar Styling */
 .sidebar::-webkit-scrollbar {
     width: 5px;
 }
 
 .sidebar::-webkit-scrollbar-thumb {
-    background: #e0e0e0;
+    background: #CBD5E1;
     border-radius: 10px;
 }
 
 .sidebar-section {
-    padding: 10px 12px 6px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
-/* Sidebar links */
+/* Sidebar Links */
 .sidebar-link {
     text-decoration: none;
     color: inherit;
+    display: block;
 }
 
 /* Sidebar Item */
@@ -45,40 +46,36 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 10px 14px;
+    padding: 12px 16px;
     border-radius: 12px;
     cursor: pointer;
-    color: #595959;
+    color: #64748B;
     position: relative;
-    transition: background 0.2s ease, color 0.2s ease;
+    transition: all 0.2s ease;
+    font-weight: 600;
+    font-size: 0.95rem;
 }
 
 .sidebar-item:hover {
-    background: #E0E0E0;
-    color: #0D0D0D;
+    background: #F8FAFC;
+    color: #0F172A;
 }
 
 /* Active Item */
 .sidebar-item.active {
-    background: #E0E0E0;
-    color: #0D0D0D;
-    border-left: 4px solid #D4AF37;
-}
-
-/* Remove extra active bar, we are using border-left */
-.sidebar-item.active::before {
-    display: none;
+    background: #EFF6FF;
+    color: #3B82F6;
 }
 
 /* Icons */
 .icon-wrap {
-    width: 28px;
-    height: 28px;
-    display: grid;
-    place-items: center;
-    border-radius: 8px;
-    color: #595959;
-    background: transparent;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94A3B8;
+    transition: color 0.2s ease;
 }
 
 .icon-wrap svg {
@@ -86,21 +83,23 @@
     height: 20px;
 }
 
-/* Active color on icon and text */
-.sidebar-item.active .icon-wrap,
-.sidebar-item.active .sidebar-label {
-    color: #0D0D0D;
+/* Active Icon Color */
+.sidebar-item:hover .icon-wrap {
+    color: #0F172A;
 }
 
-/* Sidebar Footer */
+.sidebar-item.active .icon-wrap {
+    color: #3B82F6;
+}
+
+/* Sidebar Footer (Profile) */
 .sidebar-footer {
     margin-top: auto;
-    padding: 8px;
+    padding-top: 20px;
+    border-top: 1px solid #F1F5F9;
 }
 
-
-/* ─────────── Responsive Sidebar Layout ─────────── */
-
+/* Responsive Sidebar Layout */
 @media (max-width: 900px) {
     .sidebar {
         width: 220px;
@@ -117,21 +116,49 @@
         height: auto;
         top: 64px;
         border-right: none;
-        border-bottom: 1px solid #E0E0E0;
+        border-bottom: 1px solid #F1F5F9;
         overflow-y: visible;
+        padding: 12px;
+    }
+
+    .sidebar-section {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .sidebar-item {
+        flex-direction: column;
+        gap: 6px;
+        padding: 8px 12px;
+        font-size: 0.8rem;
+        text-align: center;
+        width: 80px;
+    }
+
+    .icon-wrap {
+        margin-bottom: 0;
+    }
+
+    .sidebar-footer {
+        display: none;
+        /* Hide profile link in footer on mobile, usually in navbar */
     }
 
     .dashboard-content {
         margin-left: 0 !important;
-        margin-top: 120px;
+        margin-top: 140px;
+        /* Adjust based on sidebar height */
     }
 }
 
-/* ─────────── Dashboard Offset (Add to Global CSS) ─────────── */
-
+/* Dashboard Content Offset */
 .dashboard-content {
     margin-left: 260px;
-    /* Push main content right */
-    padding: 20px;
-    transition: margin 0.2s ease;
+    padding: 40px;
+    transition: margin 0.3s ease;
+    min-height: calc(100vh - 64px);
+    background: #F8FAFC;
+    /* Light background for the main content area */
 }

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaPlus, FaBan, FaInfoCircle, FaKey, FaTimes, FaCreditCard, FaCheckCircle } from 'react-icons/fa';
 import ApplyCardForm from '../ApplyCard/ApplyCardForm';
+import { getUserProfile } from '../../services/profileAPI'; // fetch logged‑in user profile
 import './styles/Cards.css';
 
 // Mock Data for Owned Cards
@@ -78,19 +79,62 @@ const Cards = () => {
     const [applyStep, setApplyStep] = useState('select'); // 'select' | 'form' | 'success'
     const [selectedApplyCardId, setSelectedApplyCardId] = useState(null);
 
+
+    const [cvvVisible, setCvvVisible] = useState(false);
+    const [userFullName, setUserFullName] = useState('');
+    // Fetch logged‑in user's full name on component mount
+    useEffect(() => {
+        const fetchName = async () => {
+            try {
+                const data = await getUserProfile();
+                const full = `${data.firstName || ''} ${data.lastName || ''}`.trim();
+                setUserFullName(full);
+            } catch (e) {
+                console.error('Failed to fetch user profile for card name', e);
+            }
+        };
+        fetchName();
+    }, []);
+
     const selectedCard = ownedCards[selectedCardIndex];
 
-    // Reset flip when changing cards
+    // Reset flip and CVV visibility when changing cards
     React.useEffect(() => {
         setIsFlipped(false);
+        setCvvVisible(false);
     }, [selectedCardIndex]);
 
-    const handleCardClick = (index) => {
-        if (selectedCardIndex === index) {
-            setIsFlipped(!isFlipped);
-        } else {
+    // Card interaction handlers
+    const handleSelectCard = (index) => {
+        if (selectedCardIndex !== index) {
             setSelectedCardIndex(index);
+        } else {
+            // Toggle CVV visibility on single click of already selected card
+            setCvvVisible(!cvvVisible);
         }
+    };
+
+    const handleFlipCard = (index) => {
+        // Flip only if this card is already selected
+        if (selectedCardIndex === index) {
+            const newFlipped = !isFlipped;
+            setIsFlipped(newFlipped);
+            // When flipping back, hide CVV again
+            if (!newFlipped) {
+                setCvvVisible(false);
+            }
+        } else {
+            // Selecting a different card resets flip
+            setSelectedCardIndex(index);
+            setIsFlipped(false);
+            setCvvVisible(false);
+        }
+    };
+
+    // Ensure CVV click does not trigger card selection/flip
+    const handleCvvClick = (e) => {
+        e.stopPropagation();
+        setCvvVisible(!cvvVisible);
     };
 
     const handleBlockToggle = () => {
@@ -155,7 +199,8 @@ const Cards = () => {
                         <div
                             key={card.id}
                             className={`card-visual-wrapper ${index === selectedCardIndex ? 'selected' : ''}`}
-                            onClick={() => handleCardClick(index)}
+                            onClick={() => handleSelectCard(index)}
+                            onDoubleClick={() => handleFlipCard(index)}
                         >
                             <div className={`zen-card-inner ${index === selectedCardIndex && isFlipped ? 'flipped' : ''}`}>
                                 {/* FRONT FACE */}
@@ -165,7 +210,7 @@ const Cards = () => {
                                     <div className="card-number">{card.number}</div>
                                     <div className="card-footer">
                                         <div>
-                                            <div className="card-holder-name">{card.holder}</div>
+                                            <div className="card-holder-name">{userFullName || card.holder}</div>
                                         </div>
                                         <div className="card-expiry">{card.expiry}</div>
                                     </div>
@@ -176,9 +221,9 @@ const Cards = () => {
                                     <div className="card-magnetic-strip"></div>
                                     <div className="card-signature-row">
                                         <div className="card-signature"></div>
-                                        <div className="card-cvv-box">
+                                        <div className="card-cvv-box" onClick={handleCvvClick} style={{ cursor: 'pointer' }}>
                                             <span className="cvv-label">CVV</span>
-                                            <span className="cvv-value">123</span>
+                                            <span className="cvv-value">{cvvVisible ? '123' : '•••'}</span>
                                         </div>
                                     </div>
                                     <div className="card-back-text">

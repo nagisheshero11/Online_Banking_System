@@ -1,123 +1,157 @@
-/* ─────────────────── Dashboard Top Navbar (Fixed) ─────────────────── */
+/* Zen Aesthetic - Dashboard Navbar */
 
 .dashboard-navbar {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    /* full width */
     height: 64px;
-    /* consistent height */
-    padding: 12px 24px;
+    padding: 0 40px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 16px;
     background: #FFFFFF;
-    border-bottom: 1px solid #E0E0E0;
+    border-bottom: 1px solid #F1F5F9;
     z-index: 1000;
-    /* stays above everything */
     box-sizing: border-box;
+    font-family: 'Manrope', sans-serif;
+    transition: padding 0.3s ease;
 }
 
+/* Left Section */
 .nav-left {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 16px;
 }
 
 .brand {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    font-weight: 800;
-    color: #0D0D0D;
-    letter-spacing: 0.3px;
+    gap: 12px;
+    text-decoration: none;
 }
 
-/* Brand Logo (Image) */
 .brand-logo {
-    width: 40px;
-    height: 40px;
-    object-fit: cover;
-    border-radius: 8px;
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
 }
 
 .brand-text {
     font-weight: 800;
-    color: #0D0D0D;
+    color: #0F172A;
+    font-size: 1.25rem;
+    letter-spacing: -0.02em;
 }
 
-/* Right Profile Stack */
+/* Right Section */
 .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.user-profile-section {
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
-.user-stack {
+.nav-avatar-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0F172A 0%, #334155 100%);
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    line-height: 1.1;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.15);
 }
 
 .user-name-strong {
     font-weight: 700;
-    color: #0D0D0D;
+    color: #0F172A;
+    font-size: 0.95rem;
 }
 
-.user-sub {
-    color: #595959;
-    font-size: 12px;
+.nav-divider {
+    width: 1px;
+    height: 24px;
+    background: #E2E8F0;
 }
 
-/* Logout Button */
+/* Logout Button (Ghost Style) */
 .logout-btn {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    height: 34px;
-    padding: 0 10px;
-    border-radius: 8px;
-    border: 1px solid #D4AF37;
-    color: #0D0D0D;
-    background: #D4AF37;
+    height: 36px;
+    padding: 0 12px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    /* Ghost style default */
+    color: #3B82F6;
+    /* Primary blue */
+    background: transparent;
     font-weight: 600;
-    text-decoration: none;
+    font-size: 0.9rem;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.2s ease;
 }
 
 .logout-btn:hover {
-    background: #C0A062;
+    background: #EFF6FF;
+    /* Light blue background on hover */
+    color: #2563EB;
+    /* Darker blue on hover */
 }
 
-/* Ensure navbar and content don't overlap */
+.logout-btn svg {
+    font-size: 1rem;
+}
+
+/* Body Offset */
 body {
     margin: 0;
     padding-top: 64px;
-    /* same as navbar height */
     box-sizing: border-box;
+    background: #F8FAFC;
 }
 
-/* ─────────────────── RESPONSIVE ─────────────────── */
-
+/* Responsive */
 @media (max-width: 600px) {
     .dashboard-navbar {
-        padding: 10px 16px;
+        padding: 0 16px;
     }
 
     .brand-text {
-        font-size: 1rem;
+        font-size: 1.1rem;
+    }
+
+    .user-name-strong {
+        display: none;
+        /* Hide name on mobile to save space */
+    }
+
+    .nav-divider {
+        display: none;
     }
 
     .logout-btn span {
         display: none;
-        /* Show only icon on small screens */
     }
 
     .logout-btn {
         padding: 0 8px;
+        color: #3B82F6;
+    }
+
+    .logout-btn:hover {
+        color: #2563EB;
     }
 }

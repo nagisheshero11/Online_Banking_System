@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { FaSignOutAlt } from 'react-icons/fa';
 import './styles/DashboardNavbar.css';
-import { getUserProfile } from '../../services/profileAPI'; // ✅ Fetch user profile data
-import { logout } from '../../services/authAPI'; // ✅ Token removal
+import { getUserProfile } from '../../services/profileAPI';
+import { logout } from '../../services/authAPI';
 
 const DashboardNavbar = () => {
     const [userData, setUserData] = useState({
@@ -31,17 +31,17 @@ const DashboardNavbar = () => {
     }, []);
 
     const handleLogout = () => {
-        logout(); // clears token
-        window.location.href = '/'; // redirect to homepage
+        logout();
+        window.location.href = '/';
     };
 
     const displayName = loading
         ? 'Loading...'
         : `${userData.firstName} ${userData.lastName}`;
-    const displayAcc = loading ? '' : userData.accountNumber;
 
-    const initial = userData.firstName
-        ? userData.firstName.charAt(0).toUpperCase()
+    // Initials for Avatar
+    const initials = userData.firstName && userData.lastName
+        ? `${userData.firstName[0]}${userData.lastName[0]}`.toUpperCase()
         : 'U';
 
     return (
@@ -49,7 +49,6 @@ const DashboardNavbar = () => {
             {/* Left Section */}
             <div className="nav-left">
                 <div className="brand">
-                    {/* use image placed in client/public as /logo-money.png */}
                     <img
                         src="/logo-money.png"
                         alt="Logo"
@@ -61,14 +60,16 @@ const DashboardNavbar = () => {
 
             {/* Right Section */}
             <div className="nav-right">
-                <div className="user-stack">
+                <div className="user-profile-section">
+                    <div className="nav-avatar-circle">
+                        {initials}
+                    </div>
                     <span className="user-name-strong">
                         {displayName}
                     </span>
-                    {displayAcc && (
-                        <span className="user-sub">{displayAcc}</span>
-                    )}
                 </div>
+
+                <div className="nav-divider"></div>
 
                 <button className="logout-btn" onClick={handleLogout}>
                     <FaSignOutAlt />
