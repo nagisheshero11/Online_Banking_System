@@ -16,4 +16,10 @@ public class LoanApplicationResponse {
     private BigDecimal interestRate;
     private String status;
     private LocalDateTime createdAt;
+
+    // Enhanced Details
+    private String username;
+    private String fullName;
+    private String accountNumber;
+    private BigDecimal currentBalance;
 }
