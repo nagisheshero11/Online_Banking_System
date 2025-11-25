@@ -3,8 +3,10 @@ package com.banking.server.service;
 import com.banking.server.entity.Bill;
 import com.banking.server.entity.LoanApplication;
 import com.banking.server.entity.Account;
+import com.banking.server.entity.Transaction;
 import com.banking.server.repository.BillRepository;
 import com.banking.server.repository.AccountRepository;
+import com.banking.server.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +24,9 @@ public class BillService {
 
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private TransactionRepository transactionRepository;
 
     public List<Bill> getBillsForUser(String username) {
         return billRepository.findByUsername(username);
@@ -66,7 +71,22 @@ public class BillService {
 
         bill.setStatus("PAID");
         bill.setPaid(true);
-        return billRepository.save(bill);
+        Bill savedBill = billRepository.save(bill);
+
+        // Create transaction record for bill payment
+        Transaction transaction = Transaction.builder()
+                .fromAccountNumber(account.getAccountNumber())
+                .toAccountNumber("BILL_PAYMENT")
+                .amount(bill.getAmount())
+                .remarks("Bill Payment #" + bill.getId() + " - " + bill.getBillType())
+                .status("COMPLETED")
+                .fromBalanceAfter(account.getBalance())
+                .toBalanceAfter(null)
+                .build();
+
+        transactionRepository.save(transaction);
+
+        return savedBill;
     }
 
     /**

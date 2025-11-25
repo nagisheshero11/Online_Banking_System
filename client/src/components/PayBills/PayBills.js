@@ -8,6 +8,7 @@ const PayBills = () => {
     const [bills, setBills] = useState([]);
     const [loading, setLoading] = useState(true);
     const [payingBillId, setPayingBillId] = useState(null);
+    const [successMsg, setSuccessMsg] = useState(null);
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 
@@ -41,7 +42,8 @@ const PayBills = () => {
         try {
             await payBill(billId);
             await fetchBills();
-            // Optional: Show success toast
+            setSuccessMsg("Bill paid successfully! Transaction recorded.");
+            setTimeout(() => setSuccessMsg(null), 3000);
         } catch (err) {
             alert(err.message || "Payment failed");
         } finally {
@@ -85,6 +87,11 @@ const PayBills = () => {
 
     return (
         <div className="pay-bills-container">
+            {successMsg && (
+                <div className="success-toast">
+                    <FaCheckCircle /> {successMsg}
+                </div>
+            )}
             {/* Left: Visual Guide */}
             <div className="bills-visual">
                 <div className="visual-bg"></div>
