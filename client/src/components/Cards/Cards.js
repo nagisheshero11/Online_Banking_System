@@ -1,127 +1,294 @@
-import React, { useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { FaCreditCard, FaShieldAlt } from 'react-icons/fa';
+import React, { useState } from 'react';
+import { FaPlus, FaBan, FaInfoCircle, FaKey, FaTimes, FaCreditCard, FaCheckCircle } from 'react-icons/fa';
+import ApplyCardForm from '../ApplyCard/ApplyCardForm';
 import './styles/Cards.css';
-import virtualCardImg from '../../assets/virtual_card.jpeg';
-import debitCardImg from '../../assets/debit_card.jpeg';
 
-// Two existing cards owned by the user
+// Mock Data for Owned Cards
 const initialOwned = [
     {
-        id: 'virtual-card',
+        id: 'c1',
+        name: 'Platinum Debit',
+        type: 'Debit',
+        color: 'card-gradient-lime',
+        number: '4532 12** **** 7890',
+        holder: 'NAGI SEISHIRO',
+        expiry: '12/28',
+        status: 'Active',
+        brand: 'VISA'
+    },
+    {
+        id: 'c2',
+        name: 'Signature Credit',
+        type: 'Credit',
+        color: 'card-gradient-black',
+        number: '5412 75** **** 3421',
+        holder: 'NAGI SEISHIRO',
+        expiry: '09/26',
+        status: 'Active',
+        brand: 'VISA'
+    },
+    {
+        id: 'c3',
         name: 'Virtual Card',
         type: 'Virtual',
-        color: 'gradient-orange',
-        maskedNumber: '**** **** **** 4821',
+        color: 'card-gradient-grey',
+        number: '4111 11** **** 1111',
+        holder: 'NAGI SEISHIRO',
+        expiry: '01/30',
         status: 'Active',
-        limits: 'Online limit ₹50,000/day',
-        issuedOn: '2024-06-12',
-        image: virtualCardImg,
-        info: 'Ideal for secure online payments with a dynamic CVV.'
-    },
+        brand: 'VISA'
+    }
+];
+
+// Mock Data for Available Cards (for applying)
+const availableCards = [
     {
         id: 'platinum-debit',
         name: 'Platinum Debit Card',
         type: 'Debit',
-        color: 'gradient-blue',
-        maskedNumber: '**** **** **** 7324',
-        status: 'Active',
-        limits: 'ATM withdrawal up to ₹1,00,000/day',
-        issuedOn: '2023-11-28',
-        image: debitCardImg,
-        info: 'Zero annual fee. Global acceptance and higher ATM limits.'
-    }
+        fee: 'Free',
+        color: 'card-gradient-lime',
+        benefits: ['Zero annual fee', 'High ATM withdrawal limits', 'Global acceptance'],
+    },
+    {
+        id: 'signature-credit',
+        name: 'Signature Credit Card',
+        type: 'Credit',
+        fee: '₹2,999 / year',
+        color: 'card-gradient-black',
+        benefits: ['5% cashback on online spends', 'Airport lounge access', 'Fuel surcharge waiver'],
+    },
+    {
+        id: 'virtual-card',
+        name: 'Virtual Card',
+        type: 'Virtual',
+        fee: 'Free',
+        color: 'card-gradient-grey',
+        benefits: ['Instant issuance', 'Safe online payments', 'Dynamic CVV'],
+    },
 ];
 
 const Cards = () => {
-    const [owned, setOwned] = useState(initialOwned);
-    const blockedMap = useMemo(() => new Map(), []);
-    const [blocked, setBlocked] = useState(() =>
-        owned.reduce((acc, c) => ({ ...acc, [c.id]: c.status !== 'Active' }), {})
-    );
+    const [ownedCards, setOwnedCards] = useState(initialOwned);
+    const [selectedCardIndex, setSelectedCardIndex] = useState(0);
+    const [isFlipped, setIsFlipped] = useState(false);
+    const [showApplyModal, setShowApplyModal] = useState(false);
 
-    const toggleBlock = (id) => {
-        setBlocked((prev) => ({ ...prev, [id]: !prev[id] }));
-    };
+    // Apply Form State
+    const [applyStep, setApplyStep] = useState('select'); // 'select' | 'form' | 'success'
+    const [selectedApplyCardId, setSelectedApplyCardId] = useState(null);
 
-    const removeCard = (id) => {
-        const card = owned.find((c) => c.id === id);
-        if (!card) return;
-        if (window.confirm(`Remove ${card.name}? This action cannot be undone.`)) {
-            setOwned((prev) => prev.filter((c) => c.id !== id));
+    const selectedCard = ownedCards[selectedCardIndex];
+
+    // Reset flip when changing cards
+    React.useEffect(() => {
+        setIsFlipped(false);
+    }, [selectedCardIndex]);
+
+    const handleCardClick = (index) => {
+        if (selectedCardIndex === index) {
+            setIsFlipped(!isFlipped);
+        } else {
+            setSelectedCardIndex(index);
         }
     };
 
+    const handleBlockToggle = () => {
+        if (!selectedCard) return;
+        const updated = [...ownedCards];
+        const card = updated[selectedCardIndex];
+        card.status = card.status === 'Active' ? 'Blocked' : 'Active';
+        setOwnedCards(updated);
+    };
+
+    const openApplyModal = () => {
+        setApplyStep('select');
+        setSelectedApplyCardId(null);
+        setShowApplyModal(true);
+    };
+
+    const handleApplySelect = (cardId) => {
+        setSelectedApplyCardId(cardId);
+        setApplyStep('form');
+    };
+
+    const handleApplySubmit = (formData) => {
+        console.log("Applied:", formData);
+        setApplyStep('success');
+
+        // Mock adding the card
+        const newCard = availableCards.find(c => c.id === formData.cardType);
+        setTimeout(() => {
+            setOwnedCards(prev => [...prev, {
+                id: `new-${Date.now()}`,
+                name: newCard.name,
+                type: newCard.type,
+                color: newCard.color,
+                number: '4000 12** **** 9999',
+                holder: formData.fullName.toUpperCase(),
+                expiry: '12/29',
+                status: 'Active',
+                brand: 'VISA'
+            }]);
+            setShowApplyModal(false);
+        }, 2000);
+    };
+
+    // ... (keep other functions like handleBlockToggle)
+
     return (
-        <div className="cards-container">
+        <div className="cards-page-container">
+            {/* Header */}
             <header className="cards-header">
-                <div className="cards-header-left">
-                    <h2>My Cards</h2>
-                    <p>Manage your existing cards. Block or remove them anytime.</p>
-                </div>
-                <div className="cards-header-actions">
-                    <Link to="/dashboard/apply-card" className="add-card-btn">+ Add Card</Link>
+                <h1 className="header-title">Your Cards</h1>
+                <div className="header-actions">
+                    <button className="add-card-btn" onClick={openApplyModal}>
+                        <FaPlus /> Add new card
+                    </button>
                 </div>
             </header>
 
-            {/* Owned cards list */}
-            <section className="owned-cards">
-                {owned.map((card) => (
-                    <article key={card.id} className={`owned-card ${card.color}`}>
-                        <div className="owned-card-media">
-                            {card.image ? (
-                                <img className="owned-card-img" src={card.image} alt={`${card.name} image`} />
-                            ) : (
-                                <div className={`owned-card-visual ${card.color}`} aria-hidden="true">
-                                    <FaCreditCard className="owned-card-icon" />
+            {/* Card Carousel */}
+            <section className="cards-carousel-section">
+                <div className="cards-scroll-container">
+                    {ownedCards.map((card, index) => (
+                        <div
+                            key={card.id}
+                            className={`card-visual-wrapper ${index === selectedCardIndex ? 'selected' : ''}`}
+                            onClick={() => handleCardClick(index)}
+                        >
+                            <div className={`zen-card-inner ${index === selectedCardIndex && isFlipped ? 'flipped' : ''}`}>
+                                {/* FRONT FACE */}
+                                <div className={`zen-card-front ${card.color}`}>
+                                    <div className="card-brand">{card.brand}</div>
+                                    <div className="card-chip"></div>
+                                    <div className="card-number">{card.number}</div>
+                                    <div className="card-footer">
+                                        <div>
+                                            <div className="card-holder-name">{card.holder}</div>
+                                        </div>
+                                        <div className="card-expiry">{card.expiry}</div>
+                                    </div>
                                 </div>
-                            )}
-                        </div>
-                        <div className="owned-card-body">
-                            <div className="owned-card-header">
-                                <h3 className="owned-card-title">{card.name}</h3>
-                                <span className="owned-card-type">{card.type}</span>
-                            </div>
-                            <div className="owned-card-meta">
-                                <span className="meta-item">{card.maskedNumber}</span>
-                                <span className={`status-pill ${blocked[card.id] ? 'blocked' : 'active'}`}>
-                                    {blocked[card.id] ? 'Blocked' : 'Active'}
-                                </span>
-                            </div>
-                            <p className="owned-card-info">{card.info}</p>
-                            <ul className="owned-card-details">
-                                <li><strong>Limits:</strong> {card.limits}</li>
-                                <li><strong>Issued on:</strong> {new Date(card.issuedOn).toLocaleDateString()}</li>
-                            </ul>
-                            <div className="owned-card-actions">
-                                <button className="secondary-btn" type="button" onClick={() => toggleBlock(card.id)}>
-                                    {blocked[card.id] ? 'Unblock Card' : 'Block Card'}
-                                </button>
-                                <button className="danger-btn" type="button" onClick={() => removeCard(card.id)}>
-                                    Remove Card
-                                </button>
-                            </div>
-                        </div>
-                    </article>
-                ))}
-                {owned.length === 0 && (
-                    <div className="no-cards">
-                        <p>You don’t have any active cards.</p>
-                        <Link to="/dashboard/apply-card" className="apply-btn">Apply for a Card</Link>
-                    </div>
-                )}
-            </section>
 
-            {/* Safety banner */}
-            <section className="cards-safety">
-                <div className="safety-content">
-                    <FaShieldAlt className="safety-icon" />
-                    <div>
-                        <h4>Your security is our priority</h4>
-                        <p>Chip & PIN, instant lock/unlock, and real-time alerts keep your money safe.</p>
-                    </div>
+                                {/* BACK FACE */}
+                                <div className={`zen-card-back ${card.color}`}>
+                                    <div className="card-magnetic-strip"></div>
+                                    <div className="card-signature-row">
+                                        <div className="card-signature"></div>
+                                        <div className="card-cvv-box">
+                                            <span className="cvv-label">CVV</span>
+                                            <span className="cvv-value">123</span>
+                                        </div>
+                                    </div>
+                                    <div className="card-back-text">
+                                        This card is property of Bankify. If found, please return to nearest branch.
+                                    </div>
+                                    <div className="card-brand-small">{card.brand}</div>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </section>
+
+            {/* Management Panel */}
+            {selectedCard && (
+                <section className="management-panel">
+                    <div className="panel-left">
+                        <h3 className="panel-section-title">Card Management</h3>
+                        <div className="actions-grid">
+                            <div className="action-item">
+                                <div className="action-left">
+                                    <div className="action-icon"><FaInfoCircle /></div>
+                                    <span className="action-label">Card Details</span>
+                                </div>
+                                <span className="action-arrow">→</span>
+                            </div>
+
+                            <div className="action-item">
+                                <div className="action-left">
+                                    <div className="action-icon"><FaKey /></div>
+                                    <span className="action-label">Change PIN</span>
+                                </div>
+                                <span className="action-arrow">→</span>
+                            </div>
+
+                            <div className="action-item" onClick={handleBlockToggle}>
+                                <div className="action-left">
+                                    <div className="action-icon" style={{ color: selectedCard.status === 'Blocked' ? 'red' : 'inherit' }}>
+                                        <FaBan />
+                                    </div>
+                                    <span className="action-label">
+                                        {selectedCard.status === 'Blocked' ? 'Unblock Card' : 'Block Card'}
+                                    </span>
+                                </div>
+                                <span className="action-arrow">→</span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </section>
+            )}
+
+            {/* Apply Modal */}
+            {showApplyModal && (
+                <div className="apply-modal-overlay">
+                    <div className="apply-modal-content">
+                        <button className="close-modal-btn" onClick={() => setShowApplyModal(false)}>
+                            <FaTimes />
+                        </button>
+
+                        {applyStep === 'select' && (
+                            <div>
+                                <h2 style={{ marginBottom: '20px' }}>Select a Card</h2>
+                                <div style={{ display: 'grid', gap: '16px' }}>
+                                    {availableCards.map(c => (
+                                        <div
+                                            key={c.id}
+                                            onClick={() => handleApplySelect(c.id)}
+                                            style={{
+                                                padding: '16px',
+                                                border: '1px solid #E2E8F0',
+                                                borderRadius: '12px',
+                                                cursor: 'pointer',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '16px'
+                                            }}
+                                        >
+                                            <div className={`zen-card ${c.color}`} style={{ width: '60px', height: '40px', borderRadius: '6px', padding: '0' }}></div>
+                                            <div>
+                                                <div style={{ fontWeight: '700' }}>{c.name}</div>
+                                                <div style={{ fontSize: '0.9rem', color: '#64748B' }}>{c.type} • {c.fee}</div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {applyStep === 'form' && selectedApplyCardId && (
+                            <ApplyCardForm
+                                selectedCard={availableCards.find(c => c.id === selectedApplyCardId)}
+                                cardOptions={availableCards}
+                                onChangeCard={setSelectedApplyCardId}
+                                onSubmit={handleApplySubmit}
+                                onCancel={() => setApplyStep('select')}
+                            />
+                        )}
+
+                        {applyStep === 'success' && (
+                            <div style={{ textAlign: 'center', padding: '40px 0' }}>
+                                <FaCheckCircle style={{ fontSize: '3rem', color: '#16A34A', marginBottom: '16px' }} />
+                                <h2>Application Submitted!</h2>
+                                <p style={{ color: '#64748B' }}>Your new card is being processed and will appear in your dashboard shortly.</p>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

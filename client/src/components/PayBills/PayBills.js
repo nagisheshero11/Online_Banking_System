@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { FaBolt, FaWifi, FaMobileAlt, FaFire, FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
+import { FaBolt, FaWifi, FaMobileAlt, FaFire, FaCheckCircle, FaUniversity } from "react-icons/fa";
 import { getMyBills, payBill, getBillsByLoan } from "../../services/billsAPI";
 import "./styles/PayBills.css";
 
@@ -74,10 +74,10 @@ const PayBills = () => {
 
     const currency = (n) => n.toLocaleString('en-IN', { style: 'currency', currency: 'INR' });
 
-    const getBillIcon = (type) => {
-        // Simple heuristic for icons based on bill type/name (mock logic)
-        // In a real app, bill type would be a field.
-        const t = (type || "").toLowerCase();
+    const getBillIcon = (bill) => {
+        if (bill.loanId) return <FaUniversity />;
+
+        const t = (bill.type || "").toLowerCase();
         if (t.includes("electric")) return <FaBolt />;
         if (t.includes("internet") || t.includes("wifi")) return <FaWifi />;
         if (t.includes("mobile") || t.includes("phone")) return <FaMobileAlt />;
@@ -129,11 +129,13 @@ const PayBills = () => {
                     bills.map(bill => (
                         <div key={bill.id} className="bill-card">
                             <div className="bill-icon">
-                                {getBillIcon(bill.type || "Electricity")}
+                                {getBillIcon(bill)}
                             </div>
 
                             <div className="bill-details">
-                                <div className="bill-type">Bill #{bill.id}</div>
+                                <div className="bill-type">
+                                    {bill.loanId ? `Loan Payment #${bill.id}` : `Bill #${bill.id}`}
+                                </div>
                                 <div className="bill-meta">
                                     <span className={`status-pill status-${bill.status.toLowerCase()}`}>
                                         {bill.status}
