@@ -1,17 +1,28 @@
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 :root {
   /* Brand Colors */
-  --primary-blue: #003087; /* Deep Royal Blue */
-  --action-blue: #0070BA;  /* Bright PayPal Blue */
+  --primary-blue: #003087;
+  /* Deep Royal Blue */
+  --action-blue: #0070BA;
+  /* Bright PayPal Blue */
   --action-hover: #005ea6;
-  
+
   /* Neutral Colors */
   --bg-white: #FFFFFF;
-  --bg-cream: #F5F7FA;     /* Light Grey/Blue tint */
-  --text-dark: #2C2E2F;    /* Dark Slate */
-  --text-light: #687173;   /* Medium Grey */
-  
+  --bg-cream: #F5F7FA;
+  /* Light Grey/Blue tint */
+  --text-dark: #2C2E2F;
+  /* Dark Slate */
+  --text-light: #687173;
+  /* Medium Grey */
+
   /* Spacing & Radius */
   --radius-pill: 50px;
   --radius-card: 12px;
@@ -70,7 +81,12 @@ body {
   background-color: rgba(0, 112, 186, 0.05);
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   color: var(--primary-blue);
   margin-top: 0;
   font-weight: 800;

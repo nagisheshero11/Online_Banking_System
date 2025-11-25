@@ -1,15 +1,23 @@
-/* Top navbar for dashboard */
+/* ─────────────────── Dashboard Top Navbar (Fixed) ─────────────────── */
+
 .dashboard-navbar {
-    position: sticky;
+    position: fixed;
     top: 0;
-    z-index: 20;
+    left: 0;
+    width: 100%;
+    /* full width */
+    height: 64px;
+    /* consistent height */
+    padding: 12px 24px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    padding: 12px 24px;
     background: #FFFFFF;
     border-bottom: 1px solid #E0E0E0;
+    z-index: 1000;
+    /* stays above everything */
+    box-sizing: border-box;
 }
 
 .nav-left {
@@ -27,24 +35,12 @@
     letter-spacing: 0.3px;
 }
 
-.brand-logo-mini {
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
-    background: #1A1A1A;
-    color: #FFFFFF;
-    display: grid;
-    place-items: center;
-    font-weight: 800;
-}
-
-/* New image-based brand logo */
+/* Brand Logo (Image) */
 .brand-logo {
     width: 40px;
     height: 40px;
-    border-radius: 8px;
     object-fit: cover;
-    display: inline-block;
+    border-radius: 8px;
 }
 
 .brand-text {
@@ -52,6 +48,7 @@
     color: #0D0D0D;
 }
 
+/* Right Profile Stack */
 .nav-right {
     display: flex;
     align-items: center;
@@ -75,6 +72,7 @@
     font-size: 12px;
 }
 
+/* Logout Button */
 .logout-btn {
     display: inline-flex;
     align-items: center;
@@ -85,12 +83,41 @@
     border: 1px solid #D4AF37;
     color: #0D0D0D;
     background: #D4AF37;
-    text-decoration: none;
     font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s;
 }
 
 .logout-btn:hover {
     background: #C0A062;
 }
 
-/* Keep brand text visible on all screen sizes */
+/* Ensure navbar and content don't overlap */
+body {
+    margin: 0;
+    padding-top: 64px;
+    /* same as navbar height */
+    box-sizing: border-box;
+}
+
+/* ─────────────────── RESPONSIVE ─────────────────── */
+
+@media (max-width: 600px) {
+    .dashboard-navbar {
+        padding: 10px 16px;
+    }
+
+    .brand-text {
+        font-size: 1rem;
+    }
+
+    .logout-btn span {
+        display: none;
+        /* Show only icon on small screens */
+    }
+
+    .logout-btn {
+        padding: 0 8px;
+    }
+}

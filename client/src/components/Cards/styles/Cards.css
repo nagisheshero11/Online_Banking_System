@@ -60,12 +60,11 @@
     display: flex;
     gap: 24px;
     overflow-x: auto;
+    overflow-y: hidden;
     padding: 20px 4px;
     scroll-behavior: smooth;
     -ms-overflow-style: none;
-    /* IE and Edge */
     scrollbar-width: none;
-    /* Firefox */
 }
 
 .cards-scroll-container::-webkit-scrollbar {
@@ -577,4 +576,14 @@
 .secondary-btn:hover {
     background: #F1F5F9;
     color: #0F172A;
+}
+
+/* Remove unwanted horizontal scroll */
+body,
+html {
+    overflow-x: hidden;
+}
+
+.cards-page-container {
+    overflow-x: hidden;
 }

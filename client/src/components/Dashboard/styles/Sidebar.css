@@ -1,65 +1,56 @@
-/* Sidebar-specific styles (light theme with specified palette) */
+/* ─────────── Sidebar Styles (Fixed Layout) ─────────── */
+
 .sidebar {
-    position: sticky;
+    position: fixed;
+    left: 0;
     top: 64px;
     /* height of top navbar */
     height: calc(100vh - 64px);
+    width: 260px;
+    /* fixed width */
     display: flex;
     flex-direction: column;
-    color: #595959;
     background: #FFFFFF;
+    color: #595959;
     padding: 12px 0 12px;
     border-right: 1px solid #E0E0E0;
+    overflow-y: auto;
+    /* scroll only inside sidebar */
+    z-index: 999;
+    /* keep above content */
 }
 
-.sidebar-brand {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 20px 16px;
-    border-bottom: 1px solid #E0E0E0;
-    margin-bottom: 6px;
+/* Remove scrollbar visibility (optional) */
+.sidebar::-webkit-scrollbar {
+    width: 5px;
 }
 
-.brand-logo {
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
-    background: #1A1A1A;
-    display: grid;
-    place-items: center;
-    font-weight: 800;
-    color: #FFFFFF;
-}
-
-/* Scope to sidebar to avoid hiding navbar brand text */
-.sidebar .brand-text {
-    display: none;
+.sidebar::-webkit-scrollbar-thumb {
+    background: #e0e0e0;
+    border-radius: 10px;
 }
 
 .sidebar-section {
     padding: 10px 12px 6px 12px;
 }
 
-.section-label {
-    display: none;
-}
-
+/* Sidebar links */
 .sidebar-link {
     text-decoration: none;
     color: inherit;
 }
 
+/* Sidebar Item */
 .sidebar-item {
     display: flex;
     align-items: center;
     gap: 12px;
     padding: 10px 14px;
     border-radius: 12px;
-    color: #595959;
     cursor: pointer;
-    transition: background 0.2s ease, color 0.2s ease;
+    color: #595959;
     position: relative;
+    transition: background 0.2s ease, color 0.2s ease;
 }
 
 .sidebar-item:hover {
@@ -67,25 +58,27 @@
     color: #0D0D0D;
 }
 
+/* Active Item */
 .sidebar-item.active {
     background: #E0E0E0;
     color: #0D0D0D;
     border-left: 4px solid #D4AF37;
 }
 
-/* Remove left indicator bar in light design */
+/* Remove extra active bar, we are using border-left */
 .sidebar-item.active::before {
     display: none;
 }
 
+/* Icons */
 .icon-wrap {
     width: 28px;
     height: 28px;
-    border-radius: 8px;
     display: grid;
     place-items: center;
-    background: transparent;
+    border-radius: 8px;
     color: #595959;
+    background: transparent;
 }
 
 .icon-wrap svg {
@@ -93,13 +86,52 @@
     height: 20px;
 }
 
-/* Active item makes icon/text white */
+/* Active color on icon and text */
 .sidebar-item.active .icon-wrap,
 .sidebar-item.active .sidebar-label {
     color: #0D0D0D;
 }
 
+/* Sidebar Footer */
 .sidebar-footer {
     margin-top: auto;
     padding: 8px;
+}
+
+
+/* ─────────── Responsive Sidebar Layout ─────────── */
+
+@media (max-width: 900px) {
+    .sidebar {
+        width: 220px;
+    }
+
+    .dashboard-content {
+        margin-left: 220px;
+    }
+}
+
+@media (max-width: 600px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        top: 64px;
+        border-right: none;
+        border-bottom: 1px solid #E0E0E0;
+        overflow-y: visible;
+    }
+
+    .dashboard-content {
+        margin-left: 0 !important;
+        margin-top: 120px;
+    }
+}
+
+/* ─────────── Dashboard Offset (Add to Global CSS) ─────────── */
+
+.dashboard-content {
+    margin-left: 260px;
+    /* Push main content right */
+    padding: 20px;
+    transition: margin 0.2s ease;
 }
