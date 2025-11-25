@@ -1,179 +1,277 @@
-/* ========================================================================= */
-/* client/src/components/Profile/styles/Profile.css - COMPLETE STYLING */
-/* ========================================================================= */
+/* Zen Aesthetic - Profile Page */
 
-/* --- Base Layout & Centering --- */
-.profile-page {
-    padding: 20px;
+.zen-profile-page {
+    padding: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: 'Manrope', sans-serif;
+    color: #1E293B;
+    animation: fadeIn 0.6s ease-out;
 }
 
-/* Wrapper to center the header content (aligns with cards) */
-.page-header-wrapper {
-    max-width: 750px;
-    margin: 0 auto 20px auto;
-    text-align: left;
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-/* Base Card Style (Used for the main profile card) */
-.card {
-    background-color: #FFFFFF;
-    padding: 25px;
-    border-radius: 12px;
-    border: 1px solid #E0E0E0;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+/* Header */
+.zen-profile-header {
+    margin-bottom: 40px;
+    text-align: center;
 }
 
-.profile-card {
-    max-width: 750px;
-    margin: 0 auto 30px auto;
+.zen-profile-header h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #0F172A;
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
 }
 
-/* --- 1. Profile Header Card (The Blue Card) --- */
-.profile-header-card {
-    background-color: #1A1A1A;
-    color: #FFFFFF;
-    padding: 20px;
-    border-radius: 10px;
+.zen-profile-header p {
+    font-size: 1rem;
+    color: #64748B;
+}
+
+/* Profile Card */
+.zen-profile-card {
+    background: #FFFFFF;
+    border-radius: 24px;
+    padding: 40px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+    border: 1px solid #F1F5F9;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* User Header Section */
+.zen-user-header {
     display: flex;
     align-items: center;
-    margin-bottom: 25px;
+    gap: 24px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid #F1F5F9;
+    margin-bottom: 32px;
 }
 
-.user-avatar {
-    font-size: 3em;
-    margin-right: 20px;
-    opacity: 0.9;
-}
-
-.user-name {
-    margin: 0;
-    font-size: 1.5em;
+.zen-avatar-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0F172A 0%, #334155 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2rem;
     font-weight: 700;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
 }
 
-.account-type {
-    margin: 0;
-    font-size: 0.9em;
-    opacity: 0.8;
+.zen-user-info {
+    flex: 1;
 }
 
+.zen-user-name {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #0F172A;
+    margin-bottom: 4px;
+}
 
-/* --- 2. Information Grid & Details --- */
-.profile-details-grid {
+.zen-user-id {
+    font-size: 0.9rem;
+    color: #64748B;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* Actions */
+.zen-actions-desktop {
+    display: flex;
+    gap: 12px;
+}
+
+.zen-btn-edit {
+    background: #F1F5F9;
+    color: #334155;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: 600;
+    border: 1px solid #E2E8F0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.zen-btn-edit:hover {
+    background: #E2E8F0;
+    color: #0F172A;
+}
+
+.zen-btn-save {
+    background: #0F172A;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.zen-btn-save:hover {
+    background: #1E293B;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+}
+
+/* Success Message */
+.zen-success-msg {
+    background: #ECFDF5;
+    color: #059669;
+    padding: 12px 16px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Details Grid */
+.zen-details-grid {
     display: grid;
-    /* Two equal columns with a gap */
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
 }
 
-.profile-detail-item {
+.zen-profile-item {
     display: flex;
     flex-direction: column;
+    gap: 8px;
 }
 
-.detail-label {
-    font-size: 0.9em;
+.zen-detail-label {
+    font-size: 0.85rem;
     font-weight: 600;
-    color: #595959;
-    margin-bottom: 5px;
+    color: #64748B;
     display: flex;
     align-items: center;
+    gap: 8px;
 }
 
-.detail-icon {
-    margin-right: 8px;
-    color: #1A1A1A;
-    /* Neutral dark accent */
-    font-size: 1em;
+.zen-detail-icon {
+    color: #94A3B8;
 }
 
-.detail-input-wrap {
+.zen-input-wrap {
     position: relative;
 }
 
-.detail-input {
+.zen-detail-input {
     width: 100%;
-    padding: 12px 15px;
-    border: 1px solid #E0E0E0;
-    border-radius: 8px;
-    font-size: 1em;
-    box-sizing: border-box;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid #E2E8F0;
+    font-family: inherit;
+    font-size: 0.95rem;
+    color: #334155;
+    background: #F8FAFC;
+    transition: all 0.2s ease;
+}
+
+.zen-detail-input:focus {
     outline: none;
-    transition: all 0.2s;
+    border-color: #3B82F6;
     background: #FFFFFF;
-    color: #0D0D0D;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-/* Styling for read-only fields */
-.detail-input[readOnly] {
-    background-color: #FAFAFA;
-    /* Light gray background for read-only */
-    color: #595959;
-    cursor: default;
+.zen-input-wrap.editable .zen-detail-input {
+    background: #FFFFFF;
+    border-color: #CBD5E1;
 }
 
-/* Highlight the input when it becomes editable */
-.detail-input-wrap.editable .detail-input {
-    background-color: #FFFFFF;
-    /* White background */
-    border-color: #D4AF37;
-    /* Gold border for focus/edit */
-    box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.25);
-    cursor: text;
+.zen-input-wrap.highlight .zen-detail-input {
+    background: #EFF6FF;
+    border-color: #BFDBFE;
+    color: #1E40AF;
+    font-weight: 600;
 }
 
-.read-only-text {
+.zen-readonly-text {
     position: absolute;
+    right: 12px;
     top: 50%;
-    right: 15px;
     transform: translateY(-50%);
-    font-size: 0.8em;
-    color: #595959;
+    font-size: 0.75rem;
+    color: #94A3B8;
     font-style: italic;
+    pointer-events: none;
 }
 
-/* Placeholder for layout consistency when an item is removed (like the balance field) */
-.profile-detail-item-placeholder {
-    height: 1px;
+/* Mobile Actions */
+.zen-actions-mobile {
+    display: none;
+    margin-top: 24px;
 }
 
-
-/* --- 3. Action Button (Edit/Save) --- */
-.profile-actions {
-    margin-top: 30px;
-    text-align: left;
+.full-width {
+    width: 100%;
+    justify-content: center;
 }
 
-.btn-edit {
-    background-color: #D4AF37;
-    color: #0D0D0D;
-    padding: 12px 30px;
-    border: 1px solid transparent;
-    border-radius: 8px;
-    font-size: 1em;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background-color 0.2s, box-shadow 0.2s;
-    display: flex;
-    align-items: center;
-}
+/* Responsive */
+@media (max-width: 768px) {
+    .zen-profile-page {
+        padding: 20px;
+    }
 
-.btn-edit:hover {
-    background-color: #C0A062;
-    box-shadow: 0 6px 15px rgba(212, 175, 55, 0.25);
-}
+    .zen-profile-card {
+        padding: 24px;
+    }
 
-.btn-edit .button-icon {
-    margin-right: 8px;
-}
+    .zen-user-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 16px;
+    }
 
-/* Style for the Save button */
-.btn-edit.btn-save {
-    background-color: #00C896;
-    /* Theme success */
-    color: #FFFFFF;
-}
+    .zen-actions-desktop {
+        display: none;
+    }
 
-.btn-edit.btn-save:hover {
-    background-color: #00B184;
+    .zen-actions-mobile {
+        display: block;
+    }
+
+    .zen-details-grid {
+        grid-template-columns: 1fr;
+    }
 }
