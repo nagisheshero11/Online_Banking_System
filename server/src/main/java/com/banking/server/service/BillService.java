@@ -118,9 +118,9 @@ public class BillService {
 
         transactionRepository.save(transaction);
 
-        // Credit Bank Funds if EMI
-        if ("EMI".equalsIgnoreCase(bill.getBillType())) {
-            bankFundService.creditFunds(bill.getAmount(), "EMI Payment - Bill #" + bill.getId());
+        // Credit Bank Funds if EMI or CREDIT_CARD
+        if ("EMI".equalsIgnoreCase(bill.getBillType()) || "CREDIT_CARD".equalsIgnoreCase(bill.getBillType())) {
+            bankFundService.creditFunds(bill.getAmount(), bill.getBillType() + " Payment - Bill #" + bill.getId());
         }
 
         return savedBill;

@@ -67,8 +67,8 @@ const BankFunds = () => {
                         <FaArrowUp />
                     </div>
                     <div>
-                        <h3>EMI Collections</h3>
-                        <p>Funds increase when EMIs are paid.</p>
+                        <h3>Repayments (EMI & Credit Card)</h3>
+                        <p>Funds increase when EMIs or Credit Card bills are paid.</p>
                     </div>
                 </div>
             </div>
