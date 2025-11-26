@@ -9,6 +9,7 @@ const PayBills = () => {
     const [loading, setLoading] = useState(true);
     const [payingBillId, setPayingBillId] = useState(null);
     const [successMsg, setSuccessMsg] = useState(null);
+    const [selectedBill, setSelectedBill] = useState(null); // For modal
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 
@@ -37,13 +38,20 @@ const PayBills = () => {
         }
     };
 
-    const handlePay = async (billId) => {
-        setPayingBillId(billId);
+    const openPaymentModal = (bill) => {
+        setSelectedBill(bill);
+    };
+
+    const confirmPayment = async () => {
+        if (!selectedBill) return;
+        setPayingBillId(selectedBill.id);
+
         try {
-            await payBill(billId);
+            await payBill(selectedBill.id);
             await fetchBills();
             setSuccessMsg("Bill paid successfully! Transaction recorded.");
             setTimeout(() => setSuccessMsg(null), 3000);
+            setSelectedBill(null); // Close modal
         } catch (err) {
             alert(err.message || "Payment failed");
         } finally {
@@ -156,10 +164,10 @@ const PayBills = () => {
                                 ) : (
                                     <button
                                         className="pay-btn"
-                                        onClick={() => handlePay(bill.id)}
+                                        onClick={() => openPaymentModal(bill)}
                                         disabled={payingBillId === bill.id}
                                     >
-                                        {payingBillId === bill.id ? 'Processing...' : 'Pay Now'}
+                                        Pay Now
                                     </button>
                                 )}
                             </div>
@@ -167,6 +175,34 @@ const PayBills = () => {
                     ))
                 )}
             </div>
+
+            {/* Payment Summary Modal */}
+            {selectedBill && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <h3>Payment Summary</h3>
+                        <div className="summary-row">
+                            <span>Bill Type:</span>
+                            <strong>{selectedBill.billType}</strong>
+                        </div>
+                        <div className="summary-row">
+                            <span>Due Date:</span>
+                            <strong>{selectedBill.dueDate}</strong>
+                        </div>
+                        <div className="summary-row total">
+                            <span>Total Amount:</span>
+                            <strong>{currency(selectedBill.amount)}</strong>
+                        </div>
+
+                        <div className="modal-actions">
+                            <button className="cancel-btn" onClick={() => setSelectedBill(null)}>Cancel</button>
+                            <button className="confirm-btn" onClick={confirmPayment} disabled={payingBillId}>
+                                {payingBillId ? "Processing..." : "Confirm Payment"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

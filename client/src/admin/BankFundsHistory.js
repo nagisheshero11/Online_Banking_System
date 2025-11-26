@@ -36,7 +36,7 @@ const BankFundsHistory = () => {
                     <FaArrowLeft />
                 </button>
                 <h1 style={{ fontSize: '1.5rem', fontWeight: '800', color: '#0F172A', margin: 0 }}>
-                    Fund Transaction History
+                    Bank Transactions
                 </h1>
             </div>
 
