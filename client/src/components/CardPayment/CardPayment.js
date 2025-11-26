@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getMyCards, sendCardPayment } from '../../services/cardAPI';
-import { FaCreditCard, FaPaperPlane, FaUser, FaRupeeSign } from 'react-icons/fa';
+import { FaCreditCard, FaPaperPlane, FaUser, FaRupeeSign, FaTimes } from 'react-icons/fa';
 import './CardPayment.css';
 
 const CardPayment = () => {
@@ -9,6 +9,8 @@ const CardPayment = () => {
     const [toAccount, setToAccount] = useState('');
     const [amount, setAmount] = useState('');
     const [remarks, setRemarks] = useState('');
+    const [pin, setPin] = useState('');
+    const [showPinModal, setShowPinModal] = useState(false);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState(null);
 
@@ -46,30 +48,44 @@ const CardPayment = () => {
         }
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         setMessage(null);
-        setLoading(true);
 
         if (!selectedCardId) {
             setMessage({ type: 'error', text: 'Please select a valid credit card.' });
-            setLoading(false);
             return;
         }
+
+        // Open PIN Modal
+        setShowPinModal(true);
+    };
+
+    const handlePinSubmit = async () => {
+        if (!pin || pin.length !== 4) {
+            setMessage({ type: 'error', text: 'Please enter a valid 4-digit PIN.' });
+            return;
+        }
+
+        setLoading(true);
+        setShowPinModal(false); // Close modal while processing
 
         try {
             await sendCardPayment({
                 cardId: selectedCardId,
                 toAccount,
                 amount,
-                remarks
+                remarks,
+                pin
             });
             setMessage({ type: 'success', text: 'Payment Successful!' });
             setAmount('');
             setToAccount('');
             setRemarks('');
+            setPin('');
         } catch (err) {
             setMessage({ type: 'error', text: err.response?.data || 'Payment Failed' });
+            // Re-open modal if it was just a wrong PIN? Maybe not, let them retry.
         }
         setLoading(false);
     };
@@ -146,6 +162,30 @@ const CardPayment = () => {
                     </button>
                 </form>
             </div>
+
+            {/* PIN Modal */}
+            {showPinModal && (
+                <div className="pin-modal-overlay">
+                    <div className="pin-modal">
+                        <button className="close-modal-btn" onClick={() => setShowPinModal(false)}>
+                            <FaTimes />
+                        </button>
+                        <h3>Enter Card PIN</h3>
+                        <p>Please enter your 4-digit PIN to confirm payment.</p>
+                        <input
+                            type="password"
+                            maxLength="4"
+                            value={pin}
+                            onChange={(e) => setPin(e.target.value.replace(/\D/g, ''))}
+                            className="pin-input"
+                            autoFocus
+                        />
+                        <button className="confirm-btn" onClick={handlePinSubmit} disabled={loading}>
+                            {loading ? 'Processing...' : 'Confirm'}
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

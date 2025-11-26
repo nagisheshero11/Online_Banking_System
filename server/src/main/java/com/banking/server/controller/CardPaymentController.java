@@ -22,8 +22,13 @@ public class CardPaymentController {
             String toAccount = (String) request.get("toAccount");
             BigDecimal amount = new BigDecimal(request.get("amount").toString());
             String remarks = (String) request.get("remarks");
+            String pin = (String) request.get("pin");
 
-            cardPaymentService.processPayment(cardId, toAccount, amount, remarks);
+            if (pin == null || pin.isBlank()) {
+                return ResponseEntity.badRequest().body("PIN is required");
+            }
+
+            cardPaymentService.processPayment(cardId, toAccount, amount, remarks, pin);
             return ResponseEntity.ok("Payment Successful");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

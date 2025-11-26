@@ -26,7 +26,8 @@ public class CardPaymentService {
     private TransactionRepository transactionRepository;
 
     @Transactional
-    public Transaction processPayment(Long cardId, String toAccountNumber, BigDecimal amount, String remarks) {
+    public Transaction processPayment(Long cardId, String toAccountNumber, BigDecimal amount, String remarks,
+            String pin) {
         // 1. Fetch and Validate Card
         Card card = cardRepository.findById(cardId)
                 .orElseThrow(() -> new RuntimeException("Card not found"));
@@ -37,6 +38,11 @@ public class CardPaymentService {
 
         if (!card.getCardType().contains("CREDIT")) {
             throw new RuntimeException("Card payments are only supported for Credit Cards");
+        }
+
+        // Validate PIN
+        if (card.getPin() == null || !card.getPin().equals(pin)) {
+            throw new RuntimeException("Invalid PIN");
         }
 
         // 2. Validate Limits
@@ -52,7 +58,8 @@ public class CardPaymentService {
             card.setLastUsageDate(today);
         }
         if (card.getDailyUsage().add(amount).compareTo(card.getDailyLimit()) > 0) {
-            throw new RuntimeException("Daily limit exceeded. Remaining: " + card.getDailyLimit().subtract(card.getDailyUsage()));
+            throw new RuntimeException(
+                    "Daily limit exceeded. Remaining: " + card.getDailyLimit().subtract(card.getDailyUsage()));
         }
 
         // Credit Limit
