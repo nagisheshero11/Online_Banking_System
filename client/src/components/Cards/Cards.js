@@ -1,50 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { FaPlus, FaBan, FaInfoCircle, FaKey, FaTimes, FaCreditCard, FaCheckCircle } from 'react-icons/fa';
 import ApplyCardForm from '../ApplyCard/ApplyCardForm';
-import { getUserProfile } from '../../services/profileAPI'; // fetch logged‑in user profile
+import { getMyCards, applyForCard, blockCard, unblockCard, setCardPin } from '../../services/cardAPI';
+import { getUserProfile } from '../../services/profileAPI';
 import './styles/Cards.css';
 
-// Mock Data for Owned Cards
-const initialOwned = [
-    {
-        id: 'c1',
-        name: 'Platinum Debit',
-        type: 'Debit',
-        color: 'card-gradient-lime',
-        number: '4532 12** **** 7890',
-        holder: 'NAGI SEISHIRO',
-        expiry: '12/28',
-        status: 'Active',
-        brand: 'VISA'
-    },
-    {
-        id: 'c2',
-        name: 'Signature Credit',
-        type: 'Credit',
-        color: 'card-gradient-black',
-        number: '5412 75** **** 3421',
-        holder: 'NAGI SEISHIRO',
-        expiry: '09/26',
-        status: 'Active',
-        brand: 'VISA'
-    },
-    {
-        id: 'c3',
-        name: 'Virtual Card',
-        type: 'Virtual',
-        color: 'card-gradient-grey',
-        number: '4111 11** **** 1111',
-        holder: 'NAGI SEISHIRO',
-        expiry: '01/30',
-        status: 'Active',
-        brand: 'VISA'
-    }
-];
+// Initial state is empty, fetched from API
+const initialOwned = [];
 
-// Mock Data for Available Cards (for applying)
 const availableCards = [
     {
-        id: 'platinum-debit',
+        id: 'PLATINUM_DEBIT',
         name: 'Platinum Debit Card',
         type: 'Debit',
         fee: 'Free',
@@ -52,7 +18,7 @@ const availableCards = [
         benefits: ['Zero annual fee', 'High ATM withdrawal limits', 'Global acceptance'],
     },
     {
-        id: 'signature-credit',
+        id: 'SIGNATURE_CREDIT',
         name: 'Signature Credit Card',
         type: 'Credit',
         fee: '₹2,999 / year',
@@ -60,24 +26,26 @@ const availableCards = [
         benefits: ['5% cashback on online spends', 'Airport lounge access', 'Fuel surcharge waiver'],
     },
     {
-        id: 'virtual-card',
-        name: 'Virtual Card',
-        type: 'Virtual',
-        fee: 'Free',
+        id: 'NORMAL_CREDIT',
+        name: 'Normal Credit Card',
+        type: 'Credit',
+        fee: '₹499 / year',
         color: 'card-gradient-grey',
-        benefits: ['Instant issuance', 'Safe online payments', 'Dynamic CVV'],
+        benefits: ['1% cashback on all spends', 'Low interest rates', 'EMI options'],
     },
 ];
 
 const Cards = () => {
     const [ownedCards, setOwnedCards] = useState(initialOwned);
-    const [selectedCardIndex, setSelectedCardIndex] = useState(0);
+    const [selectedCardIndex, setSelectedCardIndex] = useState(null);
     const [isFlipped, setIsFlipped] = useState(false);
     const [showApplyModal, setShowApplyModal] = useState(false);
 
     // Apply Form State
     const [applyStep, setApplyStep] = useState('select'); // 'select' | 'form' | 'success'
     const [selectedApplyCardId, setSelectedApplyCardId] = useState(null);
+    const [showPinModal, setShowPinModal] = useState(false);
+    const [newPin, setNewPin] = useState('');
 
 
     const [cvvVisible, setCvvVisible] = useState(false);
@@ -94,7 +62,49 @@ const Cards = () => {
             }
         };
         fetchName();
+        fetchCards();
     }, []);
+
+    const fetchCards = async () => {
+        try {
+            const data = await getMyCards();
+            // Map backend data to frontend format
+            const formatted = data.map(c => ({
+                id: c.id,
+                name: getCardNameByType(c.cardType),
+                type: c.cardType.includes('DEBIT') ? 'Debit' : 'Credit',
+                color: getCardColorByType(c.cardType),
+                number: c.cardNumber,
+                holder: c.cardHolder,
+                expiry: c.expiryDate,
+                status: mapBackendStatus(c.status), // Correctly map status
+                brand: 'VISA',
+                cvv: c.cvv
+            }));
+            setOwnedCards(formatted);
+        } catch (err) {
+            console.error("Failed to fetch cards", err);
+        }
+    };
+
+    const mapBackendStatus = (status) => {
+        if (status === 'ACTIVE') return 'Active';
+        if (status === 'BLOCKED') return 'Blocked';
+        if (status === 'REJECTED') return 'Rejected';
+        return 'Pending';
+    };
+
+    const getCardNameByType = (type) => {
+        if (type === 'PLATINUM_DEBIT') return 'Platinum Debit';
+        if (type === 'SIGNATURE_CREDIT') return 'Signature Credit';
+        return 'Normal Credit';
+    };
+
+    const getCardColorByType = (type) => {
+        if (type === 'PLATINUM_DEBIT') return 'card-gradient-lime';
+        if (type === 'SIGNATURE_CREDIT') return 'card-gradient-black';
+        return 'card-gradient-grey';
+    };
 
     const selectedCard = ownedCards[selectedCardIndex];
 
@@ -106,11 +116,11 @@ const Cards = () => {
 
     // Card interaction handlers
     const handleSelectCard = (index) => {
-        if (selectedCardIndex !== index) {
-            setSelectedCardIndex(index);
+        if (selectedCardIndex === index) {
+            // Deselect if clicking the same card
+            setSelectedCardIndex(null);
         } else {
-            // Toggle CVV visibility on single click of already selected card
-            setCvvVisible(!cvvVisible);
+            setSelectedCardIndex(index);
         }
     };
 
@@ -137,12 +147,33 @@ const Cards = () => {
         setCvvVisible(!cvvVisible);
     };
 
-    const handleBlockToggle = () => {
+    const handleBlockToggle = async () => {
         if (!selectedCard) return;
-        const updated = [...ownedCards];
-        const card = updated[selectedCardIndex];
-        card.status = card.status === 'Active' ? 'Blocked' : 'Active';
-        setOwnedCards(updated);
+        try {
+            if (selectedCard.status === 'Active') {
+                await blockCard(selectedCard.id);
+            } else {
+                await unblockCard(selectedCard.id);
+            }
+            await fetchCards(); // Refresh
+        } catch (err) {
+            alert("Failed to update card status");
+        }
+    };
+
+    const handleSetPin = async () => {
+        if (!newPin || newPin.length !== 4) {
+            alert("PIN must be 4 digits");
+            return;
+        }
+        try {
+            await setCardPin(selectedCard.id, newPin);
+            alert("PIN set successfully!");
+            setShowPinModal(false);
+            setNewPin('');
+        } catch (err) {
+            alert("Failed to set PIN");
+        }
     };
 
     const openApplyModal = () => {
@@ -156,26 +187,17 @@ const Cards = () => {
         setApplyStep('form');
     };
 
-    const handleApplySubmit = (formData) => {
-        console.log("Applied:", formData);
-        setApplyStep('success');
-
-        // Mock adding the card
-        const newCard = availableCards.find(c => c.id === formData.cardType);
-        setTimeout(() => {
-            setOwnedCards(prev => [...prev, {
-                id: `new-${Date.now()}`,
-                name: newCard.name,
-                type: newCard.type,
-                color: newCard.color,
-                number: '4000 12** **** 9999',
-                holder: formData.fullName.toUpperCase(),
-                expiry: '12/29',
-                status: 'Active',
-                brand: 'VISA'
-            }]);
-            setShowApplyModal(false);
-        }, 2000);
+    const handleApplySubmit = async (formData) => {
+        try {
+            await applyForCard(formData.cardType);
+            setApplyStep('success');
+            setTimeout(() => {
+                setShowApplyModal(false);
+                fetchCards(); // Refresh list (though it might be pending)
+            }, 2000);
+        } catch (err) {
+            alert("Application failed: " + err.message);
+        }
     };
 
     // ... (keep other functions like handleBlockToggle)
@@ -214,6 +236,28 @@ const Cards = () => {
                                         </div>
                                         <div className="card-expiry">{card.expiry}</div>
                                     </div>
+                                    {card.status === 'Pending' && (
+                                        <div style={{
+                                            position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+                                            background: 'rgba(0,0,0,0.6)', borderRadius: '16px',
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                            color: 'white', fontWeight: 'bold', fontSize: '1.2rem',
+                                            backdropFilter: 'blur(2px)'
+                                        }}>
+                                            PENDING APPROVAL
+                                        </div>
+                                    )}
+                                    {card.status === 'Rejected' && (
+                                        <div style={{
+                                            position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+                                            background: 'rgba(220, 38, 38, 0.8)', borderRadius: '16px',
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                            color: 'white', fontWeight: 'bold', fontSize: '1.2rem',
+                                            backdropFilter: 'blur(2px)'
+                                        }}>
+                                            CARD REJECTED
+                                        </div>
+                                    )}
                                 </div>
 
                                 {/* BACK FACE */}
@@ -223,7 +267,7 @@ const Cards = () => {
                                         <div className="card-signature"></div>
                                         <div className="card-cvv-box" onClick={handleCvvClick} style={{ cursor: 'pointer' }}>
                                             <span className="cvv-label">CVV</span>
-                                            <span className="cvv-value">{cvvVisible ? '123' : '•••'}</span>
+                                            <span className="cvv-value">{cvvVisible ? card.cvv : '•••'}</span>
                                         </div>
                                     </div>
                                     <div className="card-back-text">
@@ -238,7 +282,7 @@ const Cards = () => {
             </section>
 
             {/* Management Panel */}
-            {selectedCard && (
+            {selectedCard && selectedCard.status !== 'Rejected' && (
                 <section className="management-panel">
                     <div className="panel-left">
                         <h3 className="panel-section-title">Card Management</h3>
@@ -251,15 +295,21 @@ const Cards = () => {
                                 <span className="action-arrow">→</span>
                             </div>
 
-                            <div className="action-item">
+                            <div className={`action-item ${selectedCard.status === 'Pending' ? 'disabled' : ''}`}
+                                onClick={() => selectedCard.status !== 'Pending' && setShowPinModal(true)}
+                                style={{ opacity: selectedCard.status === 'Pending' ? 0.5 : 1 }}
+                            >
                                 <div className="action-left">
                                     <div className="action-icon"><FaKey /></div>
-                                    <span className="action-label">Change PIN</span>
+                                    <span className="action-label">Set / Change PIN</span>
                                 </div>
                                 <span className="action-arrow">→</span>
                             </div>
 
-                            <div className="action-item" onClick={handleBlockToggle}>
+                            <div className={`action-item ${selectedCard.status === 'Pending' ? 'disabled' : ''}`}
+                                onClick={() => selectedCard.status !== 'Pending' && handleBlockToggle()}
+                                style={{ opacity: selectedCard.status === 'Pending' ? 0.5 : 1 }}
+                            >
                                 <div className="action-left">
                                     <div className="action-icon" style={{ color: selectedCard.status === 'Blocked' ? 'red' : 'inherit' }}>
                                         <FaBan />
@@ -272,8 +322,21 @@ const Cards = () => {
                             </div>
                         </div>
                     </div>
+                </section>
+            )}
 
-
+            {selectedCard && selectedCard.status === 'Rejected' && (
+                <section className="management-panel" style={{ justifyContent: 'center', alignItems: 'center' }}>
+                    <div style={{ textAlign: 'center', color: '#EF4444', padding: '20px' }}>
+                        <h3>Application Rejected</h3>
+                        <p>This card application was declined by the bank.</p>
+                        <button
+                            onClick={() => {/* Logic to remove card could go here */ }}
+                            style={{ marginTop: '10px', padding: '8px 16px', background: '#EF4444', color: 'white', border: 'none', borderRadius: '8px', cursor: 'not-allowed', opacity: 0.7 }}
+                        >
+                            Contact Support
+                        </button>
+                    </div>
                 </section>
             )}
 
@@ -331,6 +394,39 @@ const Cards = () => {
                                 <p style={{ color: '#64748B' }}>Your new card is being processed and will appear in your dashboard shortly.</p>
                             </div>
                         )}
+                    </div>
+                </div>
+            )}
+
+            {/* Set PIN Modal */}
+            {showPinModal && (
+                <div className="apply-modal-overlay">
+                    <div className="apply-modal-content" style={{ maxWidth: '400px' }}>
+                        <button className="close-modal-btn" onClick={() => setShowPinModal(false)}>
+                            <FaTimes />
+                        </button>
+                        <h3>Set Card PIN</h3>
+                        <p style={{ color: '#64748B', marginBottom: '20px' }}>Enter a 4-digit PIN for your card.</p>
+                        <input
+                            type="password"
+                            maxLength="4"
+                            value={newPin}
+                            onChange={(e) => setNewPin(e.target.value.replace(/\D/g, ''))}
+                            className="pin-input"
+                            style={{
+                                width: '100%', padding: '12px', fontSize: '1.5rem', textAlign: 'center',
+                                letterSpacing: '8px', borderRadius: '12px', border: '1px solid #E2E8F0', marginBottom: '20px'
+                            }}
+                        />
+                        <button
+                            onClick={handleSetPin}
+                            style={{
+                                width: '100%', padding: '14px', background: '#0F172A', color: 'white',
+                                border: 'none', borderRadius: '12px', fontWeight: '600', cursor: 'pointer'
+                            }}
+                        >
+                            Set PIN
+                        </button>
                     </div>
                 </div>
             )}

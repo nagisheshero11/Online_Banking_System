@@ -85,6 +85,16 @@
     /* Essential for 3D effect */
 }
 
+.card-visual-wrapper.selected {
+    transform: scale(1.05) translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+}
+
+.card-visual-wrapper.selected .zen-card-inner {
+    box-shadow: 0 0 0 4px #3B82F6, 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
 .zen-card-inner {
     position: relative;
     width: 100%;

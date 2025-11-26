@@ -1,25 +1,120 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { getPendingApplications, approveCard, rejectCard } from "./services/adminCardAPI";
 import "./styles/ApproveCards.css";
 
-const mockCards = [
-    { id: 1, name: "Rahul Sharma", cardType: "Credit Card", date: "Nov 13, 2025" },
-    { id: 2, name: "Anita Rao", cardType: "Debit Card", date: "Nov 14, 2025" },
-];
-
 const ApproveCards = () => {
+    const [cards, setCards] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [processingId, setProcessingId] = useState(null);
+    const [selectedCard, setSelectedCard] = useState(null); // For confirmation modal
+
+    const loadCards = async () => {
+        setLoading(true);
+        try {
+            const data = await getPendingApplications();
+            setCards(data);
+        } catch (err) {
+            console.error("Failed to load cards", err);
+        }
+        setLoading(false);
+    };
+
+    useEffect(() => {
+        loadCards();
+    }, []);
+
+    const confirmApprove = (card) => {
+        setSelectedCard(card);
+    };
+
+    const handleApprove = async () => {
+        if (!selectedCard) return;
+        setProcessingId(selectedCard.id);
+        try {
+            await approveCard(selectedCard.id);
+            alert("Card Approved Successfully!");
+            await loadCards();
+            setSelectedCard(null);
+        } catch (err) {
+            alert("Failed to approve card");
+        }
+        setProcessingId(null);
+    };
+
+    const handleReject = async (cardId) => {
+        if (!window.confirm("Reject this card application?")) return;
+        setProcessingId(cardId);
+        try {
+            await rejectCard(cardId);
+            alert("Card Rejected");
+            await loadCards();
+        } catch (err) {
+            alert("Failed to reject card");
+        }
+        setProcessingId(null);
+    };
+
+    if (loading) return <div className="approve-cards">Loading...</div>;
+
     return (
         <div className="approve-cards">
-            {mockCards.map((c) => (
-                <div className="card-req-box" key={c.id}>
-                    <div className="left">
-                        <h3>{c.name}</h3>
-                        <p>{c.cardType}</p>
-                        <small>Applied on: {c.date}</small>
+            {cards.length === 0 ? (
+                <p>No pending card applications.</p>
+            ) : (
+                cards.map((c) => (
+                    <div className="card-req-box" key={c.id}>
+                        <div className="left">
+                            <h3>{c.cardHolder}</h3>
+                            <div style={{ fontSize: '0.9rem', color: '#475569', marginTop: '8px' }}>
+                                <div><strong>Type:</strong> {c.cardType}</div>
+                                <div><strong>Applied:</strong> {new Date(c.createdAt).toLocaleDateString()}</div>
+                                {/* In a real app, backend would send user details like balance here */}
+                                <div><strong>User ID:</strong> {c.user?.id || 'N/A'}</div>
+                            </div>
+                        </div>
+                        <div className="actions">
+                            <button
+                                className="approve-btn"
+                                onClick={() => confirmApprove(c)}
+                                disabled={processingId === c.id}
+                            >
+                                Approve
+                            </button>
+                            <button
+                                className="reject-btn"
+                                onClick={() => handleReject(c.id)}
+                                disabled={processingId === c.id}
+                                style={{ marginLeft: '10px', background: '#EF4444', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer' }}
+                            >
+                                Reject
+                            </button>
+                        </div>
                     </div>
-                    <button className="approve-btn">Approve</button>
-                </div>
-            ))}
+                ))
+            )}
 
+            {/* Confirmation Modal */}
+            {selectedCard && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <h3>Confirm Card Approval</h3>
+                        <p>Are you sure you want to approve this card?</p>
+
+                        <div style={{ background: '#F8FAFC', padding: '16px', borderRadius: '12px', margin: '20px 0', fontSize: '0.95rem' }}>
+                            <div className="summary-row"><span>Applicant:</span> <strong>{selectedCard.cardHolder}</strong></div>
+                            <div className="summary-row"><span>Card Type:</span> <strong>{selectedCard.cardType}</strong></div>
+                            <div className="summary-row"><span>Card Number:</span> <strong>{selectedCard.cardNumber}</strong></div>
+                        </div>
+
+                        <div className="modal-actions">
+                            <button className="cancel-btn" onClick={() => setSelectedCard(null)}>Cancel</button>
+                            <button className="confirm-btn" onClick={handleApprove} disabled={processingId === selectedCard.id}>
+                                {processingId === selectedCard.id ? "Processing..." : "Confirm Approval"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
