@@ -25,6 +25,7 @@ public class AccountController {
     @GetMapping("/me")
     public ResponseEntity<?> getAccountByUsername(Authentication authentication) {
         String username = authentication.getName();
+        System.out.println("DEBUG: Fetching account details for: " + username);
         Optional<Account> accountOpt = accountRepository.findByUsername(username);
 
         if (accountOpt.isEmpty()) {

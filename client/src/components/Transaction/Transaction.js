@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { getAllTransactions } from "../../services/transactionAPI";
 import { getAccountDetails } from "../../services/accountAPI";
+import { getMyCards } from "../../services/cardAPI";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import { FaSearch, FaDownload, FaArrowUp, FaArrowDown } from 'react-icons/fa';
@@ -14,6 +15,7 @@ const Transactions = () => {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [userAccount, setUserAccount] = useState(null);
+  const [userCards, setUserCards] = useState([]);
 
   // ✅ Fetch account and transactions
   useEffect(() => {
@@ -21,6 +23,13 @@ const Transactions = () => {
       try {
         const user = await getAccountDetails();
         setUserAccount(user);
+
+        try {
+          const cards = await getMyCards();
+          setUserCards(cards.map(c => c.cardNumber));
+        } catch (e) {
+          console.warn("Failed to fetch cards for transaction matching", e);
+        }
 
         const data = await getAllTransactions();
         const sorted = data.sort(
@@ -40,6 +49,7 @@ const Transactions = () => {
   const getTransactionType = (txn) => {
     if (!userAccount) return "Transfer";
     if (txn.fromAccountNumber === userAccount.accountNumber) return "Debited";
+    if (userCards.includes(txn.fromAccountNumber)) return "Debited"; // Card Payment
     if (txn.toAccountNumber === userAccount.accountNumber) return "Credited";
     return "Other";
   };
