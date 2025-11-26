@@ -48,4 +48,10 @@ public class CardController {
         cardService.setPin(id, pin);
         return ResponseEntity.ok("PIN set successfully");
     }
+
+    @PostMapping("/{id}/bill")
+    public ResponseEntity<?> generateBill(@PathVariable Long id) {
+        cardService.generateBill(id);
+        return ResponseEntity.ok("Bill generated successfully");
+    }
 }

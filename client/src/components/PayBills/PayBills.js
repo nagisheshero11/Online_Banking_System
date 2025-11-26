@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { FaBolt, FaWifi, FaMobileAlt, FaFire, FaCheckCircle, FaUniversity } from "react-icons/fa";
+import { FaBolt, FaWifi, FaMobileAlt, FaFire, FaCheckCircle, FaUniversity, FaCreditCard } from "react-icons/fa";
 import { getMyBills, payBill, getBillsByLoan } from "../../services/billsAPI";
 import "./styles/PayBills.css";
 
@@ -84,6 +84,7 @@ const PayBills = () => {
 
     const getBillIcon = (bill) => {
         if (bill.loanId) return <FaUniversity />;
+        if (bill.billType === "CREDIT_CARD") return <FaCreditCard />;
 
         const t = (bill.type || "").toLowerCase();
         if (t.includes("electric")) return <FaBolt />;
@@ -91,6 +92,12 @@ const PayBills = () => {
         if (t.includes("mobile") || t.includes("phone")) return <FaMobileAlt />;
         if (t.includes("gas")) return <FaFire />;
         return <FaBolt />; // Default
+    };
+
+    const getBillTitle = (bill) => {
+        if (bill.loanId) return `Loan Payment #${bill.id}`;
+        if (bill.billType === "CREDIT_CARD") return `Credit Card Bill #${bill.id}`;
+        return `Bill #${bill.id}`;
     };
 
     return (
@@ -142,7 +149,7 @@ const PayBills = () => {
 
                             <div className="bill-details">
                                 <div className="bill-type">
-                                    {bill.loanId ? `Loan Payment #${bill.id}` : `Bill #${bill.id}`}
+                                    {getBillTitle(bill)}
                                 </div>
                                 <div className="bill-meta">
                                     <span className={`status-pill status-${bill.status.toLowerCase()}`}>
@@ -183,12 +190,18 @@ const PayBills = () => {
                         <h3>Payment Summary</h3>
                         <div className="summary-row">
                             <span>Bill Type:</span>
-                            <strong>{selectedBill.billType}</strong>
+                            <strong>{selectedBill.billType.replace('_', ' ')}</strong>
                         </div>
                         <div className="summary-row">
                             <span>Due Date:</span>
                             <strong>{selectedBill.dueDate}</strong>
                         </div>
+                        {selectedBill.minimumDue && (
+                            <div className="summary-row">
+                                <span>Minimum Due:</span>
+                                <strong>{currency(selectedBill.minimumDue)}</strong>
+                            </div>
+                        )}
                         <div className="summary-row total">
                             <span>Total Amount:</span>
                             <strong>{currency(selectedBill.amount)}</strong>

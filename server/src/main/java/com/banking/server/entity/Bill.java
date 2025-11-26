@@ -28,8 +28,13 @@ public class Bill {
 
     private Long loanId;
 
+    private Long cardId;
+
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal amount;
+
+    @Column(precision = 19, scale = 2)
+    private BigDecimal minimumDue;
 
     @Column(nullable = false)
     private LocalDate dueDate;

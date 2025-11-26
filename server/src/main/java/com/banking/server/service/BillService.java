@@ -31,6 +31,9 @@ public class BillService {
     @Autowired
     private BankFundService bankFundService;
 
+    @Autowired
+    private com.banking.server.repository.CardRepository cardRepository;
+
     public List<Bill> getBillsForUser(String username) {
         // Show EMIs only if due within next 30 days
         LocalDate cutoffDate = LocalDate.now().plusDays(30);
@@ -47,7 +50,8 @@ public class BillService {
     }
 
     /**
-     * Pay a bill: will debit user's account balance (pessimistic lock) and mark bill as PAID.
+     * Pay a bill: will debit user's account balance (pessimistic lock) and mark
+     * bill as PAID.
      */
     @Transactional
     public Bill payBill(Long billId, String username) {
@@ -63,8 +67,31 @@ public class BillService {
         }
 
         // Fetch account with lock
-        Account account = accountRepository.findByAccountNumberForUpdate(bill.getAccountNumber())
-                .orElseThrow(() -> new RuntimeException("Account not found"));
+        Account account;
+        if ("CREDIT_CARD".equals(bill.getBillType())) {
+            // For Credit Card bills, debit the user's main account
+            account = accountRepository.findByUsernameForUpdate(username)
+                    .orElseThrow(() -> new RuntimeException("User account not found"));
+
+            // Also update the Card's used amount
+            if (bill.getCardId() != null) {
+                com.banking.server.entity.Card card = cardRepository.findById(bill.getCardId())
+                        .orElseThrow(() -> new RuntimeException("Card not found"));
+
+                // Reduce used amount
+                BigDecimal newUsed = card.getUsedAmount().subtract(bill.getAmount());
+                if (newUsed.compareTo(BigDecimal.ZERO) < 0) {
+                    newUsed = BigDecimal.ZERO;
+                }
+                card.setUsedAmount(newUsed);
+                cardRepository.save(card);
+            }
+        } else {
+            // For EMI/Manual, debit the account specified in the bill (usually user's
+            // account)
+            account = accountRepository.findByAccountNumberForUpdate(bill.getAccountNumber())
+                    .orElseThrow(() -> new RuntimeException("Account not found"));
+        }
 
         BigDecimal balance = account.getBalance();
         if (balance.compareTo(bill.getAmount()) < 0) {
@@ -130,8 +157,8 @@ public class BillService {
                     .amount(emi)
                     .dueDate(nextDue.plusMonths(i))
                     .status("UNPAID")
-                    .billType("EMI")    // REQUIRED
-                    .paid(false)        // REQUIRED
+                    .billType("EMI") // REQUIRED
+                    .paid(false) // REQUIRED
                     .build();
 
             billRepository.save(bill);
@@ -144,10 +171,10 @@ public class BillService {
 
     @Transactional
     public Bill createBillForLoan(String username,
-                                  String accountNumber,
-                                  Long loanId,
-                                  BigDecimal amount,
-                                  LocalDate dueDate) {
+            String accountNumber,
+            Long loanId,
+            BigDecimal amount,
+            LocalDate dueDate) {
 
         Bill bill = Bill.builder()
                 .username(username)
@@ -157,6 +184,34 @@ public class BillService {
                 .dueDate(dueDate)
                 .status("UNPAID")
                 .billType("MANUAL")
+                .paid(false)
+                .build();
+
+        return billRepository.save(bill);
+    }
+
+    @Transactional
+    public Bill generateCreditCardBill(com.banking.server.entity.Card card) {
+        BigDecimal totalDue = card.getUsedAmount();
+        if (totalDue.compareTo(BigDecimal.ZERO) <= 0) {
+            return null; // No bill needed if nothing used
+        }
+
+        // Minimum Due = 5% of Total Due
+        BigDecimal minimumDue = totalDue.multiply(new BigDecimal("0.05"));
+
+        // Due Date = 20 days from now
+        LocalDate dueDate = LocalDate.now().plusDays(20);
+
+        Bill bill = Bill.builder()
+                .username(card.getUser().getUsername())
+                .accountNumber(card.getCardNumber()) // Use Card Number as account reference
+                .cardId(card.getId())
+                .amount(totalDue)
+                .minimumDue(minimumDue)
+                .dueDate(dueDate)
+                .status("UNPAID")
+                .billType("CREDIT_CARD")
                 .paid(false)
                 .build();
 

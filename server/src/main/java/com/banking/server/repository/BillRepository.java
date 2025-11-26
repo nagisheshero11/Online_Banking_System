@@ -2,16 +2,23 @@ package com.banking.server.repository;
 
 import com.banking.server.entity.Bill;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
 
 public interface BillRepository extends JpaRepository<Bill, Long> {
     List<Bill> findByUsername(String username);
+
     List<Bill> findByLoanId(Long loanId);
+
     List<Bill> findByDueDateBeforeAndStatus(LocalDate date, String status);
+
     List<Bill> findByLoanIdAndUsername(Long loanId, String username);
 
-    @org.springframework.data.jpa.repository.Query("SELECT b FROM Bill b WHERE b.username = :username AND (b.billType != 'EMI' OR b.dueDate <= :cutoffDate) ORDER BY b.dueDate ASC")
-    List<Bill> findUpcomingBills(@org.springframework.data.repository.query.Param("username") String username, @org.springframework.data.repository.query.Param("cutoffDate") LocalDate cutoffDate);
+    List<Bill> findByCardIdAndUsername(Long cardId, String username);
+
+    @Query("SELECT b FROM Bill b WHERE b.username = :username AND b.dueDate <= :cutoffDate AND b.status = 'UNPAID'")
+    List<Bill> findUpcomingBills(@Param("username") String username, @Param("cutoffDate") LocalDate cutoffDate);
 }

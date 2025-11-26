@@ -95,11 +95,11 @@ public class CardService {
     public Card unblockCard(Long cardId) {
         Card card = cardRepository.findById(cardId)
                 .orElseThrow(() -> new RuntimeException("Card not found"));
-        
+
         if (!"BLOCKED".equals(card.getStatus())) {
             throw new RuntimeException("Only blocked cards can be unblocked");
         }
-        
+
         card.setStatus("ACTIVE");
         return cardRepository.save(card);
     }
@@ -122,7 +122,7 @@ public class CardService {
     }
 
     @Autowired
-    private com.banking.server.repository.BillRepository billRepository;
+    private com.banking.server.service.BillService billService;
 
     public void simulateTransaction(Long cardId, BigDecimal amount) {
         Card card = cardRepository.findById(cardId)
@@ -148,7 +148,8 @@ public class CardService {
             card.setLastUsageDate(today);
         }
         if (card.getDailyUsage().add(amount).compareTo(card.getDailyLimit()) > 0) {
-            throw new RuntimeException("Daily limit exceeded. Remaining: " + card.getDailyLimit().subtract(card.getDailyUsage()));
+            throw new RuntimeException(
+                    "Daily limit exceeded. Remaining: " + card.getDailyLimit().subtract(card.getDailyUsage()));
         }
 
         // 3. Check Credit Limit
@@ -170,20 +171,6 @@ public class CardService {
             throw new RuntimeException("No used amount to generate bill");
         }
 
-        com.banking.server.entity.Bill bill = com.banking.server.entity.Bill.builder()
-                .username(card.getUser().getUsername())
-                .accountNumber(card.getCardNumber()) // Using Card Number as Account Ref
-                .amount(card.getUsedAmount())
-                .dueDate(java.time.LocalDate.now().plusDays(20))
-                .status("UNPAID")
-                .billType("CREDIT_CARD")
-                .paid(false)
-                .build();
-
-        billRepository.save(bill);
-
-        // Reset Used Amount after bill generation? 
-        // Usually resets after payment, but for simulation we might want to keep it 
-        // or reset it. Let's keep it for now until paid.
+        billService.generateCreditCardBill(card);
     }
 }
