@@ -21,6 +21,7 @@ public class Account {
 
     @OneToOne
     @JoinColumn(name = "user_id")
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private User user;
 
     @Column(nullable = false, unique = true, length = 50)

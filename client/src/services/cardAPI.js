@@ -48,3 +48,30 @@ export const setCardPin = async (cardId, pin) => {
     });
     return res.data;
 };
+
+export const simulateTransaction = async (cardId, amount) => {
+    const token = getToken();
+    if (!token) throw new Error("No token found");
+    const res = await axios.post(`${API_URL}/${cardId}/transaction`, { amount }, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+    return res.data;
+};
+
+export const generateBill = async (cardId) => {
+    const token = getToken();
+    if (!token) throw new Error("No token found");
+    const res = await axios.post(`${API_URL}/${cardId}/bill`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+    return res.data;
+};
+
+export const sendCardPayment = async (paymentData) => {
+    const token = getToken();
+    if (!token) throw new Error("No token found");
+    const res = await axios.post(`http://localhost:6060/api/card-payment/send`, paymentData, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+    return res.data;
+};

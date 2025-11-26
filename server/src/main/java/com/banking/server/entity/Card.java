@@ -5,6 +5,8 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -42,6 +44,14 @@ public class Card {
 
     @Column(nullable = false)
     private String status = "PENDING"; // PENDING, ACTIVE, BLOCKED, REJECTED
+
+    // Credit Card Specific Fields
+    private BigDecimal creditLimit;
+    private BigDecimal usedAmount;
+    private BigDecimal dailyUsage;
+    private LocalDate lastUsageDate;
+    private BigDecimal dailyLimit;
+    private BigDecimal perTransactionLimit;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

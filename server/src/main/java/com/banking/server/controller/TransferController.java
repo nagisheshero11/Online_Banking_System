@@ -29,6 +29,9 @@ public class TransferController {
     @Autowired
     private TransactionRepository transactionRepository;
 
+    @Autowired
+    private com.banking.server.repository.CardRepository cardRepository;
+
     @PostMapping("/transfer")
     public ResponseEntity<?> transferMoney(Authentication authentication,
                                            @RequestBody TransferRequest request) {
@@ -60,9 +63,21 @@ public class TransferController {
         }
 
         String accountNumber = accountOpt.get().getAccountNumber();
+        Long userId = accountOpt.get().getUser().getId();
 
-        // Fetch all transactions (sent + received)
-        List<Transaction> transactions = transactionRepository.findAllByAccountNumber(accountNumber);
+        // Fetch user's cards
+        List<String> cardNumbers = cardRepository.findByUserId(userId)
+                .stream()
+                .map(com.banking.server.entity.Card::getCardNumber)
+                .collect(java.util.stream.Collectors.toList());
+
+        // Combine account number and card numbers
+        List<String> allSources = new java.util.ArrayList<>();
+        allSources.add(accountNumber);
+        allSources.addAll(cardNumbers);
+
+        // Fetch all transactions (sent + received) for ALL sources
+        List<Transaction> transactions = transactionRepository.findAllByAccountNumbers(allSources);
 
         return ResponseEntity.ok(transactions);
     }

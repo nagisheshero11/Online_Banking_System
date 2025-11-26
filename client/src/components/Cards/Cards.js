@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaPlus, FaBan, FaInfoCircle, FaKey, FaTimes, FaCreditCard, FaCheckCircle } from 'react-icons/fa';
 import ApplyCardForm from '../ApplyCard/ApplyCardForm';
-import { getMyCards, applyForCard, blockCard, unblockCard, setCardPin } from '../../services/cardAPI';
+import { getMyCards, applyForCard, blockCard, unblockCard, setCardPin, simulateTransaction, generateBill } from '../../services/cardAPI';
 import { getUserProfile } from '../../services/profileAPI';
 import './styles/Cards.css';
 
@@ -46,6 +46,7 @@ const Cards = () => {
     const [selectedApplyCardId, setSelectedApplyCardId] = useState(null);
     const [showPinModal, setShowPinModal] = useState(false);
     const [newPin, setNewPin] = useState('');
+    const [showDetailsModal, setShowDetailsModal] = useState(false);
 
 
     const [cvvVisible, setCvvVisible] = useState(false);
@@ -79,7 +80,10 @@ const Cards = () => {
                 expiry: c.expiryDate,
                 status: mapBackendStatus(c.status), // Correctly map status
                 brand: 'VISA',
-                cvv: c.cvv
+                cvv: c.cvv,
+                creditLimit: c.creditLimit,
+                usedAmount: c.usedAmount,
+                availableLimit: c.creditLimit ? c.creditLimit - c.usedAmount : 0
             }));
             setOwnedCards(formatted);
         } catch (err) {
@@ -173,6 +177,27 @@ const Cards = () => {
             setNewPin('');
         } catch (err) {
             alert("Failed to set PIN");
+        }
+    };
+
+    const handleSimulateTxn = async () => {
+        const amount = prompt("Enter transaction amount:");
+        if (!amount) return;
+        try {
+            await simulateTransaction(selectedCard.id, amount);
+            alert("Transaction Successful!");
+            fetchCards();
+        } catch (err) {
+            alert("Transaction Failed: " + (err.response?.data?.message || err.message));
+        }
+    };
+
+    const handleGenerateBill = async () => {
+        try {
+            await generateBill(selectedCard.id);
+            alert("Bill Generated Successfully! Check 'Pay Bills' section.");
+        } catch (err) {
+            alert("Bill Generation Failed: " + (err.response?.data?.message || err.message));
         }
     };
 
@@ -287,7 +312,7 @@ const Cards = () => {
                     <div className="panel-left">
                         <h3 className="panel-section-title">Card Management</h3>
                         <div className="actions-grid">
-                            <div className="action-item">
+                            <div className="action-item" onClick={() => setShowDetailsModal(true)}>
                                 <div className="action-left">
                                     <div className="action-icon"><FaInfoCircle /></div>
                                     <span className="action-label">Card Details</span>
@@ -320,6 +345,39 @@ const Cards = () => {
                                 </div>
                                 <span className="action-arrow">→</span>
                             </div>
+
+                            {selectedCard.type === 'Credit' && selectedCard.status === 'Active' && (
+                                <>
+                                    <div className="action-item" onClick={handleSimulateTxn}>
+                                        <div className="action-left">
+                                            <div className="action-icon"><FaCreditCard /></div>
+                                            <span className="action-label">Simulate Transaction</span>
+                                        </div>
+                                        <span className="action-arrow">→</span>
+                                    </div>
+                                    <div className="action-item" onClick={handleGenerateBill}>
+                                        <div className="action-left">
+                                            <div className="action-icon"><FaCheckCircle /></div>
+                                            <span className="action-label">Generate Bill</span>
+                                        </div>
+                                        <span className="action-arrow">→</span>
+                                    </div>
+                                    <div style={{ marginTop: '20px', padding: '16px', background: '#F8FAFC', borderRadius: '12px' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                                            <span style={{ color: '#64748B' }}>Credit Limit</span>
+                                            <strong>₹{selectedCard.creditLimit?.toLocaleString()}</strong>
+                                        </div>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                                            <span style={{ color: '#64748B' }}>Used Amount</span>
+                                            <strong>₹{selectedCard.usedAmount?.toLocaleString()}</strong>
+                                        </div>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', color: '#16A34A' }}>
+                                            <span>Available</span>
+                                            <strong>₹{selectedCard.availableLimit?.toLocaleString()}</strong>
+                                        </div>
+                                    </div>
+                                </>
+                            )}
                         </div>
                     </div>
                 </section>
@@ -427,6 +485,66 @@ const Cards = () => {
                         >
                             Set PIN
                         </button>
+                    </div>
+                </div>
+            )}
+
+            {/* Card Details Modal */}
+            {showDetailsModal && selectedCard && (
+                <div className="apply-modal-overlay">
+                    <div className="apply-modal-content" style={{ maxWidth: '450px' }}>
+                        <button className="close-modal-btn" onClick={() => setShowDetailsModal(false)}>
+                            <FaTimes />
+                        </button>
+                        <h3 style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                            <FaCreditCard /> Card Details
+                        </h3>
+
+                        <div style={{ background: '#F8FAFC', padding: '20px', borderRadius: '12px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <span style={{ color: '#64748B' }}>Card Number</span>
+                                <span style={{ fontWeight: '600', fontFamily: 'monospace' }}>{selectedCard.number}</span>
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <span style={{ color: '#64748B' }}>Card Holder</span>
+                                <span style={{ fontWeight: '600' }}>{selectedCard.holder}</span>
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <span style={{ color: '#64748B' }}>Expiry Date</span>
+                                <span style={{ fontWeight: '600' }}>{selectedCard.expiry}</span>
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <span style={{ color: '#64748B' }}>CVV</span>
+                                <span style={{ fontWeight: '600' }}>{selectedCard.cvv}</span>
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <span style={{ color: '#64748B' }}>Type</span>
+                                <span style={{ fontWeight: '600' }}>{selectedCard.type}</span>
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <span style={{ color: '#64748B' }}>Status</span>
+                                <span style={{
+                                    fontWeight: '600',
+                                    color: selectedCard.status === 'Active' ? '#16A34A' :
+                                        selectedCard.status === 'Blocked' ? '#DC2626' : '#CA8A04'
+                                }}>
+                                    {selectedCard.status}
+                                </span>
+                            </div>
+                            {selectedCard.type === 'Credit' && (
+                                <>
+                                    <div style={{ height: '1px', background: '#E2E8F0', margin: '8px 0' }}></div>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                        <span style={{ color: '#64748B' }}>Credit Limit</span>
+                                        <span style={{ fontWeight: '600' }}>₹{selectedCard.creditLimit?.toLocaleString()}</span>
+                                    </div>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                        <span style={{ color: '#64748B' }}>Available</span>
+                                        <span style={{ fontWeight: '600', color: '#16A34A' }}>₹{selectedCard.availableLimit?.toLocaleString()}</span>
+                                    </div>
+                                </>
+                            )}
+                        </div>
                     </div>
                 </div>
             )}

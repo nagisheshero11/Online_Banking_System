@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Random;
+import java.math.BigDecimal;
 
 @Service
 public class CardService {
@@ -55,6 +56,25 @@ public class CardService {
         Card card = cardRepository.findById(cardId)
                 .orElseThrow(() -> new RuntimeException("Card not found"));
         card.setStatus("ACTIVE");
+
+        // Set Limits based on Type
+        if ("SIGNATURE_CREDIT".equals(card.getCardType())) {
+            card.setCreditLimit(new BigDecimal("5000000")); // 50L Total Limit
+            card.setDailyLimit(new BigDecimal("2000000")); // 20L Daily
+            card.setPerTransactionLimit(new BigDecimal("200000")); // 2L Per Txn
+        } else if ("NORMAL_CREDIT".equals(card.getCardType())) {
+            card.setCreditLimit(new BigDecimal("1000000")); // 10L Total Limit
+            card.setDailyLimit(new BigDecimal("1000000")); // 10L Daily
+            card.setPerTransactionLimit(new BigDecimal("100000")); // 1L Per Txn
+        }
+
+        // Initialize Usage
+        if (card.getCardType().contains("CREDIT")) {
+            card.setUsedAmount(BigDecimal.ZERO);
+            card.setDailyUsage(BigDecimal.ZERO);
+            card.setLastUsageDate(java.time.LocalDate.now());
+        }
+
         return cardRepository.save(card);
     }
 
@@ -99,5 +119,71 @@ public class CardService {
         }
         // Format: XXXX XXXX XXXX XXXX
         return sb.toString().replaceAll("(.{4})", "$1 ").trim();
+    }
+
+    @Autowired
+    private com.banking.server.repository.BillRepository billRepository;
+
+    public void simulateTransaction(Long cardId, BigDecimal amount) {
+        Card card = cardRepository.findById(cardId)
+                .orElseThrow(() -> new RuntimeException("Card not found"));
+
+        if (!"ACTIVE".equals(card.getStatus())) {
+            throw new RuntimeException("Card is not active");
+        }
+
+        if (!card.getCardType().contains("CREDIT")) {
+            throw new RuntimeException("Transaction simulation only for Credit Cards");
+        }
+
+        // 1. Check Per Transaction Limit
+        if (amount.compareTo(card.getPerTransactionLimit()) > 0) {
+            throw new RuntimeException("Transaction exceeds limit of " + card.getPerTransactionLimit());
+        }
+
+        // 2. Check Daily Limit
+        java.time.LocalDate today = java.time.LocalDate.now();
+        if (!today.equals(card.getLastUsageDate())) {
+            card.setDailyUsage(BigDecimal.ZERO);
+            card.setLastUsageDate(today);
+        }
+        if (card.getDailyUsage().add(amount).compareTo(card.getDailyLimit()) > 0) {
+            throw new RuntimeException("Daily limit exceeded. Remaining: " + card.getDailyLimit().subtract(card.getDailyUsage()));
+        }
+
+        // 3. Check Credit Limit
+        if (card.getUsedAmount().add(amount).compareTo(card.getCreditLimit()) > 0) {
+            throw new RuntimeException("Insufficient credit limit");
+        }
+
+        // Update Usage
+        card.setUsedAmount(card.getUsedAmount().add(amount));
+        card.setDailyUsage(card.getDailyUsage().add(amount));
+        cardRepository.save(card);
+    }
+
+    public void generateBill(Long cardId) {
+        Card card = cardRepository.findById(cardId)
+                .orElseThrow(() -> new RuntimeException("Card not found"));
+
+        if (card.getUsedAmount().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new RuntimeException("No used amount to generate bill");
+        }
+
+        com.banking.server.entity.Bill bill = com.banking.server.entity.Bill.builder()
+                .username(card.getUser().getUsername())
+                .accountNumber(card.getCardNumber()) // Using Card Number as Account Ref
+                .amount(card.getUsedAmount())
+                .dueDate(java.time.LocalDate.now().plusDays(20))
+                .status("UNPAID")
+                .billType("CREDIT_CARD")
+                .paid(false)
+                .build();
+
+        billRepository.save(bill);
+
+        // Reset Used Amount after bill generation? 
+        // Usually resets after payment, but for simulation we might want to keep it 
+        // or reset it. Let's keep it for now until paid.
     }
 }
