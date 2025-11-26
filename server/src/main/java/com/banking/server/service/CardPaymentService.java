@@ -36,18 +36,22 @@ public class CardPaymentService {
             throw new RuntimeException("Card is not active");
         }
 
-        if (!card.getCardType().contains("CREDIT")) {
-            throw new RuntimeException("Card payments are only supported for Credit Cards");
-        }
-
         // Validate PIN
         if (card.getPin() == null || !card.getPin().equals(pin)) {
             throw new RuntimeException("Invalid PIN");
         }
 
+        // Initialize Usage if null
+        if (card.getDailyUsage() == null) {
+            card.setDailyUsage(BigDecimal.ZERO);
+        }
+        if (card.getUsedAmount() == null) {
+            card.setUsedAmount(BigDecimal.ZERO);
+        }
+
         // 2. Validate Limits
         // Per Transaction Limit
-        if (amount.compareTo(card.getPerTransactionLimit()) > 0) {
+        if (card.getPerTransactionLimit() != null && amount.compareTo(card.getPerTransactionLimit()) > 0) {
             throw new RuntimeException("Amount exceeds per-transaction limit of " + card.getPerTransactionLimit());
         }
 
@@ -57,23 +61,38 @@ public class CardPaymentService {
             card.setDailyUsage(BigDecimal.ZERO);
             card.setLastUsageDate(today);
         }
-        if (card.getDailyUsage().add(amount).compareTo(card.getDailyLimit()) > 0) {
+        if (card.getDailyLimit() != null && card.getDailyUsage().add(amount).compareTo(card.getDailyLimit()) > 0) {
             throw new RuntimeException(
                     "Daily limit exceeded. Remaining: " + card.getDailyLimit().subtract(card.getDailyUsage()));
         }
 
-        // Credit Limit
-        if (card.getUsedAmount().add(amount).compareTo(card.getCreditLimit()) > 0) {
-            throw new RuntimeException("Insufficient credit limit");
+        // 3. Handle Payment Source (Credit vs Debit)
+        if (card.getCardType().contains("CREDIT")) {
+            // Credit Card Logic
+            if (card.getCreditLimit() != null
+                    && card.getUsedAmount().add(amount).compareTo(card.getCreditLimit()) > 0) {
+                throw new RuntimeException("Insufficient credit limit");
+            }
+            card.setUsedAmount(card.getUsedAmount().add(amount));
+        } else {
+            // Debit Card Logic
+            Account userAccount = card.getUser().getAccount();
+            if (userAccount == null) {
+                throw new RuntimeException("No linked account found for this debit card");
+            }
+            if (userAccount.getBalance().compareTo(amount) < 0) {
+                throw new RuntimeException("Insufficient funds in linked account");
+            }
+            userAccount.setBalance(userAccount.getBalance().subtract(amount));
+            accountRepository.save(userAccount);
         }
 
-        // 3. Fetch Recipient Account
+        // 4. Fetch Recipient Account
         Account toAccount = accountRepository.findByAccountNumber(toAccountNumber)
                 .orElseThrow(() -> new RuntimeException("Recipient account not found"));
 
-        // 4. Perform Transfer
-        // Update Card Usage
-        card.setUsedAmount(card.getUsedAmount().add(amount));
+        // 5. Perform Transfer
+        // Update Card Usage (Common for both)
         card.setDailyUsage(card.getDailyUsage().add(amount));
         cardRepository.save(card);
 
@@ -81,14 +100,23 @@ public class CardPaymentService {
         toAccount.setBalance(toAccount.getBalance().add(amount));
         accountRepository.save(toAccount);
 
-        // 5. Create Transaction Record
+        // 6. Create Transaction Record
+        BigDecimal sourceBalanceAfter;
+        if (card.getCardType().contains("CREDIT")) {
+            sourceBalanceAfter = (card.getCreditLimit() != null)
+                    ? card.getCreditLimit().subtract(card.getUsedAmount())
+                    : BigDecimal.ZERO;
+        } else {
+            sourceBalanceAfter = card.getUser().getAccount().getBalance();
+        }
+
         Transaction transaction = Transaction.builder()
                 .fromAccountNumber(card.getCardNumber()) // Use Card Number as source
                 .toAccountNumber(toAccountNumber)
                 .amount(amount)
                 .remarks(remarks != null ? remarks : "Card Payment")
                 .status("SUCCESS")
-                .fromBalanceAfter(card.getCreditLimit().subtract(card.getUsedAmount())) // Available Limit
+                .fromBalanceAfter(sourceBalanceAfter)
                 .toBalanceAfter(toAccount.getBalance())
                 .build();
 

@@ -23,21 +23,20 @@ const CardPayment = () => {
             const data = await getMyCards();
             console.log("Fetched Cards:", data); // Debugging
 
-            // Filter Active Credit Cards (Case Insensitive)
+            // Filter Active Cards (Credit & Debit)
             const validCards = data.filter(c =>
                 c.status?.toUpperCase() === 'ACTIVE' &&
-                c.cardType?.toUpperCase().includes('CREDIT')
+                (c.cardType?.toUpperCase().includes('CREDIT') || c.cardType?.toUpperCase().includes('DEBIT'))
             );
 
-            console.log("Valid Credit Cards:", validCards);
+            console.log("Valid Cards:", validCards);
             setCards(validCards);
 
             if (validCards.length > 0) {
                 setSelectedCardId(validCards[0].id);
             } else {
-                // If no active credit cards, check if they have any cards at all to give better error
                 if (data.length > 0) {
-                    setMessage({ type: 'error', text: 'You have cards, but none are Active Credit Cards.' });
+                    setMessage({ type: 'error', text: 'You have cards, but none are Active.' });
                 } else {
                     setMessage({ type: 'error', text: 'No cards found. Please apply for a card first.' });
                 }
@@ -53,7 +52,7 @@ const CardPayment = () => {
         setMessage(null);
 
         if (!selectedCardId) {
-            setMessage({ type: 'error', text: 'Please select a valid credit card.' });
+            setMessage({ type: 'error', text: 'Please select a valid card.' });
             return;
         }
 
@@ -95,7 +94,7 @@ const CardPayment = () => {
             <div className="payment-card">
                 <div className="payment-header">
                     <h2><FaCreditCard /> Card Payment</h2>
-                    <p>Send money instantly using your Credit Card</p>
+                    <p>Send money instantly using your Credit or Debit Card</p>
                 </div>
 
                 {message && (
@@ -112,10 +111,13 @@ const CardPayment = () => {
                             onChange={(e) => setSelectedCardId(e.target.value)}
                             className="form-select"
                         >
-                            {cards.length === 0 && <option>No Active Credit Cards</option>}
+                            {cards.length === 0 && <option>No Active Cards</option>}
                             {cards.map(c => (
                                 <option key={c.id} value={c.id}>
-                                    {c.cardType.replace('_', ' ')} - {c.cardNumber.slice(-4)} (Avail: ₹{(c.creditLimit - c.usedAmount).toLocaleString()})
+                                    {c.cardType.replace('_', ' ')} - {c.cardNumber.slice(-4)}
+                                    {c.cardType.includes('CREDIT')
+                                        ? ` (Avail: ₹${(c.creditLimit - c.usedAmount).toLocaleString()})`
+                                        : ' (Linked to Account)'}
                                 </option>
                             ))}
                         </select>
