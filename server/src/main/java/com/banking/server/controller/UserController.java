@@ -34,19 +34,34 @@ public class UserController {
      * Update limited profile fields (firstName, lastName, phoneNumber)
      * PUT /api/user/profile/update
      * This endpoint does NOT allow:
-     *  - changing email
-     *  - changing PAN
-     *  - changing role
-     *  - changing password (separate endpoint)
+     * - changing email
+     * - changing PAN
+     * - changing role
+     * - changing password (separate endpoint)
      */
     @PutMapping("/profile/update")
     public ResponseEntity<User> updateUserProfile(
             @RequestBody UserUpdateRequest request,
-            Authentication authentication
-    ) {
+            Authentication authentication) {
         String username = authentication.getName();
         User updatedUser = userService.updateUserProfile(username, request);
         return ResponseEntity.ok(updatedUser);
+    }
+
+    /**
+     * Change Password
+     * POST /api/user/profile/change-password
+     */
+    @PostMapping("/profile/change-password")
+    public ResponseEntity<String> changePassword(
+            @RequestBody java.util.Map<String, String> payload,
+            Authentication authentication) {
+        String username = authentication.getName();
+        String oldPassword = payload.get("oldPassword");
+        String newPassword = payload.get("newPassword");
+
+        userService.changePassword(username, oldPassword, newPassword);
+        return ResponseEntity.ok("Password changed successfully");
     }
 
     /**

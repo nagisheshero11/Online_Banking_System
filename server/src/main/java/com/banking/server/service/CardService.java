@@ -1,15 +1,20 @@
 package com.banking.server.service;
 
+import com.banking.server.entity.Account;
+import com.banking.server.entity.BankTransaction;
 import com.banking.server.entity.Card;
 import com.banking.server.entity.User;
+import com.banking.server.repository.AccountRepository;
+import com.banking.server.repository.BankTransactionRepository;
 import com.banking.server.repository.CardRepository;
 import com.banking.server.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Random;
-import java.math.BigDecimal;
 
 @Service
 public class CardService {
@@ -20,6 +25,13 @@ public class CardService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private AccountRepository accountRepository;
+
+    @Autowired
+    private BankTransactionRepository bankTransactionRepository;
+
+    @Transactional
     public Card applyForCard(String username, String cardType) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -31,6 +43,38 @@ public class CardService {
 
         if (hasExistingCardOfType) {
             throw new RuntimeException("You already have an active or pending application for this card type.");
+        }
+
+        // Fee Logic
+        BigDecimal fee = BigDecimal.ZERO;
+        if ("SIGNATURE_CREDIT".equals(cardType)) {
+            fee = new BigDecimal("2999");
+        } else if ("NORMAL_CREDIT".equals(cardType)) {
+            fee = new BigDecimal("499");
+        }
+
+        // Deduct Fee if applicable
+        if (fee.compareTo(BigDecimal.ZERO) > 0) {
+            Account account = user.getAccount();
+            if (account == null) {
+                throw new RuntimeException("No account found linked to user");
+            }
+            if (account.getBalance().compareTo(fee) < 0) {
+                throw new RuntimeException("Insufficient balance for card application fee");
+            }
+
+            // Deduct balance
+            account.setBalance(account.getBalance().subtract(fee));
+            accountRepository.save(account);
+
+            // Record Transaction
+            BankTransaction transaction = BankTransaction.builder()
+                    .transactionType("DEBIT")
+                    .amount(fee)
+                    .description("Card Application Fee - " + cardType.replace("_", " "))
+                    .balanceAfter(account.getBalance())
+                    .build();
+            bankTransactionRepository.save(transaction);
         }
 
         // Generate mock card details
