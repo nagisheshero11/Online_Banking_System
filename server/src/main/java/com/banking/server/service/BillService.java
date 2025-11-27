@@ -197,6 +197,17 @@ public class BillService {
             return null; // No bill needed if nothing used
         }
 
+        // Check for existing UNPAID bill
+        List<Bill> unpaidBills = billRepository.findByCardIdAndStatus(card.getId(), "UNPAID");
+        if (!unpaidBills.isEmpty()) {
+            // Update existing bill
+            Bill existingBill = unpaidBills.get(0);
+            existingBill.setAmount(totalDue);
+            existingBill.setMinimumDue(totalDue.multiply(new BigDecimal("0.05")));
+            // We keep the original due date to enforce payment timeline
+            return billRepository.save(existingBill);
+        }
+
         // Minimum Due = 5% of Total Due
         BigDecimal minimumDue = totalDue.multiply(new BigDecimal("0.05"));
 
@@ -216,6 +227,36 @@ public class BillService {
                 .build();
 
         return billRepository.save(bill);
+    }
+
+    @Transactional
+    public void generateBillsForEligibleCards() {
+        List<com.banking.server.entity.Card> cards = cardRepository.findAll();
+        for (com.banking.server.entity.Card card : cards) {
+            if ("ACTIVE".equals(card.getStatus()) && card.getCardType().contains("CREDIT")) {
+                // Check last bill date
+                Optional<Bill> lastBill = billRepository.findTopByCardIdOrderByCreatedAtDesc(card.getId());
+                boolean shouldGenerate = false;
+
+                if (lastBill.isEmpty()) {
+                    // Never billed, check if used amount > 0
+                    if (card.getUsedAmount().compareTo(BigDecimal.ZERO) > 0) {
+                        shouldGenerate = true;
+                    }
+                } else {
+                    // Check if 30 days passed since last bill
+                    // Using createdAt for cycle calculation
+                    if (lastBill.get().getCreatedAt().toLocalDate().plusDays(30).isBefore(LocalDate.now()) ||
+                            lastBill.get().getCreatedAt().toLocalDate().plusDays(30).isEqual(LocalDate.now())) {
+                        shouldGenerate = true;
+                    }
+                }
+
+                if (shouldGenerate) {
+                    generateCreditCardBill(card);
+                }
+            }
+        }
     }
 
     @Transactional

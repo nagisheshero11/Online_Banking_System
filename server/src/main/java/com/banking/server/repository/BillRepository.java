@@ -21,4 +21,10 @@ public interface BillRepository extends JpaRepository<Bill, Long> {
 
     @Query("SELECT b FROM Bill b WHERE b.username = :username AND b.dueDate <= :cutoffDate AND b.status = 'UNPAID'")
     List<Bill> findUpcomingBills(@Param("username") String username, @Param("cutoffDate") LocalDate cutoffDate);
+
+    // Find the latest bill generated for a card
+    java.util.Optional<Bill> findTopByCardIdOrderByCreatedAtDesc(Long cardId);
+
+    // Find unpaid bills for a specific card
+    List<Bill> findByCardIdAndStatus(Long cardId, String status);
 }
