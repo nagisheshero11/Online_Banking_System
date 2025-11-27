@@ -16,6 +16,7 @@ public class LoanApplicationResponse {
     private BigDecimal interestRate;
     private String status;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     // Enhanced Details
     private String username;

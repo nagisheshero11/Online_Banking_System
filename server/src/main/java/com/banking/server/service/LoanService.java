@@ -156,6 +156,7 @@ public class LoanService {
     public List<LoanApplicationResponse> getLoanHistory() {
         List<String> historyStatuses = List.of("APPROVED", "REJECTED", "COMPLETED");
         return loanRepository.findByStatusIn(historyStatuses).stream()
+                .sorted((l1, l2) -> l2.getUpdatedAt().compareTo(l1.getUpdatedAt())) // Sort by recent
                 .map(loan -> LoanApplicationResponse.builder()
                         .id(loan.getId())
                         .loanType(loan.getLoanType())
@@ -164,6 +165,7 @@ public class LoanService {
                         .interestRate(loan.getInterestRate())
                         .status(loan.getStatus())
                         .createdAt(loan.getCreatedAt())
+                        .updatedAt(loan.getUpdatedAt()) // Map updatedAt
                         .username(loan.getUsername())
                         .accountNumber(loan.getAccountNumber())
                         .build())

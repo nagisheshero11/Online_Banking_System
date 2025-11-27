@@ -39,7 +39,7 @@ const HistoryLoans = () => {
                             <tr>
                                 <th>Applicant Name</th>
                                 <th>Loan Amount</th>
-                                <th>Date Processed</th>
+                                <th>Processed On</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
@@ -53,7 +53,15 @@ const HistoryLoans = () => {
                                         <div className="amount-text">₹{Number(l.loanAmount).toLocaleString()}</div>
                                     </td>
                                     <td>
-                                        <div className="date-text">{new Date(l.createdAt).toLocaleDateString()}</div>
+                                        <div className="date-text">
+                                            {l.updatedAt ? new Date(l.updatedAt).toLocaleString('en-US', {
+                                                year: 'numeric',
+                                                month: 'short',
+                                                day: 'numeric',
+                                                hour: '2-digit',
+                                                minute: '2-digit'
+                                            }) : 'N/A'}
+                                        </div>
                                     </td>
                                     <td>
                                         <span className={`status-badge ${l.status === 'COMPLETED' || l.status === 'APPROVED' ? 'status-completed' : 'status-failed'}`}>

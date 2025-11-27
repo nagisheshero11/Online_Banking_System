@@ -40,6 +40,7 @@ const HistoryCards = () => {
                                 <th>Card Holder</th>
                                 <th>Card Type</th>
                                 <th>Card Number</th>
+                                <th>Processed On</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
@@ -54,6 +55,17 @@ const HistoryCards = () => {
                                     </td>
                                     <td>
                                         <div className="date-text">{c.cardNumber}</div>
+                                    </td>
+                                    <td>
+                                        <div className="date-text">
+                                            {c.updatedAt ? new Date(c.updatedAt).toLocaleString('en-US', {
+                                                year: 'numeric',
+                                                month: 'short',
+                                                day: 'numeric',
+                                                hour: '2-digit',
+                                                minute: '2-digit'
+                                            }) : 'N/A'}
+                                        </div>
                                     </td>
                                     <td>
                                         <span className={`status-badge ${c.status === 'ACTIVE' ? 'status-active' : 'status-failed'}`}>

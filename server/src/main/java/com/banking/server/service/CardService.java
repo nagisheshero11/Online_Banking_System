@@ -66,6 +66,7 @@ public class CardService {
         List<Card> allCards = cardRepository.findAll();
         return allCards.stream()
                 .filter(c -> !"PENDING".equals(c.getStatus()))
+                .sorted((c1, c2) -> c2.getUpdatedAt().compareTo(c1.getUpdatedAt())) // Sort by recent
                 .toList();
     }
 
