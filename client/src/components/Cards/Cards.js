@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { FaPlus, FaBan, FaInfoCircle, FaKey, FaTimes, FaCreditCard, FaCheckCircle, FaHeartBroken } from 'react-icons/fa';
+import { FaPlus, FaBan, FaInfoCircle, FaKey, FaTimes, FaCreditCard, FaCheckCircle } from 'react-icons/fa';
+import { TbCreditCardOff } from "react-icons/tb";
 import ApplyCardForm from '../ApplyCard/ApplyCardForm';
 import { getMyCards, applyForCard, blockCard, unblockCard, setCardPin, simulateTransaction, generateBill } from '../../services/cardAPI';
 import { getUserProfile } from '../../services/profileAPI';
@@ -250,7 +251,7 @@ const Cards = () => {
                         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                         height: '240px', width: '100%', opacity: 0.5, color: '#94A3B8'
                     }}>
-                        <FaHeartBroken style={{ fontSize: '4rem', marginBottom: '16px' }} />
+                        <TbCreditCardOff style={{ fontSize: '4rem', marginBottom: '16px' }} />
                         <h3>No Cards Available</h3>
                         <p>Apply for a new card to get started</p>
                     </div>
