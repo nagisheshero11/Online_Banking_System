@@ -12,7 +12,8 @@ import {
   FaSuitcase,
   FaIdCard,
   FaCreditCard,
-  FaHandHoldingUsd
+  FaHandHoldingUsd,
+  FaChartBar
 } from 'react-icons/fa';
 import './styles/Sidebar.css';
 
@@ -41,6 +42,7 @@ const Sidebar = () => {
         {/* Account and Transactions */}
         <NavItem icon={FaUser} label="Account Details" to="/dashboard/account-details" />
         <NavItem icon={FaListAlt} label="Transactions" to="/dashboard/transactions" />
+        <NavItem icon={FaChartBar} label="Analytics" to="/dashboard/analytics" />
 
         {/* Banking Actions */}
         {/* Banking Actions */}

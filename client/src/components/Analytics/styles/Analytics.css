@@ -1,0 +1,184 @@
+/* Analytics Page Styles */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+
+.analytics-container {
+    font-family: 'Manrope', sans-serif;
+    padding: 0;
+    color: #1E293B;
+    max-width: 100%;
+}
+
+/* Page Header */
+.analytics-page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 40px;
+}
+
+.analytics-page-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #0F172A;
+    letter-spacing: -1px;
+    line-height: 1;
+    margin-bottom: 8px;
+}
+
+.analytics-page-subtitle {
+    font-size: 1rem;
+    color: #64748B;
+    font-weight: 500;
+}
+
+.analytics-loading,
+.analytics-error {
+    text-align: center;
+    padding: 60px 20px;
+    font-size: 1.125rem;
+    color: #64748B;
+}
+
+/* Analytics Section */
+.analytics-section {
+    background: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%);
+    border-radius: 16px;
+    padding: 30px;
+    border: 1px solid #E2E8F0;
+}
+
+.analytics-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 30px;
+}
+
+.analytics-icon {
+    font-size: 1.5rem;
+    color: #3B82F6;
+}
+
+.analytics-header h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #0F172A;
+    margin: 0;
+}
+
+.analytics-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.summary-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.summary-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.summary-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.summary-card.credit .summary-icon {
+    background: #DCFCE7;
+    color: #10B981;
+}
+
+.summary-card.debit .summary-icon {
+    background: #FEE2E2;
+    color: #EF4444;
+}
+
+.summary-card.total .summary-icon {
+    background: #DBEAFE;
+    color: #3B82F6;
+}
+
+.summary-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.summary-label {
+    font-size: 0.875rem;
+    color: #64748B;
+    font-weight: 500;
+}
+
+.summary-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #0F172A;
+}
+
+.summary-count {
+    font-size: 0.75rem;
+    color: #94A3B8;
+}
+
+.analytics-charts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 20px;
+}
+
+.chart-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.chart-card.wide {
+    grid-column: 1 / -1;
+}
+
+.chart-card h4 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #0F172A;
+    margin: 0 0 20px 0;
+}
+
+@media (max-width: 768px) {
+    .analytics-section {
+        padding: 20px;
+    }
+
+    .analytics-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .analytics-charts {
+        grid-template-columns: 1fr;
+    }
+
+    .chart-card.wide {
+        grid-column: 1;
+    }
+
+    .analytics-page-title {
+        font-size: 2rem;
+    }
+}
