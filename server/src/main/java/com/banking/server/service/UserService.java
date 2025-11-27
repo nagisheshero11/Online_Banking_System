@@ -64,11 +64,15 @@ public class UserService {
     }
 
     /**
-     * Change user password
+     * Change user password with verification
      */
-    public User changePassword(String username, String newPassword) {
+    public User changePassword(String username, String oldPassword, String newPassword) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found: " + username));
+
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new RuntimeException("Incorrect old password");
+        }
 
         user.setPassword(passwordEncoder.encode(newPassword));
         return userRepository.save(user);

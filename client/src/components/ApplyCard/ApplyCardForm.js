@@ -1,35 +1,23 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { FaUser, FaEnvelope, FaPhone, FaHome, FaCreditCard } from 'react-icons/fa';
-
-import { useToast } from '../../context/ToastContext';
+import React, { useState } from 'react';
+import { FaCreditCard, FaCheckCircle, FaInfoCircle } from 'react-icons/fa';
 
 const ApplyCardForm = ({ selectedCard, cardOptions = [], onChangeCard, onSubmit, onCancel }) => {
-    const { showToast } = useToast();
-    const [form, setForm] = useState({ fullName: '', email: '', phone: '', address: '' });
-    const nameRef = useRef(null);
-
-    useEffect(() => {
-        // Focus the first field when form mounts
-        nameRef.current?.focus();
-    }, [selectedCard?.id]);
-
-    const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+    const [agreed, setAgreed] = useState(false);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const { fullName, email, phone, address } = form;
-        if (!fullName || !email || !phone || !address) {
-            showToast('Please fill all required fields.', 'error');
-            return;
-        }
-        onSubmit({ ...form, cardType: selectedCard.id });
+        if (!agreed) return;
+        onSubmit({ cardType: selectedCard.id });
     };
 
+    const feeValue = selectedCard.feeValue || 0;
+    const isFree = feeValue === 0;
+
     return (
-        <section aria-label="Application form">
+        <section aria-label="Application confirmation">
             {/* Form toolbar with card switcher */}
             <div className="form-toolbar">
-                <label htmlFor="changeCard" className="toolbar-label">Card</label>
+                <label htmlFor="changeCard" className="toolbar-label">Selected Card</label>
                 <select
                     id="changeCard"
                     className="change-card-select"
@@ -42,44 +30,64 @@ const ApplyCardForm = ({ selectedCard, cardOptions = [], onChangeCard, onSubmit,
                 </select>
             </div>
 
-            {/* Selected card visual (image placeholder; will support real images) */}
+            {/* Selected card visual */}
             <div className="selected-card-visual">
-                {selectedCard.image ? (
-                    <img
-                        className="selected-card-image"
-                        src={selectedCard.image}
-                        alt={`${selectedCard.name} preview`}
-                    />
-                ) : (
-                    <div className={`card-mock ${selectedCard.color}`} aria-hidden="true">
-                        <FaCreditCard className="card-mock-icon" />
+                <div className={`card-mock ${selectedCard.color}`} aria-hidden="true">
+                    <FaCreditCard className="card-mock-icon" />
+                    <div style={{ position: 'absolute', bottom: '20px', left: '20px', color: 'white', fontWeight: 'bold' }}>
+                        {selectedCard.name}
                     </div>
-                )}
+                </div>
             </div>
 
-            <form className="apply-card-form" onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label className="form-label" htmlFor="fullName"><FaUser /> Full Name *</label>
-                    <input ref={nameRef} id="fullName" name="fullName" value={form.fullName} onChange={handleChange} className="form-input" placeholder="Enter your full name" />
+            <form className="apply-card-form" onSubmit={handleSubmit} style={{ textAlign: 'center' }}>
+                <div style={{ margin: '20px 0', padding: '20px', background: '#F8FAFC', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+                    <h3 style={{ margin: '0 0 10px 0', color: '#0F172A' }}>Application Summary</h3>
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '1rem' }}>
+                        <span style={{ color: '#64748B' }}>Card Type</span>
+                        <strong style={{ color: '#0F172A' }}>{selectedCard.name}</strong>
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.1rem', marginTop: '16px', paddingTop: '16px', borderTop: '1px solid #E2E8F0' }}>
+                        <span style={{ color: '#64748B' }}>Application Fee</span>
+                        <strong style={{ color: isFree ? '#16A34A' : '#0F172A' }}>
+                            {isFree ? 'FREE' : `₹${feeValue.toLocaleString()}`}
+                        </strong>
+                    </div>
                 </div>
 
-                <div className="form-group">
-                    <label className="form-label" htmlFor="email"><FaEnvelope /> Email *</label>
-                    <input id="email" type="email" name="email" value={form.email} onChange={handleChange} className="form-input" placeholder="you@example.com" />
-                </div>
+                {!isFree && (
+                    <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', textAlign: 'left', margin: '20px 0', padding: '12px', background: '#FFF7ED', borderRadius: '8px', border: '1px solid #FFEDD5' }}>
+                        <FaInfoCircle style={{ color: '#EA580C', marginTop: '3px', flexShrink: 0 }} />
+                        <p style={{ margin: 0, fontSize: '0.9rem', color: '#9A3412' }}>
+                            By proceeding, <strong>₹{feeValue.toLocaleString()}</strong> will be deducted from your account balance immediately.
+                        </p>
+                    </div>
+                )}
 
-                <div className="form-group">
-                    <label className="form-label" htmlFor="phone"><FaPhone /> Phone *</label>
-                    <input id="phone" name="phone" value={form.phone} onChange={handleChange} className="form-input" placeholder="+91 98765 43210" />
-                </div>
-
-                <div className="form-group">
-                    <label className="form-label" htmlFor="address"><FaHome /> Address *</label>
-                    <textarea id="address" name="address" value={form.address} onChange={handleChange} className="form-textarea" rows="3" placeholder="Your full address" />
+                <div className="form-group" style={{ display: 'flex', alignItems: 'center', gap: '10px', justifyContent: 'center', margin: '24px 0' }}>
+                    <input
+                        type="checkbox"
+                        id="agree-checkbox"
+                        checked={agreed}
+                        onChange={(e) => setAgreed(e.target.checked)}
+                        style={{ width: '20px', height: '20px', cursor: 'pointer' }}
+                    />
+                    <label htmlFor="agree-checkbox" style={{ cursor: 'pointer', userSelect: 'none', color: '#334155' }}>
+                        I agree to the terms and authorize this request.
+                    </label>
                 </div>
 
                 <div className="form-actions">
-                    <button className="primary-btn" type="submit">Submit Application</button>
+                    <button
+                        className="primary-btn"
+                        type="submit"
+                        disabled={!agreed}
+                        style={{ opacity: agreed ? 1 : 0.5, cursor: agreed ? 'pointer' : 'not-allowed' }}
+                    >
+                        {isFree ? 'Confirm & Apply' : `Pay ₹${feeValue.toLocaleString()} & Apply`}
+                    </button>
                     <button className="secondary-btn" type="button" onClick={onCancel}>Cancel</button>
                 </div>
             </form>

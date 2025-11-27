@@ -70,3 +70,23 @@ export async function getUserProfile() {
         throw new Error(msg);
     }
 }
+
+// Change Password (POST /api/user/profile/change-password)
+export async function changePassword(oldPassword, newPassword) {
+    try {
+        const { data } = await api.post("/profile/change-password", {
+            oldPassword,
+            newPassword
+        }, {
+            headers: { "Content-Type": "application/json" },
+        });
+        return data;
+    } catch (error) {
+        if (error.response?.status === 401) {
+            localStorage.removeItem("token");
+            throw new Error("Session expired. Please log in again.");
+        }
+        const msg = error.response?.data || error.message || "Failed to change password";
+        throw new Error(msg);
+    }
+}

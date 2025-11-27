@@ -8,10 +8,12 @@ import {
     FaSave,
     FaPen,
     FaIdCard,
-    FaCheckCircle
+    FaLock,
+    FaChevronDown,
+    FaChevronUp
 } from 'react-icons/fa';
 import './styles/Profile.css';
-import { fetchUserProfile, updateUserProfile } from '../../services/profileAPI';
+import { fetchUserProfile, updateUserProfile, changePassword } from '../../services/profileAPI';
 import { useToast } from '../../context/ToastContext';
 
 // ✅ Reusable Profile Item Component
@@ -58,6 +60,14 @@ const Profile = () => {
     const [loading, setLoading] = useState(true);
     const { showToast } = useToast();
 
+    // Password Change State
+    const [showPasswordChange, setShowPasswordChange] = useState(false);
+    const [passwordData, setPasswordData] = useState({
+        oldPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+    });
+
     // ✅ Fetch user profile on mount
     useEffect(() => {
         const loadProfile = async () => {
@@ -92,6 +102,35 @@ const Profile = () => {
             setIsEditing(false);
         } catch (error) {
             showToast(error.message || 'Error updating profile', 'error');
+        }
+    };
+
+    // ✅ Handle Password Change
+    const handlePasswordChange = (e) => {
+        setPasswordData({ ...passwordData, [e.target.name]: e.target.value });
+    };
+
+    const submitPasswordChange = async (e) => {
+        e.preventDefault();
+        const { oldPassword, newPassword, confirmPassword } = passwordData;
+
+        if (!oldPassword || !newPassword || !confirmPassword) {
+            showToast('Please fill all password fields.', 'error');
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            showToast('New passwords do not match.', 'error');
+            return;
+        }
+
+        try {
+            await changePassword(oldPassword, newPassword);
+            showToast('Password changed successfully!', 'success');
+            setPasswordData({ oldPassword: '', newPassword: '', confirmPassword: '' });
+            setShowPasswordChange(false);
+        } catch (error) {
+            showToast(error.message, 'error');
         }
     };
 
@@ -222,6 +261,78 @@ const Profile = () => {
                         </button>
                     )}
                 </div>
+            </div>
+
+            {/* Change Password Section */}
+            <div className="zen-profile-card" style={{ marginTop: '20px' }}>
+                <div
+                    className="zen-user-header"
+                    style={{ cursor: 'pointer', borderBottom: showPasswordChange ? '1px solid #E2E8F0' : 'none' }}
+                    onClick={() => setShowPasswordChange(!showPasswordChange)}
+                >
+                    <div className="zen-user-info" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <div className="zen-avatar-circle" style={{ width: '40px', height: '40px', fontSize: '1.2rem', background: '#F1F5F9', color: '#64748B' }}>
+                            <FaLock />
+                        </div>
+                        <div>
+                            <h3 className="zen-user-name" style={{ fontSize: '1.1rem' }}>Security Settings</h3>
+                            <p className="zen-user-id">Change your password</p>
+                        </div>
+                    </div>
+                    <div style={{ color: '#64748B' }}>
+                        {showPasswordChange ? <FaChevronUp /> : <FaChevronDown />}
+                    </div>
+                </div>
+
+                {showPasswordChange && (
+                    <form onSubmit={submitPasswordChange} style={{ padding: '20px', display: 'grid', gap: '20px', maxWidth: '500px' }}>
+                        <div className="zen-profile-item" style={{ border: 'none', padding: 0 }}>
+                            <label className="zen-detail-label">Current Password</label>
+                            <div className="zen-input-wrap editable">
+                                <input
+                                    type="password"
+                                    name="oldPassword"
+                                    value={passwordData.oldPassword}
+                                    onChange={handlePasswordChange}
+                                    className="zen-detail-input"
+                                    placeholder="Enter current password"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="zen-profile-item" style={{ border: 'none', padding: 0 }}>
+                            <label className="zen-detail-label">New Password</label>
+                            <div className="zen-input-wrap editable">
+                                <input
+                                    type="password"
+                                    name="newPassword"
+                                    value={passwordData.newPassword}
+                                    onChange={handlePasswordChange}
+                                    className="zen-detail-input"
+                                    placeholder="Enter new password"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="zen-profile-item" style={{ border: 'none', padding: 0 }}>
+                            <label className="zen-detail-label">Confirm New Password</label>
+                            <div className="zen-input-wrap editable">
+                                <input
+                                    type="password"
+                                    name="confirmPassword"
+                                    value={passwordData.confirmPassword}
+                                    onChange={handlePasswordChange}
+                                    className="zen-detail-input"
+                                    placeholder="Confirm new password"
+                                />
+                            </div>
+                        </div>
+
+                        <button type="submit" className="zen-btn-save" style={{ justifySelf: 'start' }}>
+                            Update Password
+                        </button>
+                    </form>
+                )}
             </div>
         </div>
     );
