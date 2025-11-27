@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getMyCards, sendCardPayment } from '../../services/cardAPI';
-import { FaCreditCard, FaPaperPlane, FaUser, FaRupeeSign, FaTimes } from 'react-icons/fa';
+import { verifyAccount } from '../../services/accountAPI';
+import { FaCreditCard, FaPaperPlane, FaUser, FaRupeeSign, FaTimes, FaCheckCircle, FaExclamationCircle, FaUserCheck } from 'react-icons/fa';
 import './styles/TransferMoney.css';
 
 const CardTransfer = () => {
@@ -13,6 +14,10 @@ const CardTransfer = () => {
     const [showPinModal, setShowPinModal] = useState(false);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState(null);
+
+    // Verification State
+    const [verificationStatus, setVerificationStatus] = useState('idle'); // idle | loading | valid | invalid
+    const [beneficiaryDetails, setBeneficiaryDetails] = useState(null);
 
     useEffect(() => {
         fetchCards();
@@ -37,12 +42,39 @@ const CardTransfer = () => {
         }
     };
 
+    const handleVerifyAccount = async () => {
+        if (!toAccount || toAccount.length < 5) {
+            setVerificationStatus('idle');
+            setBeneficiaryDetails(null);
+            return;
+        }
+
+        setVerificationStatus('loading');
+        try {
+            const data = await verifyAccount(toAccount);
+            if (data.valid) {
+                setVerificationStatus('valid');
+                setBeneficiaryDetails(data);
+            } else {
+                setVerificationStatus('invalid');
+                setBeneficiaryDetails(null);
+            }
+        } catch (err) {
+            setVerificationStatus('invalid');
+            setBeneficiaryDetails(null);
+        }
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
         setMessage(null);
 
         if (!selectedCardId) {
             setMessage({ type: 'error', text: 'Please select a valid card.' });
+            return;
+        }
+        if (verificationStatus === 'invalid') {
+            setMessage({ type: 'error', text: 'Please enter a valid recipient account number.' });
             return;
         }
         setShowPinModal(true);
@@ -70,6 +102,8 @@ const CardTransfer = () => {
             setToAccount('');
             setRemarks('');
             setPin('');
+            setVerificationStatus('idle');
+            setBeneficiaryDetails(null);
         } catch (err) {
             setMessage({ type: 'error', text: err.response?.data || 'Payment Failed' });
         }
@@ -111,14 +145,40 @@ const CardTransfer = () => {
 
                 <div className="form-group">
                     <label>Recipient Account Number</label>
-                    <input
-                        type="text"
-                        value={toAccount}
-                        onChange={(e) => setToAccount(e.target.value)}
-                        placeholder="Enter account number"
-                        required
-                        className="form-input"
-                    />
+                    <div style={{ position: 'relative' }}>
+                        <input
+                            type="text"
+                            value={toAccount}
+                            onChange={(e) => {
+                                setToAccount(e.target.value);
+                                if (verificationStatus !== 'idle') setVerificationStatus('idle');
+                            }}
+                            onBlur={handleVerifyAccount}
+                            placeholder="Enter account number"
+                            required
+                            className="form-input"
+                            style={{
+                                width: '100%',
+                                boxSizing: 'border-box',
+                                borderColor: verificationStatus === 'valid' ? '#10B981' :
+                                    verificationStatus === 'invalid' ? '#EF4444' : ''
+                            }}
+                        />
+                        {verificationStatus === 'loading' && (
+                            <span style={{ position: 'absolute', right: '10px', top: '12px', fontSize: '0.8rem', color: '#64748B' }}>Checking...</span>
+                        )}
+                    </div>
+                    {/* Verification Feedback */}
+                    {verificationStatus === 'valid' && beneficiaryDetails && (
+                        <div style={{ marginTop: '5px', fontSize: '0.85rem', color: '#10B981', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                            <FaUserCheck /> Verified: <strong>{beneficiaryDetails.fullName}</strong> (@{beneficiaryDetails.username})
+                        </div>
+                    )}
+                    {verificationStatus === 'invalid' && (
+                        <div style={{ marginTop: '5px', fontSize: '0.85rem', color: '#EF4444', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                            <FaExclamationCircle /> Account not found
+                        </div>
+                    )}
                 </div>
 
                 <div className="form-group">

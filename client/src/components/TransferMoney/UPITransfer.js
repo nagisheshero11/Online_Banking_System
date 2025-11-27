@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
-import { FaQrcode, FaSyncAlt } from 'react-icons/fa';
+import { FaQrcode, FaSyncAlt, FaCheckCircle, FaExclamationCircle, FaUserCheck } from 'react-icons/fa';
+import { verifyAccount } from '../../services/accountAPI';
 import './styles/TransferMoney.css';
 
 const UPITransfer = () => {
@@ -11,10 +12,46 @@ const UPITransfer = () => {
     const [showQr, setShowQr] = useState(false);
     const [generatedVpa, setGeneratedVpa] = useState("");
 
+    // Verification State
+    const [verificationStatus, setVerificationStatus] = useState('idle'); // idle | loading | valid | invalid
+    const [beneficiaryDetails, setBeneficiaryDetails] = useState(null);
+
+    const handleVerifyAccount = async () => {
+        // Verify if it looks like an account number (numeric > 5) OR a username (length > 3)
+        const isAccount = /^\d{6,}$/.test(identifier);
+        const isUsername = identifier.length > 3;
+
+        if (!isAccount && !isUsername) {
+            setVerificationStatus('idle');
+            setBeneficiaryDetails(null);
+            return;
+        }
+
+        setVerificationStatus('loading');
+        try {
+            const data = await verifyAccount(identifier);
+            if (data.valid) {
+                setVerificationStatus('valid');
+                setBeneficiaryDetails(data);
+            } else {
+                setVerificationStatus('invalid');
+                setBeneficiaryDetails(null);
+            }
+        } catch (err) {
+            setVerificationStatus('invalid');
+            setBeneficiaryDetails(null);
+        }
+    };
+
     const handleGenerateQR = (e) => {
         e.preventDefault();
         if (!identifier || !amount) {
             alert("Please enter Account Number/Username and Amount");
+            return;
+        }
+
+        if (verificationStatus === 'invalid') {
+            alert("Please enter a valid account number or username");
             return;
         }
 
@@ -41,6 +78,8 @@ const UPITransfer = () => {
         setAmount("");
         setRemarks("");
         setGeneratedVpa("");
+        setVerificationStatus('idle');
+        setBeneficiaryDetails(null);
     };
 
     return (
@@ -54,14 +93,40 @@ const UPITransfer = () => {
                 <form onSubmit={handleGenerateQR} className="transfer-form">
                     <div className="form-group">
                         <label>Receiver Account Number / Username</label>
-                        <input
-                            type="text"
-                            className="form-input"
-                            value={identifier}
-                            onChange={(e) => setIdentifier(e.target.value)}
-                            placeholder="e.g. 123456789 or john_doe"
-                            required
-                        />
+                        <div style={{ position: 'relative' }}>
+                            <input
+                                type="text"
+                                className="form-input"
+                                value={identifier}
+                                onChange={(e) => {
+                                    setIdentifier(e.target.value);
+                                    if (verificationStatus !== 'idle') setVerificationStatus('idle');
+                                }}
+                                onBlur={handleVerifyAccount}
+                                placeholder="e.g. 123456789 or john_doe"
+                                required
+                                style={{
+                                    width: '100%',
+                                    boxSizing: 'border-box',
+                                    borderColor: verificationStatus === 'valid' ? '#10B981' :
+                                        verificationStatus === 'invalid' ? '#EF4444' : ''
+                                }}
+                            />
+                            {verificationStatus === 'loading' && (
+                                <span style={{ position: 'absolute', right: '10px', top: '12px', fontSize: '0.8rem', color: '#64748B' }}>Checking...</span>
+                            )}
+                        </div>
+                        {/* Verification Feedback */}
+                        {verificationStatus === 'valid' && beneficiaryDetails && (
+                            <div style={{ marginTop: '5px', fontSize: '0.85rem', color: '#10B981', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                <FaUserCheck /> Verified: <strong>{beneficiaryDetails.fullName}</strong> (@{beneficiaryDetails.username})
+                            </div>
+                        )}
+                        {verificationStatus === 'invalid' && (
+                            <div style={{ marginTop: '5px', fontSize: '0.85rem', color: '#EF4444', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                <FaExclamationCircle /> Account not found
+                            </div>
+                        )}
                     </div>
 
                     <div className="form-group">
@@ -89,7 +154,7 @@ const UPITransfer = () => {
                         />
                     </div>
 
-                    <button type="submit" className="action-btn">
+                    <button type="submit" className="action-btn" disabled={verificationStatus === 'invalid'}>
                         <FaQrcode /> Generate QR Code
                     </button>
                 </form>

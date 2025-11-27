@@ -91,4 +91,28 @@ public class AccountController {
     public ResponseEntity<?> getAllAccounts() {
         return ResponseEntity.ok(accountRepository.findAll());
     }
+
+    /**
+     * ✅ Verify Account Number OR Username (for transfer)
+     */
+    @GetMapping("/verify/{identifier}")
+    public ResponseEntity<?> verifyAccount(@PathVariable String identifier) {
+        // Try finding by Account Number
+        Optional<Account> accountOpt = accountRepository.findByAccountNumber(identifier);
+
+        // If not found, try finding by Username
+        if (accountOpt.isEmpty()) {
+            accountOpt = accountRepository.findByUsername(identifier);
+        }
+
+        if (accountOpt.isPresent()) {
+            Account account = accountOpt.get();
+            return ResponseEntity.ok(java.util.Map.of(
+                    "valid", true,
+                    "fullName", account.getFirstName() + " " + account.getLastName(),
+                    "username", account.getUsername()));
+        } else {
+            return ResponseEntity.ok(java.util.Map.of("valid", false));
+        }
+    }
 }

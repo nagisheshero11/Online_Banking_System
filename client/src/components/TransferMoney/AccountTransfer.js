@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { FaPaperPlane, FaCheckCircle } from 'react-icons/fa';
-import { transferMoney, getAccountDetails } from '../../services/accountAPI';
+import { FaPaperPlane, FaCheckCircle, FaExclamationCircle, FaUserCheck } from 'react-icons/fa';
+import { transferMoney, getAccountDetails, verifyAccount } from '../../services/accountAPI';
 import './styles/TransferMoney.css';
 
 const AccountTransfer = () => {
@@ -11,6 +11,10 @@ const AccountTransfer = () => {
     const [availableBalance, setAvailableBalance] = useState(0);
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState('');
+
+    // Verification State
+    const [verificationStatus, setVerificationStatus] = useState('idle'); // idle | loading | valid | invalid
+    const [beneficiaryDetails, setBeneficiaryDetails] = useState(null);
 
     useEffect(() => {
         const fetchAccount = async () => {
@@ -25,11 +29,44 @@ const AccountTransfer = () => {
         fetchAccount();
     }, []);
 
+    const handleVerifyAccount = async () => {
+        if (!receiverAccount || receiverAccount.length < 5) {
+            setVerificationStatus('idle');
+            setBeneficiaryDetails(null);
+            return;
+        }
+
+        if (receiverAccount === userAccount) {
+            setVerificationStatus('invalid');
+            setBeneficiaryDetails(null);
+            return;
+        }
+
+        setVerificationStatus('loading');
+        try {
+            const data = await verifyAccount(receiverAccount);
+            if (data.valid) {
+                setVerificationStatus('valid');
+                setBeneficiaryDetails(data);
+            } else {
+                setVerificationStatus('invalid');
+                setBeneficiaryDetails(null);
+            }
+        } catch (err) {
+            setVerificationStatus('invalid');
+            setBeneficiaryDetails(null);
+        }
+    };
+
     const handleTransfer = async (e) => {
         e.preventDefault();
 
         if (!receiverAccount) {
             alert("Please enter receiver's account number");
+            return;
+        }
+        if (verificationStatus === 'invalid') {
+            alert("Please enter a valid receiver account number");
             return;
         }
         if (!transferAmount || parseFloat(transferAmount) <= 0) {
@@ -59,6 +96,8 @@ const AccountTransfer = () => {
             setReceiverAccount('');
             setTransferAmount('');
             setDescription('');
+            setVerificationStatus('idle');
+            setBeneficiaryDetails(null);
 
             setTimeout(() => setSuccess(''), 4000);
         } catch (error) {
@@ -87,14 +126,40 @@ const AccountTransfer = () => {
             <form onSubmit={handleTransfer} className="transfer-form">
                 <div className="form-group">
                     <label>Receiver Account Number</label>
-                    <input
-                        type="text"
-                        className="form-input"
-                        value={receiverAccount}
-                        onChange={(e) => setReceiverAccount(e.target.value.toUpperCase())}
-                        placeholder="e.g. BANK12345678"
-                        required
-                    />
+                    <div style={{ position: 'relative' }}>
+                        <input
+                            type="text"
+                            className="form-input"
+                            value={receiverAccount}
+                            onChange={(e) => {
+                                setReceiverAccount(e.target.value.toUpperCase());
+                                if (verificationStatus !== 'idle') setVerificationStatus('idle');
+                            }}
+                            onBlur={handleVerifyAccount}
+                            placeholder="e.g. BANK12345678"
+                            required
+                            style={{
+                                width: '100%',
+                                boxSizing: 'border-box',
+                                borderColor: verificationStatus === 'valid' ? '#10B981' :
+                                    verificationStatus === 'invalid' ? '#EF4444' : ''
+                            }}
+                        />
+                        {verificationStatus === 'loading' && (
+                            <span style={{ position: 'absolute', right: '10px', top: '12px', fontSize: '0.8rem', color: '#64748B' }}>Checking...</span>
+                        )}
+                    </div>
+                    {/* Verification Feedback */}
+                    {verificationStatus === 'valid' && beneficiaryDetails && (
+                        <div style={{ marginTop: '5px', fontSize: '0.85rem', color: '#10B981', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                            <FaUserCheck /> Verified: <strong>{beneficiaryDetails.fullName}</strong> (@{beneficiaryDetails.username})
+                        </div>
+                    )}
+                    {verificationStatus === 'invalid' && (
+                        <div style={{ marginTop: '5px', fontSize: '0.85rem', color: '#EF4444', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                            <FaExclamationCircle /> Account not found
+                        </div>
+                    )}
                 </div>
 
                 <div className="form-group">
@@ -122,7 +187,7 @@ const AccountTransfer = () => {
                     />
                 </div>
 
-                <button type="submit" className="action-btn" disabled={loading}>
+                <button type="submit" className="action-btn" disabled={loading || verificationStatus === 'invalid'}>
                     {loading ? "Processing..." : (success ? "Transfer Successful!" : "Send Money")}
                     {!loading && !success && <FaPaperPlane />}
                     {success && <FaCheckCircle />}

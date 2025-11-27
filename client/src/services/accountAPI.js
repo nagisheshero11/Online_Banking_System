@@ -69,3 +69,16 @@ export async function transferMoney(transferData) {
         throw new Error(msg);
     }
 }
+/**
+ * ✅ Verify Account Number
+ * GET /api/account/verify/{accountNumber}
+ */
+export async function verifyAccount(accountNumber) {
+    try {
+        const { data } = await api.get(`/verify/${accountNumber}`);
+        return data;
+    } catch (error) {
+        // If 404 or other error, return valid: false
+        return { valid: false };
+    }
+}
