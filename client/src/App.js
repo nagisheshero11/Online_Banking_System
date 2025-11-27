@@ -12,6 +12,7 @@ import Transaction from './components/Transaction/Transaction';
 import TransferMoney from './components/TransferMoney/TransferMoney';
 import RequestLoan from './components/RequestLoan/RequestLoan';
 import PayBills from './components/PayBills/PayBills';
+import PayEMI from './components/PayBills/PayEMI';
 import Profile from './components/Profile/Profile';
 import Cards from './components/Cards/Cards';
 
@@ -29,59 +30,64 @@ import UserManagement from './admin/UserManagement';
 
 import './App.css';
 
+import { ToastProvider } from './context/ToastContext';
+
 function App() {
   return (
-    <Router>
-      <div className="App">
-        <Routes>
+    <ToastProvider>
+      <Router>
+        <div className="App">
+          <Routes>
 
-          {/* Landing page */}
-          <Route path="/" element={<LandingPage />} />
+            {/* Landing page */}
+            <Route path="/" element={<LandingPage />} />
 
-          {/* USER DASHBOARD */}
-          <Route path="/dashboard" element={<DashboardPage />}>
-            {/* Default → account details */}
-            <Route index element={<Navigate to="account-details" replace />} />
+            {/* USER DASHBOARD */}
+            <Route path="/dashboard" element={<DashboardPage />}>
+              {/* Default → account details */}
+              <Route index element={<Navigate to="account-details" replace />} />
 
-            {/* User nested routes */}
-            <Route path="account-details" element={<AccountDetails />} />
-            <Route path="transactions" element={<Transaction />} />
-            <Route path="transfer-money" element={<TransferMoney />} />
-            <Route path="pay-bills" element={<PayBills />} />
-            <Route path="cards" element={<Cards />} />
-            <Route path="request-loan" element={<RequestLoan />} />
-            <Route path="loan-status" element={<LoanStatus />} />
-            <Route path="profile" element={<Profile />} />
-          </Route>
+              {/* User nested routes */}
+              <Route path="account-details" element={<AccountDetails />} />
+              <Route path="transactions" element={<Transaction />} />
+              <Route path="transfer-money" element={<TransferMoney />} />
+              <Route path="pay-bills" element={<PayBills />} />
+              <Route path="pay-emi" element={<PayEMI />} />
+              <Route path="cards" element={<Cards />} />
+              <Route path="request-loan" element={<RequestLoan />} />
+              <Route path="loan-status" element={<LoanStatus />} />
+              <Route path="profile" element={<Profile />} />
+            </Route>
 
-          {/* LOGIN & SIGNUP */}
-          <Route path="/login" element={<LoginOverlayPage />} />
-          <Route path="/signup" element={<SignupOverlayPage />} />
+            {/* LOGIN & SIGNUP */}
+            <Route path="/login" element={<LoginOverlayPage />} />
+            <Route path="/signup" element={<SignupOverlayPage />} />
 
-          {/* ADMIN DASHBOARD */}
-          <Route path="/admin" element={<AdminLayout />}>
-            {/* Default → dashboard */}
-            <Route index element={<Navigate to="dashboard" replace />} />
+            {/* ADMIN DASHBOARD */}
+            <Route path="/admin" element={<AdminLayout />}>
+              {/* Default → dashboard */}
+              <Route index element={<Navigate to="dashboard" replace />} />
 
-            <Route path="dashboard" element={<AdminDashboard />} />
-            <Route path="approve-cards" element={<ApproveCards />} />
-            <Route path="approve-loans" element={<ApproveLoans />} />
-            <Route path="bank-funds" element={<BankFunds />} />
-            <Route path="bank-funds/history" element={<BankFundsHistory />} />
-            <Route path="transactions" element={<AdminTransactions />} />
-            <Route path="users" element={<UserManagement />} />
+              <Route path="dashboard" element={<AdminDashboard />} />
+              <Route path="approve-cards" element={<ApproveCards />} />
+              <Route path="approve-loans" element={<ApproveLoans />} />
+              <Route path="bank-funds" element={<BankFunds />} />
+              <Route path="bank-funds/history" element={<BankFundsHistory />} />
+              <Route path="transactions" element={<AdminTransactions />} />
+              <Route path="users" element={<UserManagement />} />
 
-            {/* History */}
-            <Route path="history/cards" element={<HistoryCards />} />
-            <Route path="history/loans" element={<HistoryLoans />} />
-          </Route>
+              {/* History */}
+              <Route path="history/cards" element={<HistoryCards />} />
+              <Route path="history/loans" element={<HistoryLoans />} />
+            </Route>
 
-          {/* Catch-all route → redirect to home */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+            {/* Catch-all route → redirect to home */}
+            <Route path="*" element={<Navigate to="/" replace />} />
 
-        </Routes>
-      </div>
-    </Router>
+          </Routes>
+        </div>
+      </Router>
+    </ToastProvider>
   );
 }
 

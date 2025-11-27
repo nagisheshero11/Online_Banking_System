@@ -123,6 +123,11 @@ public class BillService {
             bankFundService.creditFunds(bill.getAmount(), bill.getBillType() + " Payment - Bill #" + bill.getId());
         }
 
+        // Check for Loan Completion
+        if ("EMI".equalsIgnoreCase(bill.getBillType()) && bill.getLoanId() != null) {
+            checkAndCompleteLoan(bill.getLoanId());
+        }
+
         return savedBill;
     }
 
@@ -361,6 +366,31 @@ public class BillService {
         // Credit Bank Funds
         bankFundService.creditFunds(amount, bill.getBillType() + " Payment via Card - Bill #" + bill.getId());
 
+        // Check for Loan Completion
+        if ("EMI".equalsIgnoreCase(bill.getBillType()) && bill.getLoanId() != null) {
+            checkAndCompleteLoan(bill.getLoanId());
+        }
+
         return savedBill;
+    }
+
+    @Autowired
+    private com.banking.server.repository.LoanApplicationRepository loanRepository;
+
+    private void checkAndCompleteLoan(Long loanId) {
+        // Check if there are any UNPAID bills for this loan
+        // loanId only or filter
+        // Actually we have findByLoanId in repo
+        List<Bill> allLoanBills = billRepository.findByLoanId(loanId);
+
+        boolean allPaid = allLoanBills.stream().allMatch(Bill::isPaid);
+
+        if (allPaid) {
+            LoanApplication loan = loanRepository.findById(loanId).orElse(null);
+            if (loan != null && "APPROVED".equals(loan.getStatus())) {
+                loan.setStatus("COMPLETED");
+                loanRepository.save(loan);
+            }
+        }
     }
 }

@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface LoanApplicationRepository extends JpaRepository<LoanApplication, Long> {
     List<LoanApplication> findByUsername(String username);
+
+    long countByStatus(String status);
 }

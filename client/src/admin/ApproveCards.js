@@ -2,7 +2,10 @@ import React, { useEffect, useState } from "react";
 import { getPendingApplications, approveCard, rejectCard } from "./services/adminCardAPI";
 import "./styles/ApproveCards.css";
 
+import { useToast } from '../context/ToastContext';
+
 const ApproveCards = () => {
+    const { showToast } = useToast();
     const [cards, setCards] = useState([]);
     const [loading, setLoading] = useState(true);
     const [processingId, setProcessingId] = useState(null);
@@ -32,11 +35,11 @@ const ApproveCards = () => {
         setProcessingId(selectedCard.id);
         try {
             await approveCard(selectedCard.id);
-            alert("Card Approved Successfully!");
+            showToast("Card Approved Successfully!", 'success');
             await loadCards();
             setSelectedCard(null);
         } catch (err) {
-            alert("Failed to approve card");
+            showToast("Failed to approve card", 'error');
         }
         setProcessingId(null);
     };
@@ -46,10 +49,10 @@ const ApproveCards = () => {
         setProcessingId(cardId);
         try {
             await rejectCard(cardId);
-            alert("Card Rejected");
+            showToast("Card Rejected", 'info');
             await loadCards();
         } catch (err) {
-            alert("Failed to reject card");
+            showToast("Failed to reject card", 'error');
         }
         setProcessingId(null);
     };

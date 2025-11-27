@@ -41,3 +41,14 @@ export const rejectLoan = async (loanId) => {
     );
     return res.data;
 };
+
+/* ---------------------------------------------------------
+   GET LOAN STATS
+--------------------------------------------------------- */
+export const getLoanStats = async () => {
+    const token = getToken();
+    const res = await axios.get(`${API_URL}/stats`, {
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+};

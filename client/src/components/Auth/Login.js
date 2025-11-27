@@ -4,8 +4,11 @@ import { FaEnvelope, FaLock, FaCheck, FaCreditCard, FaUser, FaUniversity, FaWifi
 import './styles/Login.css';
 import { login } from '../../services/authAPI';
 
+import { useToast } from '../../context/ToastContext';
+
 const Login = () => {
     const navigate = useNavigate();
+    const { showToast } = useToast();
 
     // Form state
     const [formData, setFormData] = useState({
@@ -32,11 +35,11 @@ const Login = () => {
             } else if (role === "USER") {
                 navigate('/dashboard', { state: { showLoginSuccess: true } });
             } else {
-                alert("Invalid role received from server");
+                showToast("Invalid role received from server", 'error');
             }
 
         } catch (error) {
-            alert(error.message || 'Login failed!');
+            showToast(error.message || 'Login failed!', 'error');
         }
     };
 

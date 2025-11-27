@@ -4,7 +4,10 @@ import { getAllUsers } from "./services/userAPI";
 import { FaSearch, FaUserCircle, FaMoneyBillWave, FaIdCard } from "react-icons/fa";
 import "./styles/UserManagement.css";
 
+import { useToast } from '../context/ToastContext';
+
 const UserManagement = () => {
+    const { showToast } = useToast();
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
@@ -143,8 +146,7 @@ const UserManagement = () => {
                     user={selectedUserForBill}
                     onClose={() => setSelectedUserForBill(null)}
                     onSuccess={() => {
-                        // Optional: Refresh users or show toast
-                        alert("Bill created successfully!");
+                        showToast("Bill created successfully!", 'success');
                     }}
                 />
             )}

@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { FaHome, FaGraduationCap, FaCar, FaBriefcase, FaUser, FaInfoCircle, FaCheckCircle } from 'react-icons/fa';
 import './styles/RequestLoan.css';
 import { applyForLoan } from '../../services/loanAPI';
+import { useToast } from '../../context/ToastContext';
 
 const RequestLoan = () => {
+    const { showToast } = useToast();
     // State
     const [loanType, setLoanType] = useState('');
     const [loanAmount, setLoanAmount] = useState(50000);
@@ -63,7 +65,7 @@ const RequestLoan = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!loanType) return alert('Please select a loan type');
+        if (!loanType) return showToast('Please select a loan type', 'error');
 
         setLoading(true);
         try {
@@ -74,6 +76,7 @@ const RequestLoan = () => {
                 interestRate: effectiveRate
             });
             setSuccessMode(true);
+            showToast('Loan request submitted successfully!', 'success');
             setTimeout(() => {
                 setSuccessMode(false);
                 setLoanType('');
@@ -81,7 +84,7 @@ const RequestLoan = () => {
                 setLoanTenure(12);
             }, 3000);
         } catch (err) {
-            alert(err.message || "Loan submission failed.");
+            showToast(err.message || "Loan submission failed.", 'error');
         } finally {
             setLoading(false);
         }

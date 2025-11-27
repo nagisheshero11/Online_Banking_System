@@ -8,8 +8,10 @@ import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import { FaSearch, FaDownload, FaArrowUp, FaArrowDown } from 'react-icons/fa';
 import "./styles/Transaction.css";
+import { useToast } from '../../context/ToastContext';
 
 const Transactions = () => {
+  const { showToast } = useToast();
   const [filter, setFilter] = useState("All");
   const [search, setSearch] = useState("");
   const [transactions, setTransactions] = useState([]);
@@ -151,7 +153,7 @@ const Transactions = () => {
       doc.save(`Statement_${userAccount.accountNumber}.pdf`);
     } catch (error) {
       console.error("PDF Error", error);
-      alert("Could not generate PDF");
+      showToast("Could not generate PDF", 'error');
     }
   };
 

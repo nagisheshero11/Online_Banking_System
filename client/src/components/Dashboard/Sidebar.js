@@ -49,8 +49,10 @@ const Sidebar = () => {
         <NavItem icon={FaCreditCard} label="Cards" to="/dashboard/cards" />
 
         {/* Loan Services */}
+        {/* Loan Services */}
         <NavItem icon={FaHandHoldingUsd} label="Request Loan" to="/dashboard/request-loan" />
         <NavItem icon={FaMoneyCheckAlt} label="Loan Status" to="/dashboard/loan-status" />
+        <NavItem icon={FaFileInvoiceDollar} label="Pay EMI" to="/dashboard/pay-emi" />
 
       </div>
 

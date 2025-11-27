@@ -6,8 +6,6 @@ import com.banking.server.entity.Account;
 import com.banking.server.entity.LoanApplication;
 import com.banking.server.repository.AccountRepository;
 import com.banking.server.repository.LoanApplicationRepository;
-import com.banking.server.repository.BillRepository;
-import com.banking.server.entity.Bill;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,9 +23,6 @@ public class LoanService {
 
     @Autowired
     private AccountRepository accountRepository;
-
-    @Autowired
-    private BillRepository billRepository;
 
     @Autowired
     private BillService billService;
@@ -57,50 +52,32 @@ public class LoanService {
 
         BigDecimal interestRate = getInterestRate(request.getLoanType());
 
-        LoanApplication loan = LoanApplication.builder()
-                .username(username)
-                .accountNumber(account.getAccountNumber())
-                .loanType(request.getLoanType().toUpperCase())
-                .loanAmount(request.getLoanAmount())
-                .tenureMonths(request.getTenureMonths())
-                .interestRate(interestRate)
-                .status("PENDING")
-                .build();
+        LoanApplication loan = LoanApplication.builder().username(username).accountNumber(account.getAccountNumber())
+                .loanType(request.getLoanType().toUpperCase()).loanAmount(request.getLoanAmount())
+                .tenureMonths(request.getTenureMonths()).interestRate(interestRate).status("PENDING").build();
 
         loanRepository.save(loan);
 
-        return LoanApplicationResponse.builder()
-                .id(loan.getId())
-                .loanType(loan.getLoanType())
-                .loanAmount(loan.getLoanAmount())
-                .tenureMonths(loan.getTenureMonths())
-                .interestRate(loan.getInterestRate())
-                .status(loan.getStatus())
-                .createdAt(loan.getCreatedAt())
-                .build();
+        return LoanApplicationResponse.builder().id(loan.getId()).loanType(loan.getLoanType())
+                .loanAmount(loan.getLoanAmount()).tenureMonths(loan.getTenureMonths())
+                .interestRate(loan.getInterestRate()).status(loan.getStatus()).createdAt(loan.getCreatedAt()).build();
     }
 
     public List<LoanApplicationResponse> getMyLoans(String username) {
 
-        return loanRepository.findByUsername(username)
-                .stream()
-                .map(loan -> LoanApplicationResponse.builder()
-                        .id(loan.getId())
-                        .loanType(loan.getLoanType())
-                        .loanAmount(loan.getLoanAmount())
-                        .tenureMonths(loan.getTenureMonths())
-                        .interestRate(loan.getInterestRate())
-                        .status(loan.getStatus())
-                        .createdAt(loan.getCreatedAt())
+        return loanRepository.findByUsername(username).stream()
+                .map(loan -> LoanApplicationResponse.builder().id(loan.getId()).loanType(loan.getLoanType())
+                        .loanAmount(loan.getLoanAmount()).tenureMonths(loan.getTenureMonths())
+                        .interestRate(loan.getInterestRate()).status(loan.getStatus()).createdAt(loan.getCreatedAt())
                         .build())
                 .collect(Collectors.toList());
     }
 
     /**
      * Approve loan:
-     *  - mark loan APPROVED
-     *  - credit loan principal into user's account (use pessimistic lock)
-     *  - generate monthly EMI bills for tenure months
+     * - mark loan APPROVED
+     * - credit loan principal into user's account (use pessimistic lock)
+     * - generate monthly EMI bills for tenure months
      */
     @Transactional
     public LoanApplicationResponse approveLoan(Long loanId) {
@@ -149,15 +126,9 @@ public class LoanService {
         // Debit Bank Funds
         bankFundService.debitFunds(loan.getLoanAmount(), "Loan Disbursal - Loan #" + loan.getId());
 
-        return LoanApplicationResponse.builder()
-                .id(loan.getId())
-                .loanType(loan.getLoanType())
-                .loanAmount(loan.getLoanAmount())
-                .tenureMonths(loan.getTenureMonths())
-                .interestRate(loan.getInterestRate())
-                .status(loan.getStatus())
-                .createdAt(loan.getCreatedAt())
-                .build();
+        return LoanApplicationResponse.builder().id(loan.getId()).loanType(loan.getLoanType())
+                .loanAmount(loan.getLoanAmount()).tenureMonths(loan.getTenureMonths())
+                .interestRate(loan.getInterestRate()).status(loan.getStatus()).createdAt(loan.getCreatedAt()).build();
     }
 
     /**
@@ -170,5 +141,15 @@ public class LoanService {
 
         loan.setStatus("REJECTED");
         loanRepository.save(loan);
+    }
+
+    public java.util.Map<String, Long> getLoanStatistics() {
+        long pending = loanRepository.countByStatus("PENDING");
+        long approved = loanRepository.countByStatus("APPROVED");
+        long rejected = loanRepository.countByStatus("REJECTED");
+        long completed = loanRepository.countByStatus("COMPLETED");
+
+        return java.util.Map.of("totalApplied", pending + approved + rejected + completed, "pending", pending, "active",
+                approved, "rejected", rejected, "completed", completed);
     }
 }

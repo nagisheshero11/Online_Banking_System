@@ -4,7 +4,10 @@ import React, { useEffect, useState } from "react";
 import "./styles/ApproveLoans.css";
 import { getAllLoans, approveLoan, rejectLoan } from "./services/adminLoanAPI";
 
+import { useToast } from '../context/ToastContext';
+
 const ApproveLoans = () => {
+    const { showToast } = useToast();
     const [loans, setLoans] = useState([]);
     const [loading, setLoading] = useState(true);
     const [processingId, setProcessingId] = useState(null);
@@ -20,7 +23,7 @@ const ApproveLoans = () => {
             setLoans(data.filter((loan) => loan.status === "PENDING"));
         } catch (err) {
             console.error("Loan load error:", err);
-            alert(err.message || "Failed to load loans");
+            showToast(err.message || "Failed to load loans", 'error');
         }
         setLoading(false);
     };
@@ -42,12 +45,12 @@ const ApproveLoans = () => {
 
         try {
             await approveLoan(selectedLoan.id);
-            alert("Loan Approved Successfully!");
+            showToast("Loan Approved Successfully!", 'success');
             await loadLoans(); // refresh table
             setSelectedLoan(null); // Close modal
         } catch (err) {
             console.error("Approve error:", err);
-            alert(err.message || "Failed to approve loan");
+            showToast(err.message || "Failed to approve loan", 'error');
         }
 
         setProcessingId(null);
@@ -63,11 +66,11 @@ const ApproveLoans = () => {
 
         try {
             await rejectLoan(loanId);
-            alert("Loan Rejected");
+            showToast("Loan Rejected", 'info');
             await loadLoans();
         } catch (err) {
             console.error("Reject error:", err);
-            alert(err.message || "Failed to reject loan");
+            showToast(err.message || "Failed to reject loan", 'error');
         }
 
         setProcessingId(null);
@@ -128,6 +131,13 @@ const ApproveLoans = () => {
                             <div className="summary-row"><span>Applicant:</span> <strong>{selectedLoan.fullName}</strong></div>
                             <div className="summary-row"><span>Loan Amount:</span> <strong>₹{Number(selectedLoan.loanAmount).toLocaleString()}</strong></div>
                             <div className="summary-row"><span>Current Balance:</span> <strong>₹{Number(selectedLoan.currentBalance).toLocaleString()}</strong></div>
+
+                            <div style={{ margin: '10px 0', borderTop: '1px solid #E2E8F0', borderBottom: '1px solid #E2E8F0', padding: '10px 0' }}>
+                                <div className="summary-row" style={{ fontSize: '0.85rem', color: '#64748B' }}><span>Total Applied:</span> <strong>{selectedLoan.totalLoansApplied}</strong></div>
+                                <div className="summary-row" style={{ fontSize: '0.85rem', color: '#16A34A' }}><span>Approved:</span> <strong>{selectedLoan.loansApproved}</strong></div>
+                                <div className="summary-row" style={{ fontSize: '0.85rem', color: '#EF4444' }}><span>Rejected:</span> <strong>{selectedLoan.loansRejected}</strong></div>
+                            </div>
+
                             <div className="summary-row total">
                                 <span>New Balance:</span>
                                 <strong style={{ color: '#16A34A' }}>

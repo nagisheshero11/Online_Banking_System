@@ -3,7 +3,10 @@ import { FaPaperPlane, FaCheckCircle, FaExclamationCircle, FaUserCheck } from 'r
 import { transferMoney, getAccountDetails, verifyAccount } from '../../services/accountAPI';
 import './styles/TransferMoney.css';
 
+import { useToast } from '../../context/ToastContext';
+
 const AccountTransfer = () => {
+    const { showToast } = useToast();
     const [receiverAccount, setReceiverAccount] = useState('');
     const [transferAmount, setTransferAmount] = useState('');
     const [description, setDescription] = useState('');
@@ -62,23 +65,23 @@ const AccountTransfer = () => {
         e.preventDefault();
 
         if (!receiverAccount) {
-            alert("Please enter receiver's account number");
+            showToast("Please enter receiver's account number", 'error');
             return;
         }
         if (verificationStatus === 'invalid') {
-            alert("Please enter a valid receiver account number");
+            showToast("Please enter a valid receiver account number", 'error');
             return;
         }
         if (!transferAmount || parseFloat(transferAmount) <= 0) {
-            alert("Please enter a valid transfer amount");
+            showToast("Please enter a valid transfer amount", 'error');
             return;
         }
         if (parseFloat(transferAmount) > availableBalance) {
-            alert("Insufficient balance for this transfer");
+            showToast("Insufficient balance for this transfer", 'error');
             return;
         }
         if (receiverAccount === userAccount) {
-            alert("Cannot transfer to your own account");
+            showToast("Cannot transfer to your own account", 'error');
             return;
         }
 
@@ -92,6 +95,7 @@ const AccountTransfer = () => {
 
             const response = await transferMoney(transferData);
             setSuccess(`Transferred ₹${response.amount} to ${response.toAccountNumber}`);
+            showToast(`Transferred ₹${response.amount} to ${response.toAccountNumber}`, 'success');
             setAvailableBalance(response.fromBalanceAfter);
             setReceiverAccount('');
             setTransferAmount('');
@@ -103,7 +107,7 @@ const AccountTransfer = () => {
         } catch (error) {
             console.error("Transfer failed:", error);
             const errMsg = error.response?.data || "Transfer failed. Please try again.";
-            alert(`❌ ${errMsg}`);
+            showToast(`❌ ${errMsg}`, 'error');
         } finally {
             setLoading(false);
         }

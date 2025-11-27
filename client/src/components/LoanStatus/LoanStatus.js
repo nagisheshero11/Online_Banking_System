@@ -28,9 +28,10 @@ const LoanStatus = () => {
   }, []);
 
   /* ------------------- Summary Calculations ------------------- */
-  const approvedLoans = loans.filter((l) => l.status === "APPROVED");
+  const approvedLoans = loans.filter((l) => l.status === "APPROVED" || l.status === "COMPLETED");
   const pendingLoans = loans.filter((l) => l.status === "PENDING");
   const rejectedLoans = loans.filter((l) => l.status === "REJECTED");
+  const completedLoans = loans.filter((l) => l.status === "COMPLETED");
 
   const totalApprovedAmount = approvedLoans
     .reduce((sum, l) => sum + Number(l.loanAmount), 0)
@@ -135,6 +136,7 @@ const LoanStatus = () => {
                         className={`zen-status-badge ${loan.status.toLowerCase()}`}
                       >
                         {loan.status === 'APPROVED' && <FaCheckCircle />}
+                        {loan.status === 'COMPLETED' && <FaCheckCircle />}
                         {loan.status === 'PENDING' && <FaClock />}
                         {loan.status === 'REJECTED' && <FaTimesCircle />}
                         {loan.status}

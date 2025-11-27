@@ -1,7 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { FaUser, FaEnvelope, FaPhone, FaHome, FaCreditCard } from 'react-icons/fa';
 
+import { useToast } from '../../context/ToastContext';
+
 const ApplyCardForm = ({ selectedCard, cardOptions = [], onChangeCard, onSubmit, onCancel }) => {
+    const { showToast } = useToast();
     const [form, setForm] = useState({ fullName: '', email: '', phone: '', address: '' });
     const nameRef = useRef(null);
 
@@ -16,7 +19,7 @@ const ApplyCardForm = ({ selectedCard, cardOptions = [], onChangeCard, onSubmit,
         e.preventDefault();
         const { fullName, email, phone, address } = form;
         if (!fullName || !email || !phone || !address) {
-            alert('Please fill all required fields.');
+            showToast('Please fill all required fields.', 'error');
             return;
         }
         onSubmit({ ...form, cardType: selectedCard.id });

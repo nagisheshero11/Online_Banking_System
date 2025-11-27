@@ -4,6 +4,7 @@ import ApplyCardForm from '../ApplyCard/ApplyCardForm';
 import { getMyCards, applyForCard, blockCard, unblockCard, setCardPin, simulateTransaction, generateBill } from '../../services/cardAPI';
 import { getUserProfile } from '../../services/profileAPI';
 import './styles/Cards.css';
+import { useToast } from '../../context/ToastContext';
 
 // Initial state is empty, fetched from API
 const initialOwned = [];
@@ -36,6 +37,7 @@ const availableCards = [
 ];
 
 const Cards = () => {
+    const { showToast } = useToast();
     const [ownedCards, setOwnedCards] = useState(initialOwned);
     const [selectedCardIndex, setSelectedCardIndex] = useState(null);
     const [isFlipped, setIsFlipped] = useState(false);
@@ -161,22 +163,22 @@ const Cards = () => {
             }
             await fetchCards(); // Refresh
         } catch (err) {
-            alert("Failed to update card status");
+            showToast("Failed to update card status", 'error');
         }
     };
 
     const handleSetPin = async () => {
         if (!newPin || newPin.length !== 4) {
-            alert("PIN must be 4 digits");
+            showToast("PIN must be 4 digits", 'error');
             return;
         }
         try {
             await setCardPin(selectedCard.id, newPin);
-            alert("PIN set successfully!");
+            showToast("PIN set successfully!", 'success');
             setShowPinModal(false);
             setNewPin('');
         } catch (err) {
-            alert("Failed to set PIN");
+            showToast("Failed to set PIN", 'error');
         }
     };
 
@@ -185,19 +187,19 @@ const Cards = () => {
         if (!amount) return;
         try {
             await simulateTransaction(selectedCard.id, amount);
-            alert("Transaction Successful!");
+            showToast("Transaction Successful!", 'success');
             fetchCards();
         } catch (err) {
-            alert("Transaction Failed: " + (err.response?.data?.message || err.message));
+            showToast("Transaction Failed: " + (err.response?.data?.message || err.message), 'error');
         }
     };
 
     const handleGenerateBill = async () => {
         try {
             await generateBill(selectedCard.id);
-            alert("Bill Generated Successfully! Check 'Pay Bills' section.");
+            showToast("Bill Generated Successfully! Check 'Pay Bills' section.", 'success');
         } catch (err) {
-            alert("Bill Generation Failed: " + (err.response?.data?.message || err.message));
+            showToast("Bill Generation Failed: " + (err.response?.data?.message || err.message), 'error');
         }
     };
 
@@ -221,11 +223,9 @@ const Cards = () => {
                 fetchCards(); // Refresh list (though it might be pending)
             }, 2000);
         } catch (err) {
-            alert("Application failed: " + err.message);
+            showToast("Application failed: " + err.message, 'error');
         }
     };
-
-    // ... (keep other functions like handleBlockToggle)
 
     return (
         <div className="cards-page-container">

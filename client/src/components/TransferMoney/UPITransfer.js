@@ -4,7 +4,10 @@ import { FaQrcode, FaSyncAlt, FaCheckCircle, FaExclamationCircle, FaUserCheck } 
 import { verifyAccount } from '../../services/accountAPI';
 import './styles/TransferMoney.css';
 
+import { useToast } from '../../context/ToastContext';
+
 const UPITransfer = () => {
+    const { showToast } = useToast();
     const [identifier, setIdentifier] = useState(""); // Account No or Username
     const [amount, setAmount] = useState("");
     const [remarks, setRemarks] = useState("");
@@ -46,12 +49,12 @@ const UPITransfer = () => {
     const handleGenerateQR = (e) => {
         e.preventDefault();
         if (!identifier || !amount) {
-            alert("Please enter Account Number/Username and Amount");
+            showToast("Please enter Account Number/Username and Amount", 'error');
             return;
         }
 
         if (verificationStatus === 'invalid') {
-            alert("Please enter a valid account number or username");
+            showToast("Please enter a valid account number or username", 'error');
             return;
         }
 

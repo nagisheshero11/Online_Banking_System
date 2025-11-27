@@ -22,4 +22,9 @@ public class LoanApplicationResponse {
     private String fullName;
     private String accountNumber;
     private BigDecimal currentBalance;
+
+    // User Loan History
+    private Long totalLoansApplied;
+    private Long loansApproved;
+    private Long loansRejected;
 }

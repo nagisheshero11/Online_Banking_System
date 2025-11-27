@@ -12,6 +12,7 @@ import {
 } from 'react-icons/fa';
 import './styles/Profile.css';
 import { fetchUserProfile, updateUserProfile } from '../../services/profileAPI';
+import { useToast } from '../../context/ToastContext';
 
 // ✅ Reusable Profile Item Component
 const ProfileDetailItem = ({
@@ -55,7 +56,7 @@ const Profile = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [successMsg, setSuccessMsg] = useState('');
+    const { showToast } = useToast();
 
     // ✅ Fetch user profile on mount
     useEffect(() => {
@@ -65,6 +66,7 @@ const Profile = () => {
                 setFormData(data);
             } catch (error) {
                 console.error('Failed to load profile', error);
+                showToast('Failed to load profile data.', 'error');
             } finally {
                 setLoading(false);
             }
@@ -85,12 +87,11 @@ const Profile = () => {
                 lastName: formData.lastName,
                 phoneNumber: formData.phoneNumber
             });
-            setSuccessMsg('Profile updated successfully!');
+            showToast('Profile updated successfully!', 'success');
             setFormData(updated);
             setIsEditing(false);
-            setTimeout(() => setSuccessMsg(''), 3000);
         } catch (error) {
-            alert(error.message || 'Error updating profile');
+            showToast(error.message || 'Error updating profile', 'error');
         }
     };
 
@@ -139,12 +140,6 @@ const Profile = () => {
                         )}
                     </div>
                 </div>
-
-                {successMsg && (
-                    <div className="zen-success-msg">
-                        <FaCheckCircle /> {successMsg}
-                    </div>
-                )}
 
                 {/* Details Grid */}
                 <div className="zen-details-grid">
