@@ -31,6 +31,7 @@ public class AdminUserController {
         List<User> users = userService.searchUsers(search);
 
         List<UserResponseDTO> response = users.stream()
+                .filter(user -> "USER".equals(user.getRole())) // Filter only USER role
                 .map(user -> {
                     Account account = user.getAccount();
                     // Fallback: if relationship is null, fetch by username
@@ -39,18 +40,18 @@ public class AdminUserController {
                     }
 
                     return UserResponseDTO.builder()
-                        .id(user.getId())
-                        .fullName(user.getFirstName() + " " + user.getLastName())
-                        .username(user.getUsername())
-                        .email(user.getEmail())
-                        .phoneNumber(user.getPhoneNumber())
-                        .panNumber(user.getPanNumber())
-                        .accountNumber(user.getAccountNumber())
-                        .balance(account != null ? account.getBalance() : null)
-                        .accountType(account != null ? account.getAccountType() : "N/A")
-                        .role(user.getRole())
-                        .createdAt(user.getCreatedAt())
-                        .build();
+                            .id(user.getId())
+                            .fullName(user.getFirstName() + " " + user.getLastName())
+                            .username(user.getUsername())
+                            .email(user.getEmail())
+                            .phoneNumber(user.getPhoneNumber())
+                            .panNumber(user.getPanNumber())
+                            .accountNumber(user.getAccountNumber())
+                            .balance(account != null ? account.getBalance() : null)
+                            .accountType(account != null ? account.getAccountType() : "N/A")
+                            .role(user.getRole())
+                            .createdAt(user.getCreatedAt())
+                            .build();
                 })
                 .collect(Collectors.toList());
 

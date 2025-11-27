@@ -85,7 +85,8 @@ const Cards = () => {
                 cvv: c.cvv,
                 creditLimit: c.creditLimit,
                 usedAmount: c.usedAmount,
-                availableLimit: c.creditLimit ? c.creditLimit - c.usedAmount : 0
+                availableLimit: c.creditLimit ? c.creditLimit - c.usedAmount : 0,
+                rawType: c.cardType // Store raw type for comparison
             }));
             setOwnedCards(formatted);
         } catch (err) {
@@ -410,27 +411,37 @@ const Cards = () => {
                             <div>
                                 <h2 style={{ marginBottom: '20px' }}>Select a Card</h2>
                                 <div style={{ display: 'grid', gap: '16px' }}>
-                                    {availableCards.map(c => (
-                                        <div
-                                            key={c.id}
-                                            onClick={() => handleApplySelect(c.id)}
-                                            style={{
-                                                padding: '16px',
-                                                border: '1px solid #E2E8F0',
-                                                borderRadius: '12px',
-                                                cursor: 'pointer',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                gap: '16px'
-                                            }}
-                                        >
-                                            <div className={`zen-card ${c.color}`} style={{ width: '60px', height: '40px', borderRadius: '6px', padding: '0' }}></div>
-                                            <div>
-                                                <div style={{ fontWeight: '700' }}>{c.name}</div>
-                                                <div style={{ fontSize: '0.9rem', color: '#64748B' }}>{c.type} • {c.fee}</div>
+                                    {availableCards.map(c => {
+                                        // Check if user already owns this card type (and not rejected)
+                                        const isOwned = ownedCards.some(owned => owned.rawType === c.id && owned.status !== 'Rejected');
+
+                                        return (
+                                            <div
+                                                key={c.id}
+                                                onClick={() => !isOwned && handleApplySelect(c.id)}
+                                                style={{
+                                                    padding: '16px',
+                                                    border: '1px solid #E2E8F0',
+                                                    borderRadius: '12px',
+                                                    cursor: isOwned ? 'not-allowed' : 'pointer',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: '16px',
+                                                    opacity: isOwned ? 0.5 : 1,
+                                                    background: isOwned ? '#F1F5F9' : 'white'
+                                                }}
+                                                title={isOwned ? "You already have this card" : ""}
+                                            >
+                                                <div className={`zen-card ${c.color}`} style={{ width: '60px', height: '40px', borderRadius: '6px', padding: '0', filter: isOwned ? 'grayscale(100%)' : 'none' }}></div>
+                                                <div>
+                                                    <div style={{ fontWeight: '700', color: isOwned ? '#94A3B8' : 'inherit' }}>
+                                                        {c.name} {isOwned && <span style={{ fontSize: '0.8rem', color: '#DC2626', marginLeft: '8px' }}>(Owned)</span>}
+                                                    </div>
+                                                    <div style={{ fontSize: '0.9rem', color: '#64748B' }}>{c.type} • {c.fee}</div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    ))}
+                                        );
+                                    })}
                                 </div>
                             </div>
                         )}

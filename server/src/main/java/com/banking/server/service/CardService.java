@@ -24,6 +24,15 @@ public class CardService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        // Check if user already has a card of the requested type (PENDING, ACTIVE, or
+        // BLOCKED)
+        boolean hasExistingCardOfType = cardRepository.findByUserId(user.getId()).stream()
+                .anyMatch(c -> c.getCardType().equals(cardType) && !c.getStatus().equals("REJECTED"));
+
+        if (hasExistingCardOfType) {
+            throw new RuntimeException("You already have an active or pending application for this card type.");
+        }
+
         // Generate mock card details
         String cardNumber = generateCardNumber();
         String cvv = String.format("%03d", new Random().nextInt(1000));

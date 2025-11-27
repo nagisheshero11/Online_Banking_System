@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import AddBillModal from "./AddBillModal";
+import UserDetailsModal from "./UserDetailsModal";
 import { getAllUsers } from "./services/userAPI";
 import { FaSearch, FaUserCircle, FaMoneyBillWave, FaIdCard } from "react-icons/fa";
 import "./styles/UserManagement.css";
@@ -13,6 +14,7 @@ const UserManagement = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [debouncedSearch, setDebouncedSearch] = useState("");
     const [selectedUserForBill, setSelectedUserForBill] = useState(null); // For Add Bill Modal
+    const [selectedUser, setSelectedUser] = useState(null); // For User Details Modal
 
     // Debounce search input
     useEffect(() => {
@@ -62,6 +64,11 @@ const UserManagement = () => {
 
             {/* Users Table */}
             <div className="table-container">
+                <div style={{ padding: '12px 20px', borderBottom: '1px solid #E2E8F0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <h3 style={{ margin: 0, fontSize: '1rem', color: '#475569' }}>Total Users</h3>
+                    <span className="badge" style={{ background: '#EFF6FF', color: '#3B82F6', fontSize: '0.9rem' }}>{users.length}</span>
+                </div>
+
                 {loading ? (
                     <div className="loading-state">Loading users...</div>
                 ) : users.length === 0 ? (
@@ -75,14 +82,13 @@ const UserManagement = () => {
                                 <th>Account Details</th>
                                 <th>Balance</th>
                                 <th>Role</th>
-                                <th>Role</th>
                                 <th>Joined</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {users.map((user) => (
-                                <tr key={user.id}>
+                                <tr key={user.id} onClick={() => setSelectedUser(user)} style={{ cursor: 'pointer' }} className="user-row">
                                     <td>
                                         <div className="user-cell">
                                             <div className="user-avatar">
@@ -123,7 +129,10 @@ const UserManagement = () => {
                                     <td>
                                         <button
                                             className="action-btn add-bill-btn"
-                                            onClick={() => setSelectedUserForBill(user)}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setSelectedUserForBill(user);
+                                            }}
                                         >
                                             <FaMoneyBillWave /> Add Bill
                                         </button>
@@ -143,6 +152,14 @@ const UserManagement = () => {
                     onSuccess={() => {
                         showToast("Bill created successfully!", 'success');
                     }}
+                />
+            )}
+
+            {/* User Details Modal */}
+            {selectedUser && (
+                <UserDetailsModal
+                    user={selectedUser}
+                    onClose={() => setSelectedUser(null)}
                 />
             )}
         </div>
