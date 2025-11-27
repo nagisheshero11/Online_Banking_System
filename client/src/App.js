@@ -15,6 +15,7 @@ import PayBills from './components/PayBills/PayBills';
 import PayEMI from './components/PayBills/PayEMI';
 import Profile from './components/Profile/Profile';
 import Cards from './components/Cards/Cards';
+import Analytics from './components/Analytics/Analytics';
 
 // Admin Components
 import AdminLayout from './admin/AdminLayout';
@@ -50,6 +51,7 @@ function App() {
               {/* User nested routes */}
               <Route path="account-details" element={<AccountDetails />} />
               <Route path="transactions" element={<Transaction />} />
+              <Route path="analytics" element={<Analytics />} />
               <Route path="transfer-money" element={<TransferMoney />} />
               <Route path="pay-bills" element={<PayBills />} />
               <Route path="pay-emi" element={<PayEMI />} />
