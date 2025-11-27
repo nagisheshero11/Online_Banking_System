@@ -1,7 +1,7 @@
 // client/src/services/authAPI.js
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:6060/api/user";
+const API_BASE_URL = "/api/user";
 
 /* -------------------------
    Token helper

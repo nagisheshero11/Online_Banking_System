@@ -1,7 +1,7 @@
 // client/src/services/transactionAPI.js
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:6060/api/account";
+const API_BASE_URL = "/api/account";
 
 /**
  * Helper — Get JWT token

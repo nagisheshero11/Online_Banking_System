@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:6060/api/admin/cards';
+const API_URL = "/api/admin/cards";
 
 const getToken = () => localStorage.getItem('token');
 

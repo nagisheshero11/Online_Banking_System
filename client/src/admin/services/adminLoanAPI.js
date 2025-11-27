@@ -2,7 +2,7 @@
 
 import axios from "axios";
 
-const API_URL = "http://localhost:6060/api/admin/loans";
+const API_URL = "/api/admin/loans";
 const getToken = () => localStorage.getItem("token");
 
 /* ---------------------------------------------------------

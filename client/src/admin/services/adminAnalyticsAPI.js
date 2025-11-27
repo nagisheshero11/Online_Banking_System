@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:6060/api/admin/analytics";
+const API_BASE_URL = "/api/admin/analytics";
 
 // Helper: Get JWT token from localStorage
 function getToken() {
