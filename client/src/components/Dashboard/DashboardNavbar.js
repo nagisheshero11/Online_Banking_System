@@ -71,7 +71,7 @@ const DashboardNavbar = () => {
 
                 <div className="nav-divider"></div>
 
-                <button className="logout-btn" onClick={handleLogout}>
+                <button className="dashboard-logout-btn" onClick={handleLogout}>
                     <FaSignOutAlt />
                     <span>Logout</span>
                 </button>
