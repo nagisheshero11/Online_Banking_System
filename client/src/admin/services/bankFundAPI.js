@@ -1,32 +1,18 @@
-import axios from "axios";
+import api from "../../services/api";
 
-const API_URL = "http://localhost:6060/api/admin/bank-funds";
-
-/* ------------------------- TOKEN HELPER ------------------------- */
-const getToken = () => localStorage.getItem("token");
+const API_URL = "/admin/bank-funds";
 
 /* ------------------------- GET BANK FUNDS ----------------------- */
 /*
   GET /api/admin/bank-funds
 */
 export const getBankFunds = async () => {
-    const token = getToken();
-    if (!token) throw new Error("No token found");
-
     try {
-        const res = await axios({
-            method: "GET",
-            url: API_URL,
-            headers: {
-                Authorization: `Bearer ${token}`,
-                Accept: "application/json",
-            },
-        });
-
+        const res = await api.get(API_URL);
         return res.data;
     } catch (err) {
         console.error("❌ Get Bank Funds Error:", err?.response || err);
-        throw new Error(err?.response?.data || "Failed to fetch bank funds");
+        throw err;
     }
 };
 
@@ -35,22 +21,11 @@ export const getBankFunds = async () => {
   GET /api/admin/bank-funds/history
 */
 export const getBankFundHistory = async () => {
-    const token = getToken();
-    if (!token) throw new Error("No token found");
-
     try {
-        const res = await axios({
-            method: "GET",
-            url: `${API_URL}/history`,
-            headers: {
-                Authorization: `Bearer ${token}`,
-                Accept: "application/json",
-            },
-        });
-
+        const res = await api.get(`${API_URL}/history`);
         return res.data;
     } catch (err) {
         console.error("❌ Get History Error:", err?.response || err);
-        throw new Error(err?.response?.data || "Failed to fetch history");
+        throw err;
     }
 };
