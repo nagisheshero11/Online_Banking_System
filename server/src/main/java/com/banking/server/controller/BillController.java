@@ -8,6 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/bills")
@@ -42,12 +43,22 @@ public class BillController {
      */
     @GetMapping("/loan/{loanId}")
     public ResponseEntity<?> getBillsByLoan(@PathVariable Long loanId,
-                                            Authentication authentication) {
+            Authentication authentication) {
 
         String username = authentication.getName();
 
         List<Bill> bills = billService.getBillsByLoan(loanId, username);
 
         return ResponseEntity.ok(bills);
+    }
+
+    @PostMapping("/pay/card")
+    public ResponseEntity<?> payBillWithCard(@RequestBody Map<String, Object> payload, Authentication authentication) {
+        Long billId = Long.valueOf(payload.get("billId").toString());
+        Long cardId = Long.valueOf(payload.get("cardId").toString());
+        String pin = payload.get("pin").toString();
+
+        Bill bill = billService.payBillWithCard(billId, cardId, pin, authentication.getName());
+        return ResponseEntity.ok(bill);
     }
 }

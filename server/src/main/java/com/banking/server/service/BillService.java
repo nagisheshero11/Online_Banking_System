@@ -217,4 +217,109 @@ public class BillService {
 
         return billRepository.save(bill);
     }
+
+    @Transactional
+    public Bill payBillWithCard(Long billId, Long cardId, String pin, String username) {
+        // 1. Fetch Bill
+        Bill bill = billRepository.findById(billId)
+                .orElseThrow(() -> new RuntimeException("Bill not found"));
+
+        if (!bill.getUsername().equals(username)) {
+            throw new RuntimeException("Unauthorized to pay this bill");
+        }
+
+        if (!"UNPAID".equalsIgnoreCase(bill.getStatus())) {
+            throw new RuntimeException("Bill is not unpaid");
+        }
+
+        // 2. Fetch Card
+        com.banking.server.entity.Card card = cardRepository.findById(cardId)
+                .orElseThrow(() -> new RuntimeException("Card not found"));
+
+        if (!card.getUser().getUsername().equals(username)) {
+            throw new RuntimeException("Card does not belong to user");
+        }
+
+        if (!"ACTIVE".equals(card.getStatus())) {
+            throw new RuntimeException("Card is not active");
+        }
+
+        // 3. Validate PIN
+        if (card.getPin() == null || !card.getPin().equals(pin)) {
+            throw new RuntimeException("Invalid PIN");
+        }
+
+        // 4. Validate Limits
+        BigDecimal amount = bill.getAmount();
+
+        // Per Transaction Limit
+        if (card.getPerTransactionLimit() != null && amount.compareTo(card.getPerTransactionLimit()) > 0) {
+            throw new RuntimeException("Amount exceeds per-transaction limit");
+        }
+
+        // Daily Limit
+        LocalDate today = LocalDate.now();
+        if (!today.equals(card.getLastUsageDate())) {
+            card.setDailyUsage(BigDecimal.ZERO);
+            card.setLastUsageDate(today);
+        }
+        if (card.getDailyLimit() != null && card.getDailyUsage().add(amount).compareTo(card.getDailyLimit()) > 0) {
+            throw new RuntimeException("Daily limit exceeded");
+        }
+
+        // 5. Process Payment based on Card Type
+        if (card.getCardType().contains("CREDIT")) {
+            // Credit Card Logic
+            if (card.getCreditLimit() != null
+                    && card.getUsedAmount().add(amount).compareTo(card.getCreditLimit()) > 0) {
+                throw new RuntimeException("Insufficient credit limit");
+            }
+            card.setUsedAmount(card.getUsedAmount().add(amount));
+        } else {
+            // Debit Card Logic
+            Account userAccount = card.getUser().getAccount();
+            if (userAccount == null) {
+                throw new RuntimeException("No linked account found for this debit card");
+            }
+            // Lock account for update
+            Account lockedAccount = accountRepository.findByAccountNumberForUpdate(userAccount.getAccountNumber())
+                    .orElseThrow(() -> new RuntimeException("Account not found"));
+
+            if (lockedAccount.getBalance().compareTo(amount) < 0) {
+                throw new RuntimeException("Insufficient funds in linked account");
+            }
+            lockedAccount.setBalance(lockedAccount.getBalance().subtract(amount));
+            accountRepository.save(lockedAccount);
+        }
+
+        // Update Card Usage Stats
+        card.setDailyUsage(card.getDailyUsage().add(amount));
+        cardRepository.save(card);
+
+        // 6. Mark Bill as Paid
+        bill.setStatus("PAID");
+        bill.setPaid(true);
+        Bill savedBill = billRepository.save(bill);
+
+        // 7. Create Transaction Record
+        Transaction transaction = Transaction.builder()
+                .fromAccountNumber(card.getCardNumber())
+                .toAccountNumber("BILL_PAYMENT")
+                .amount(amount)
+                .remarks("Bill Payment #" + bill.getId() + " via Card "
+                        + card.getCardNumber().substring(card.getCardNumber().length() - 4))
+                .status("COMPLETED")
+                .fromBalanceAfter(card.getCardType().contains("CREDIT")
+                        ? card.getCreditLimit().subtract(card.getUsedAmount())
+                        : card.getUser().getAccount().getBalance())
+                .toBalanceAfter(null)
+                .build();
+
+        transactionRepository.save(transaction);
+
+        // Credit Bank Funds
+        bankFundService.creditFunds(amount, bill.getBillType() + " Payment via Card - Bill #" + bill.getId());
+
+        return savedBill;
+    }
 }

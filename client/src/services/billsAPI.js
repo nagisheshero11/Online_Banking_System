@@ -79,3 +79,30 @@ export const getBillsByLoan = async (loanId) => {
         throw new Error(err?.response?.data || "Failed to fetch loan bills");
     }
 };
+
+/* ------------------------- PAY BILL WITH CARD ------------------- */
+/*
+  POST /api/bills/pay/card
+  Body: { billId, cardId, pin }
+*/
+export const payBillWithCard = async (billId, cardId, pin) => {
+    const token = getToken();
+    if (!token) throw new Error("No token found");
+
+    try {
+        const res = await axios({
+            method: "POST",
+            url: `${API_URL}/pay/card`,
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+            data: { billId, cardId, pin },
+        });
+
+        return res.data;
+    } catch (err) {
+        console.error("❌ Pay Bill With Card Error:", err?.response || err);
+        throw new Error(err?.response?.data || "Failed to pay bill with card");
+    }
+};

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { FaBolt, FaWifi, FaMobileAlt, FaFire, FaCheckCircle, FaUniversity, FaCreditCard } from "react-icons/fa";
 import { getMyBills, payBill, getBillsByLoan } from "../../services/billsAPI";
+import BillPaymentModal from "./BillPaymentModal";
 import "./styles/PayBills.css";
 
 const PayBills = () => {
@@ -42,21 +43,11 @@ const PayBills = () => {
         setSelectedBill(bill);
     };
 
-    const confirmPayment = async () => {
-        if (!selectedBill) return;
-        setPayingBillId(selectedBill.id);
-
-        try {
-            await payBill(selectedBill.id);
-            await fetchBills();
-            setSuccessMsg("Bill paid successfully! Transaction recorded.");
-            setTimeout(() => setSuccessMsg(null), 3000);
-            setSelectedBill(null); // Close modal
-        } catch (err) {
-            alert(err.message || "Payment failed");
-        } finally {
-            setPayingBillId(null);
-        }
+    const handlePaymentSuccess = async () => {
+        await fetchBills();
+        setSuccessMsg("Bill paid successfully! Transaction recorded.");
+        setTimeout(() => setSuccessMsg(null), 3000);
+        setSelectedBill(null);
     };
 
     const handlePayAll = async () => {
@@ -185,36 +176,11 @@ const PayBills = () => {
 
             {/* Payment Summary Modal */}
             {selectedBill && (
-                <div className="modal-overlay">
-                    <div className="modal-content">
-                        <h3>Payment Summary</h3>
-                        <div className="summary-row">
-                            <span>Bill Type:</span>
-                            <strong>{selectedBill.billType.replace('_', ' ')}</strong>
-                        </div>
-                        <div className="summary-row">
-                            <span>Due Date:</span>
-                            <strong>{selectedBill.dueDate}</strong>
-                        </div>
-                        {selectedBill.minimumDue && (
-                            <div className="summary-row">
-                                <span>Minimum Due:</span>
-                                <strong>{currency(selectedBill.minimumDue)}</strong>
-                            </div>
-                        )}
-                        <div className="summary-row total">
-                            <span>Total Amount:</span>
-                            <strong>{currency(selectedBill.amount)}</strong>
-                        </div>
-
-                        <div className="modal-actions">
-                            <button className="cancel-btn" onClick={() => setSelectedBill(null)}>Cancel</button>
-                            <button className="confirm-btn" onClick={confirmPayment} disabled={payingBillId}>
-                                {payingBillId ? "Processing..." : "Confirm Payment"}
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                <BillPaymentModal
+                    bill={selectedBill}
+                    onClose={() => setSelectedBill(null)}
+                    onSuccess={handlePaymentSuccess}
+                />
             )}
         </div>
     );
