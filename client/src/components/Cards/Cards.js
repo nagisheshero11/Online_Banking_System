@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaPlus, FaBan, FaInfoCircle, FaKey, FaTimes, FaCreditCard, FaCheckCircle } from 'react-icons/fa';
+import { FaPlus, FaBan, FaInfoCircle, FaKey, FaTimes, FaCreditCard, FaCheckCircle, FaHeartBroken } from 'react-icons/fa';
 import ApplyCardForm from '../ApplyCard/ApplyCardForm';
 import { getMyCards, applyForCard, blockCard, unblockCard, setCardPin, simulateTransaction, generateBill } from '../../services/cardAPI';
 import { getUserProfile } from '../../services/profileAPI';
@@ -245,69 +245,80 @@ const Cards = () => {
 
             {/* Card Carousel */}
             <section className="cards-carousel-section">
-                <div className="cards-scroll-container">
-                    {ownedCards.map((card, index) => (
-                        <div
-                            key={card.id}
-                            className={`card-visual-wrapper ${index === selectedCardIndex ? 'selected' : ''}`}
-                            onClick={() => handleSelectCard(index)}
-                            onDoubleClick={() => handleFlipCard(index)}
-                        >
-                            <div className={`zen-card-inner ${index === selectedCardIndex && isFlipped ? 'flipped' : ''}`}>
-                                {/* FRONT FACE */}
-                                <div className={`zen-card-front ${card.color}`}>
-                                    <div className="card-brand">{card.brand}</div>
-                                    <div className="card-chip"></div>
-                                    <div className="card-number">{card.number}</div>
-                                    <div className="card-footer">
-                                        <div>
-                                            <div className="card-holder-name">{userFullName || card.holder}</div>
+                {ownedCards.length === 0 ? (
+                    <div className="no-cards-placeholder" style={{
+                        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                        height: '240px', width: '100%', opacity: 0.5, color: '#94A3B8'
+                    }}>
+                        <FaHeartBroken style={{ fontSize: '4rem', marginBottom: '16px' }} />
+                        <h3>No Cards Available</h3>
+                        <p>Apply for a new card to get started</p>
+                    </div>
+                ) : (
+                    <div className="cards-scroll-container">
+                        {ownedCards.map((card, index) => (
+                            <div
+                                key={card.id}
+                                className={`card-visual-wrapper ${index === selectedCardIndex ? 'selected' : ''}`}
+                                onClick={() => handleSelectCard(index)}
+                                onDoubleClick={() => handleFlipCard(index)}
+                            >
+                                <div className={`zen-card-inner ${index === selectedCardIndex && isFlipped ? 'flipped' : ''}`}>
+                                    {/* FRONT FACE */}
+                                    <div className={`zen-card-front ${card.color}`}>
+                                        <div className="card-brand">{card.brand}</div>
+                                        <div className="card-chip"></div>
+                                        <div className="card-number">{card.number}</div>
+                                        <div className="card-footer">
+                                            <div>
+                                                <div className="card-holder-name">{userFullName || card.holder}</div>
+                                            </div>
+                                            <div className="card-expiry">{card.expiry}</div>
                                         </div>
-                                        <div className="card-expiry">{card.expiry}</div>
+                                        {card.status === 'Pending' && (
+                                            <div style={{
+                                                position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+                                                background: 'rgba(0,0,0,0.6)', borderRadius: '16px',
+                                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                color: 'white', fontWeight: 'bold', fontSize: '1.2rem',
+                                                backdropFilter: 'blur(2px)'
+                                            }}>
+                                                PENDING APPROVAL
+                                            </div>
+                                        )}
+                                        {card.status === 'Rejected' && (
+                                            <div style={{
+                                                position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+                                                background: 'rgba(220, 38, 38, 0.8)', borderRadius: '16px',
+                                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                color: 'white', fontWeight: 'bold', fontSize: '1.2rem',
+                                                backdropFilter: 'blur(2px)'
+                                            }}>
+                                                CARD REJECTED
+                                            </div>
+                                        )}
                                     </div>
-                                    {card.status === 'Pending' && (
-                                        <div style={{
-                                            position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-                                            background: 'rgba(0,0,0,0.6)', borderRadius: '16px',
-                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                            color: 'white', fontWeight: 'bold', fontSize: '1.2rem',
-                                            backdropFilter: 'blur(2px)'
-                                        }}>
-                                            PENDING APPROVAL
-                                        </div>
-                                    )}
-                                    {card.status === 'Rejected' && (
-                                        <div style={{
-                                            position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-                                            background: 'rgba(220, 38, 38, 0.8)', borderRadius: '16px',
-                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                            color: 'white', fontWeight: 'bold', fontSize: '1.2rem',
-                                            backdropFilter: 'blur(2px)'
-                                        }}>
-                                            CARD REJECTED
-                                        </div>
-                                    )}
-                                </div>
 
-                                {/* BACK FACE */}
-                                <div className={`zen-card-back ${card.color}`}>
-                                    <div className="card-magnetic-strip"></div>
-                                    <div className="card-signature-row">
-                                        <div className="card-signature"></div>
-                                        <div className="card-cvv-box" onClick={handleCvvClick} style={{ cursor: 'pointer' }}>
-                                            <span className="cvv-label">CVV</span>
-                                            <span className="cvv-value">{cvvVisible ? card.cvv : '•••'}</span>
+                                    {/* BACK FACE */}
+                                    <div className={`zen-card-back ${card.color}`}>
+                                        <div className="card-magnetic-strip"></div>
+                                        <div className="card-signature-row">
+                                            <div className="card-signature"></div>
+                                            <div className="card-cvv-box" onClick={handleCvvClick} style={{ cursor: 'pointer' }}>
+                                                <span className="cvv-label">CVV</span>
+                                                <span className="cvv-value">{cvvVisible ? card.cvv : '•••'}</span>
+                                            </div>
                                         </div>
+                                        <div className="card-back-text">
+                                            This card is property of Bankify. If found, please return to nearest branch.
+                                        </div>
+                                        <div className="card-brand-small">{card.brand}</div>
                                     </div>
-                                    <div className="card-back-text">
-                                        This card is property of Bankify. If found, please return to nearest branch.
-                                    </div>
-                                    <div className="card-brand-small">{card.brand}</div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
+                )}
             </section>
 
             {/* Management Panel */}

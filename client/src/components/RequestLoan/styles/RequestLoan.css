@@ -6,7 +6,7 @@
     margin: 0 auto;
     font-family: 'Manrope', sans-serif;
     color: #1E293B;
-    animation: fadeIn 0.6s ease-out;
+    /* animation: fadeIn 0.6s ease-out; */
 }
 
 @keyframes fadeIn {

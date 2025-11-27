@@ -122,26 +122,38 @@ const RequestLoan = () => {
                         </div>
                     </section>
 
-                    {/* 2. Loan Amount Slider */}
+                    {/* 2. Loan Amount Input */}
                     <section className="control-section">
                         <div className="slider-header">
-                            <label className="section-title">Loan Amount</label>
-                            <span className="slider-value">{formatCurrency(loanAmount)}</span>
+                            <label className="section-title">Loan Amount (₹)</label>
                         </div>
-                        <div className="range-slider-container">
+                        <div className="input-container">
                             <input
-                                type="range"
+                                type="number"
                                 min={MIN_AMOUNT}
                                 max={selectedLoanDetails ? selectedLoanDetails.maxAmount : MAX_AMOUNT}
-                                step={5000}
                                 value={loanAmount}
-                                onChange={(e) => setLoanAmount(Number(e.target.value))}
-                                className="zen-range"
-                                style={{ backgroundSize: `${((loanAmount - MIN_AMOUNT) * 100) / ((selectedLoanDetails ? selectedLoanDetails.maxAmount : MAX_AMOUNT) - MIN_AMOUNT)}% 100%` }}
+                                onChange={(e) => {
+                                    const val = Number(e.target.value);
+                                    setLoanAmount(val);
+                                }}
+                                onBlur={() => {
+                                    let val = loanAmount;
+                                    const max = selectedLoanDetails ? selectedLoanDetails.maxAmount : MAX_AMOUNT;
+                                    if (val < MIN_AMOUNT) val = MIN_AMOUNT;
+                                    if (val > max) val = max;
+                                    setLoanAmount(val);
+                                }}
+                                className="zen-input"
+                                style={{
+                                    width: '100%', padding: '12px', fontSize: '1.2rem',
+                                    borderRadius: '8px', border: '1px solid #E2E8F0',
+                                    marginTop: '8px'
+                                }}
                             />
-                            <div className="slider-labels">
-                                <span>{formatCurrency(MIN_AMOUNT)}</span>
-                                <span>{formatCurrency(selectedLoanDetails ? selectedLoanDetails.maxAmount : MAX_AMOUNT)}</span>
+                            <div className="slider-labels" style={{ marginTop: '8px', color: '#64748B', fontSize: '0.9rem' }}>
+                                <span>Min: {formatCurrency(MIN_AMOUNT)}</span>
+                                <span>Max: {formatCurrency(selectedLoanDetails ? selectedLoanDetails.maxAmount : MAX_AMOUNT)}</span>
                             </div>
                         </div>
                     </section>
