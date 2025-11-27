@@ -9,13 +9,11 @@ import SignupOverlayPage from './components/Auth/SignupOverlayPage';
 import AccountDetails from './components/AccountDetails/AccountDetails';
 import LoanStatus from './components/LoanStatus/LoanStatus';
 import Transaction from './components/Transaction/Transaction';
-import DepositMoney from './components/DepositMoney/DepositMoney';
 import TransferMoney from './components/TransferMoney/TransferMoney';
 import RequestLoan from './components/RequestLoan/RequestLoan';
 import PayBills from './components/PayBills/PayBills';
 import Profile from './components/Profile/Profile';
 import Cards from './components/Cards/Cards';
-import CardPayment from './components/CardPayment/CardPayment';
 
 // Admin Components
 import AdminLayout from './admin/AdminLayout';
@@ -48,11 +46,9 @@ function App() {
             {/* User nested routes */}
             <Route path="account-details" element={<AccountDetails />} />
             <Route path="transactions" element={<Transaction />} />
-            <Route path="deposit-money" element={<DepositMoney />} />
             <Route path="transfer-money" element={<TransferMoney />} />
             <Route path="pay-bills" element={<PayBills />} />
             <Route path="cards" element={<Cards />} />
-            <Route path="card-payment" element={<CardPayment />} />
             <Route path="request-loan" element={<RequestLoan />} />
             <Route path="loan-status" element={<LoanStatus />} />
             <Route path="profile" element={<Profile />} />

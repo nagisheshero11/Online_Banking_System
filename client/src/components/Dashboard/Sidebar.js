@@ -43,11 +43,10 @@ const Sidebar = () => {
         <NavItem icon={FaListAlt} label="Transactions" to="/dashboard/transactions" />
 
         {/* Banking Actions */}
-        <NavItem icon={FaArrowDown} label="Deposit Money" to="/dashboard/deposit-money" />
+        {/* Banking Actions */}
         <NavItem icon={FaPaperPlane} label="Transfer Money" to="/dashboard/transfer-money" />
         <NavItem icon={FaFileInvoiceDollar} label="Pay Bills" to="/dashboard/pay-bills" />
         <NavItem icon={FaCreditCard} label="Cards" to="/dashboard/cards" />
-        <NavItem icon={FaCreditCard} label="Card Payment" to="/dashboard/card-payment" />
 
         {/* Loan Services */}
         <NavItem icon={FaHandHoldingUsd} label="Request Loan" to="/dashboard/request-loan" />
