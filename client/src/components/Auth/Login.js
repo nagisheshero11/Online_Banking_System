@@ -10,6 +10,8 @@ const Login = () => {
     const navigate = useNavigate();
     const { showToast } = useToast();
 
+    const [loginError, setLoginError] = useState('');
+
     // Form state
     const [formData, setFormData] = useState({
         emailOrUsername: '',
@@ -19,12 +21,15 @@ const Login = () => {
     // Handle input change
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+        if (loginError) setLoginError(''); // Clear error on input
     };
 
     // Handle login submit
     const onSubmit = async (e) => {
         e.preventDefault();
         console.log("Login form submitted", formData);
+        setLoginError(''); // Clear previous error
+
         try {
             const data = await login(formData);
             localStorage.setItem("role", data.role);
@@ -35,11 +40,16 @@ const Login = () => {
             } else if (role === "USER") {
                 navigate('/dashboard', { state: { showLoginSuccess: true } });
             } else {
-                showToast("Invalid role received from server", 'error');
+                setLoginError("Invalid role received from server");
             }
 
         } catch (error) {
-            showToast(error.message || 'Login failed!', 'error');
+            // User requested "Invalid Credentials" specifically
+            let msg = error.message || 'Login failed';
+            if (msg.toLowerCase().includes('forbidden') || msg.includes('403') || msg.includes('401')) {
+                msg = 'Invalid Credentials';
+            }
+            setLoginError(msg);
         }
     };
 
@@ -86,6 +96,12 @@ const Login = () => {
                                 onChange={handleChange}
                             />
                         </div>
+
+                        {loginError && (
+                            <div className="login-error-msg">
+                                {loginError}
+                            </div>
+                        )}
 
                         <button type="submit" className="split-btn-primary">
                             Login

@@ -37,9 +37,19 @@ export async function signup(userData) {
         );
         return data;
     } catch (error) {
-        throw new Error(
-            error.response?.data || error.message || "Signup failed"
-        );
+        let msg = "Signup failed";
+        if (error.response) {
+            if (typeof error.response.data === 'string') {
+                msg = error.response.data;
+            } else if (error.response.data?.message) {
+                msg = error.response.data.message;
+            } else if (error.response.data?.error) {
+                msg = error.response.data.error;
+            }
+        } else if (error.message) {
+            msg = error.message;
+        }
+        throw new Error(msg);
     }
 }
 
@@ -65,11 +75,20 @@ export async function login(credentials) {
 
         return data; // {token, username, email, role}
     } catch (error) {
-        const msg =
-            error.response?.data ||
-            error.response?.statusText ||
-            error.message ||
-            "Login failed";
+        let msg = "Login failed";
+        if (error.response) {
+            if (typeof error.response.data === 'string') {
+                msg = error.response.data;
+            } else if (error.response.data?.message) {
+                msg = error.response.data.message;
+            } else if (error.response.data?.error) {
+                msg = error.response.data.error;
+            } else {
+                msg = error.response.statusText || "Login failed";
+            }
+        } else if (error.message) {
+            msg = error.message;
+        }
         console.error("Login Error:", msg);
         throw new Error(msg);
     }

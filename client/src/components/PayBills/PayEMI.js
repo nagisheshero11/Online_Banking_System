@@ -3,16 +3,24 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { FaBolt, FaWifi, FaMobileAlt, FaFire, FaCheckCircle, FaUniversity, FaCreditCard } from "react-icons/fa";
 import { getMyBills, payBill, getBillsByLoan } from "../../services/billsAPI";
 import BillPaymentModal from "./BillPaymentModal";
+import ConfirmationModal from "../Common/ConfirmationModal";
+import { useToast } from "../../context/ToastContext";
 import "./styles/PayBills.css"; // Reuse styles
 
 const PayEMI = () => {
     const [bills, setBills] = useState([]);
     const [loading, setLoading] = useState(true);
     const [payingBillId, setPayingBillId] = useState(null);
-    const [successMsg, setSuccessMsg] = useState(null);
     const [selectedBill, setSelectedBill] = useState(null); // For modal
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
+    const { showToast } = useToast();
+
+    // Confirmation Modal State
+    const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+    const [confirmAction, setConfirmAction] = useState(null);
+    const [confirmMessage, setConfirmMessage] = useState("");
+    const [confirmTitle, setConfirmTitle] = useState("");
 
     const loanIdParam = searchParams.get("loanId");
 
@@ -37,6 +45,7 @@ const PayEMI = () => {
             })));
         } catch (err) {
             console.error("Bills fetch error:", err);
+            showToast("Failed to load EMIs", "error");
         } finally {
             setLoading(false);
         }
@@ -48,26 +57,34 @@ const PayEMI = () => {
 
     const handlePaymentSuccess = async () => {
         await fetchBills();
-        setSuccessMsg("EMI paid successfully! Transaction recorded.");
-        setTimeout(() => setSuccessMsg(null), 3000);
+        showToast("EMI paid successfully! Transaction recorded.", "success");
         setSelectedBill(null);
     };
 
-    const handlePayAll = async () => {
+    const handlePayAllClick = () => {
         const outstanding = bills.filter(b => b.status === "UNPAID" || b.status === "OVERDUE");
         if (outstanding.length === 0) return;
-        if (!window.confirm(`Pay all ${outstanding.length} EMIs?`)) return;
 
+        setConfirmTitle("Pay All EMIs");
+        setConfirmMessage(`Are you sure you want to pay all ${outstanding.length} outstanding EMIs? Total amount: ${currency(totalDue)}`);
+        setConfirmAction(() => () => executePayAll(outstanding));
+        setIsConfirmModalOpen(true);
+    };
+
+    const executePayAll = async (outstanding) => {
+        setIsConfirmModalOpen(false);
         for (let b of outstanding) {
             try {
                 setPayingBillId(b.id);
                 await payBill(b.id);
             } catch (e) {
                 console.error(e);
+                showToast(`Failed to pay EMI #${b.id}`, "error");
             }
         }
         await fetchBills();
         setPayingBillId(null);
+        showToast("All EMIs paid successfully!", "success");
     };
 
     const totalDue = bills
@@ -86,11 +103,6 @@ const PayEMI = () => {
 
     return (
         <div className="pay-bills-container">
-            {successMsg && (
-                <div className="success-toast">
-                    <FaCheckCircle /> {successMsg}
-                </div>
-            )}
             {/* Left: Visual Guide */}
             <div className="bills-visual">
                 <div className="visual-bg"></div>
@@ -106,7 +118,7 @@ const PayEMI = () => {
                         <div className="due-value">{currency(totalDue)}</div>
 
                         {totalDue > 0 && (
-                            <button className="pay-all-btn" onClick={handlePayAll}>
+                            <button className="pay-all-btn" onClick={handlePayAllClick}>
                                 Pay All EMIs
                             </button>
                         )}
@@ -175,6 +187,16 @@ const PayEMI = () => {
                     onSuccess={handlePaymentSuccess}
                 />
             )}
+
+            {/* Confirmation Modal */}
+            <ConfirmationModal
+                isOpen={isConfirmModalOpen}
+                onClose={() => setIsConfirmModalOpen(false)}
+                onConfirm={confirmAction}
+                title={confirmTitle}
+                message={confirmMessage}
+                confirmText="Pay All"
+            />
         </div>
     );
 };

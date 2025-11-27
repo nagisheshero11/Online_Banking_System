@@ -42,9 +42,9 @@
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background: rgba(255,255,255,0.95);
-    border: 1px solid rgba(15,23,42,0.06);
-    box-shadow: 0 6px 18px rgba(2,6,23,0.08);
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    box-shadow: 0 6px 18px rgba(2, 6, 23, 0.08);
     font-size: 18px;
     color: var(--text-dark);
     cursor: pointer;
@@ -54,7 +54,7 @@
 
 .back-to-landing:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 26px rgba(2,6,23,0.12);
+    box-shadow: 0 10px 26px rgba(2, 6, 23, 0.12);
 }
 
 .back-to-landing:active {
@@ -486,5 +486,45 @@
 
     .login-left-panel {
         padding: 1.5rem;
+    }
+}
+
+/* Error Message */
+.login-error-msg {
+    color: #ef4444;
+    /* Red-500 */
+    background-color: #fef2f2;
+    /* Red-50 */
+    border: 1px solid #fee2e2;
+    /* Red-200 */
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    text-align: center;
+    margin-top: 10px;
+    animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
+}
+
+@keyframes shake {
+
+    10%,
+    90% {
+        transform: translate3d(-1px, 0, 0);
+    }
+
+    20%,
+    80% {
+        transform: translate3d(2px, 0, 0);
+    }
+
+    30%,
+    50%,
+    70% {
+        transform: translate3d(-4px, 0, 0);
+    }
+
+    40%,
+    60% {
+        transform: translate3d(4px, 0, 0);
     }
 }
