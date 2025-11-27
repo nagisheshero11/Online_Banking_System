@@ -85,33 +85,34 @@
     background: #E2E8F0;
 }
 
-/* Logout Button (Ghost Style) */
-.logout-btn {
+/* Logout Button (Solid Blue) */
+.dashboard-logout-btn {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    height: 36px;
-    padding: 0 12px;
-    border-radius: 10px;
-    border: 1px solid transparent;
-    /* Ghost style default */
-    color: #3B82F6;
-    /* Primary blue */
-    background: transparent;
+    height: 40px;
+    padding: 0 20px;
+    border-radius: 12px;
+    border: none;
+    color: white;
+    background: #3B82F6;
+    /* Solid Blue */
     font-weight: 600;
     font-size: 0.9rem;
     cursor: pointer;
     transition: all 0.2s ease;
+    box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2);
 }
 
-.logout-btn:hover {
-    background: #EFF6FF;
-    /* Light blue background on hover */
-    color: #2563EB;
-    /* Darker blue on hover */
+.dashboard-logout-btn:hover {
+    background: #2563EB;
+    /* Darker Blue */
+    transform: translateY(-1px);
+    box-shadow: 0 6px 8px -1px rgba(59, 130, 246, 0.3);
+    color: white;
 }
 
-.logout-btn svg {
+.dashboard-logout-btn svg {
     font-size: 1rem;
 }
 
@@ -142,16 +143,15 @@ body {
         display: none;
     }
 
-    .logout-btn span {
+    .dashboard-logout-btn span {
         display: none;
     }
 
-    .logout-btn {
-        padding: 0 8px;
-        color: #3B82F6;
+    .dashboard-logout-btn {
+        padding: 0 10px;
+        width: 36px;
+        /* Square-ish for icon only */
+        justify-content: center;
     }
 
-    .logout-btn:hover {
-        color: #2563EB;
-    }
 }
