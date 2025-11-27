@@ -1,6 +1,6 @@
 import api from "./api";
 
-const API_URL = "/api/cards";
+const API_URL = "/cards";
 
 export const getMyCards = async () => {
     const res = await api.get(`${API_URL}/my`);
