@@ -1,4 +1,4 @@
-/* client/src/admin/styles/HistoryLoans.css */
+/* client/src/admin/styles/AdminTransactions.css */
 
 .admin-content-container {
     padding-bottom: 40px;
@@ -64,10 +64,34 @@
 }
 
 /* Cell Styles */
-.user-name {
-    font-weight: 700;
+.date-text {
+    color: #64748B;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.tx-id-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: #334155;
+    background: #F1F5F9;
+    padding: 4px 8px;
+    border-radius: 6px;
+    width: fit-content;
+}
+
+.account-text {
+    font-weight: 600;
     color: #0F172A;
-    font-size: 0.95rem;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.transfer-arrow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #94A3B8;
+    font-size: 0.8rem;
 }
 
 .amount-text {
@@ -75,12 +99,6 @@
     font-weight: 700;
     color: #0F172A;
     font-size: 1rem;
-}
-
-.date-text {
-    color: #64748B;
-    font-size: 0.85rem;
-    font-weight: 500;
 }
 
 /* Status Badge */
@@ -101,4 +119,19 @@
 .status-failed {
     background: #FEE2E2;
     color: #DC2626;
+}
+
+.status-pending {
+    background: #FEF3C7;
+    color: #D97706;
+}
+
+/* States */
+.loading-state,
+.empty-state {
+    padding: 60px;
+    text-align: center;
+    color: #64748B;
+    font-size: 1rem;
+    font-weight: 500;
 }

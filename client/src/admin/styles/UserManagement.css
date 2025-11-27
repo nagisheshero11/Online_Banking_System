@@ -1,38 +1,44 @@
 /* client/src/admin/styles/UserManagement.css */
 
 .admin-content-container {
-    padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
+    padding-bottom: 40px;
 }
 
 .admin-header-section {
-    margin-bottom: 30px;
+    margin-bottom: 32px;
 }
 
 .admin-page-title {
     font-size: 2rem;
     font-weight: 800;
     color: #0F172A;
-    margin-bottom: 8px;
+    margin: 0 0 8px 0;
+    letter-spacing: -0.02em;
 }
 
 .admin-page-subtitle {
     color: #64748B;
     font-size: 1rem;
+    font-weight: 500;
 }
 
 /* Search Bar */
 .search-bar-container {
     background: white;
-    padding: 16px;
+    padding: 16px 24px;
     border-radius: 16px;
     border: 1px solid #E2E8F0;
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 30px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+    gap: 16px;
+    margin-bottom: 32px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+}
+
+.search-bar-container:focus-within {
+    border-color: #3B82F6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .search-icon {
@@ -47,6 +53,7 @@
     width: 100%;
     color: #0F172A;
     background: transparent;
+    font-family: inherit;
 }
 
 .search-input::placeholder {
@@ -56,22 +63,23 @@
 /* Table Container */
 .table-container {
     background: white;
-    border-radius: 24px;
-    border: 1px solid #E2E8F0;
+    border-radius: 20px;
+    border: 1px solid #F1F5F9;
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
 .admin-table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     text-align: left;
 }
 
 .admin-table th {
     background: #F8FAFC;
-    padding: 16px 24px;
-    font-size: 0.85rem;
+    padding: 20px 24px;
+    font-size: 0.8rem;
     font-weight: 700;
     text-transform: uppercase;
     color: #64748B;
@@ -97,12 +105,19 @@
 .user-cell {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 16px;
 }
 
 .user-avatar {
     font-size: 2.5rem;
     color: #CBD5E1;
+    background: #F1F5F9;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .user-name {
@@ -120,19 +135,21 @@
 .contact-info {
     font-size: 0.9rem;
     color: #334155;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .phone-text {
     color: #64748B;
     font-size: 0.85rem;
-    margin-top: 2px;
 }
 
 /* Account Info */
 .account-info {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 6px;
 }
 
 .acc-number {
@@ -145,14 +162,15 @@
 .pan-text {
     font-size: 0.75rem;
     color: #94A3B8;
+    font-weight: 500;
 }
 
-.badge {
+.acc-type.badge {
     display: inline-block;
     background: #EEF2FF;
     color: #4F46E5;
-    padding: 2px 8px;
-    border-radius: 4px;
+    padding: 4px 8px;
+    border-radius: 6px;
     font-size: 0.7rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -170,7 +188,7 @@
 /* Role Badge */
 .role-badge {
     padding: 6px 12px;
-    border-radius: 50px;
+    border-radius: 20px;
     font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -191,10 +209,34 @@
     color: #DC2626;
 }
 
+/* Actions */
+.add-bill-btn {
+    background: #0F172A;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.add-bill-btn:hover {
+    background: #1E293B;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.15);
+}
+
 /* States */
-.loading-state, .empty-state {
+.loading-state,
+.empty-state {
     padding: 60px;
     text-align: center;
     color: #64748B;
     font-size: 1rem;
+    font-weight: 500;
 }

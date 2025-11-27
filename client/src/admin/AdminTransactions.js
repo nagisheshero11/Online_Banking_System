@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getAllTransactions } from "./services/adminTransactionAPI";
-import "./styles/BankFunds.css"; // Reuse existing styles
-import { FaExchangeAlt, FaArrowRight } from "react-icons/fa";
+import "./styles/AdminTransactions.css";
+import { FaArrowRight } from "react-icons/fa";
 
 const AdminTransactions = () => {
     const [transactions, setTransactions] = useState([]);
@@ -26,12 +26,10 @@ const AdminTransactions = () => {
     const formatDate = (dateStr) => new Date(dateStr).toLocaleString();
 
     return (
-        <div className="bank-funds">
-            <div className="header-row" style={{ marginBottom: '30px' }}>
-                <h1 style={{ fontSize: '1.5rem', fontWeight: '800', color: '#0F172A', margin: 0 }}>
-                    User Transactions
-                </h1>
-                <p style={{ color: '#64748B', marginTop: '4px' }}>View all user transactions.</p>
+        <div className="admin-content-container">
+            <div className="admin-header-section">
+                <h1 className="admin-page-title">User Transactions</h1>
+                <p className="admin-page-subtitle">View and monitor all user transaction history.</p>
             </div>
 
             <div className="table-container">
@@ -45,8 +43,8 @@ const AdminTransactions = () => {
                             <tr>
                                 <th>Date</th>
                                 <th>Transaction ID</th>
-                                <th>From</th>
-                                <th>To</th>
+                                <th>From Account</th>
+                                <th>To Account</th>
                                 <th>Amount</th>
                                 <th>Status</th>
                             </tr>
@@ -54,31 +52,26 @@ const AdminTransactions = () => {
                         <tbody>
                             {transactions.map((tx) => (
                                 <tr key={tx.id}>
-                                    <td style={{ color: '#64748B', fontSize: '0.85rem' }}>
-                                        {formatDate(tx.createdAt)}
-                                    </td>
-                                    <td style={{ fontFamily: 'JetBrains Mono', fontSize: '0.8rem', color: '#334155' }}>
-                                        {tx.transactionId}
-                                    </td>
-                                    <td style={{ fontWeight: '600', color: '#0F172A' }}>
-                                        {tx.fromAccountNumber}
+                                    <td>
+                                        <div className="date-text">{formatDate(tx.createdAt)}</div>
                                     </td>
                                     <td>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#64748B' }}>
-                                            <FaArrowRight style={{ fontSize: '0.7rem' }} />
-                                            <span style={{ fontWeight: '600', color: '#0F172A' }}>{tx.toAccountNumber}</span>
+                                        <div className="tx-id-text">{tx.transactionId}</div>
+                                    </td>
+                                    <td>
+                                        <div className="account-text">{tx.fromAccountNumber}</div>
+                                    </td>
+                                    <td>
+                                        <div className="transfer-arrow">
+                                            <FaArrowRight />
+                                            <span className="account-text">{tx.toAccountNumber}</span>
                                         </div>
                                     </td>
-                                    <td style={{ fontFamily: 'JetBrains Mono', fontWeight: '700', color: '#0F172A' }}>
-                                        {currency(tx.amount)}
+                                    <td>
+                                        <div className="amount-text">{currency(tx.amount)}</div>
                                     </td>
                                     <td>
-                                        <span className={`badge ${tx.status === 'COMPLETED' ? 'badge-success' : 'badge-danger'}`}
-                                            style={{
-                                                background: tx.status === 'COMPLETED' ? '#ECFDF5' : '#FEF2F2',
-                                                color: tx.status === 'COMPLETED' ? '#10B981' : '#EF4444',
-                                                padding: '4px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: '700'
-                                            }}>
+                                        <span className={`status-badge ${tx.status === 'COMPLETED' ? 'status-completed' : 'status-failed'}`}>
                                             {tx.status}
                                         </span>
                                     </td>

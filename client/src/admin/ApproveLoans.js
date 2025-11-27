@@ -82,9 +82,14 @@ const ApproveLoans = () => {
     if (loading) return <div className="approve-loans">Loading...</div>;
 
     return (
-        <div className="approve-loans">
+        <div className="admin-content-container">
+            <div className="admin-header-section">
+                <h1 className="admin-page-title">Approve Loans</h1>
+                <p className="admin-page-subtitle">Review and take action on pending loan applications.</p>
+            </div>
+
             {loans.length === 0 ? (
-                <p>No pending loans.</p>
+                <div className="empty-state">No pending loans found.</div>
             ) : (
                 loans.map((loan) => (
                     <div className="loan-req-box" key={loan.id}>

@@ -122,13 +122,8 @@ const UserManagement = () => {
                                     </td>
                                     <td>
                                         <button
-                                            className="action-btn"
+                                            className="action-btn add-bill-btn"
                                             onClick={() => setSelectedUserForBill(user)}
-                                            style={{
-                                                background: '#0F172A', color: 'white', border: 'none',
-                                                padding: '8px 12px', borderRadius: '8px', cursor: 'pointer',
-                                                display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', fontWeight: '600'
-                                            }}
                                         >
                                             <FaMoneyBillWave /> Add Bill
                                         </button>
