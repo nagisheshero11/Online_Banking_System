@@ -52,3 +52,14 @@ export const getLoanStats = async () => {
     });
     return res.data;
 };
+
+/* ---------------------------------------------------------
+   GET LOAN HISTORY
+--------------------------------------------------------- */
+export const getLoanHistory = async () => {
+    const token = getToken();
+    const res = await axios.get(`${API_URL}/history`, {
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+};

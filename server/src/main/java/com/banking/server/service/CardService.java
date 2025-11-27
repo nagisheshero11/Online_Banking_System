@@ -52,6 +52,14 @@ public class CardService {
         return cardRepository.findByStatus("PENDING");
     }
 
+    public List<Card> getCardHistory() {
+        // Fetch cards that are NOT pending (Active, Rejected, Blocked)
+        List<Card> allCards = cardRepository.findAll();
+        return allCards.stream()
+                .filter(c -> !"PENDING".equals(c.getStatus()))
+                .toList();
+    }
+
     public Card approveCard(Long cardId) {
         Card card = cardRepository.findById(cardId)
                 .orElseThrow(() -> new RuntimeException("Card not found"));

@@ -21,6 +21,12 @@ public class AdminCardController {
         return ResponseEntity.ok(cards);
     }
 
+    @GetMapping("/history")
+    public ResponseEntity<?> getCardHistory() {
+        List<Card> cards = cardService.getCardHistory();
+        return ResponseEntity.ok(cards);
+    }
+
     @PostMapping("/approve/{id}")
     public ResponseEntity<?> approveCard(@PathVariable Long id) {
         Card card = cardService.approveCard(id);

@@ -32,7 +32,7 @@
     border-left: 3px solid transparent;
 }
 
-.admin-nav a:hover {
+.admin-nav a:hover:not(.active) {
     background: #F8FAFC;
     color: #0F172A;
 }

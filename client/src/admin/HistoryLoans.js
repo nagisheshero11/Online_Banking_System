@@ -1,12 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { getLoanHistory } from "./services/adminLoanAPI";
 import "./styles/HistoryLoans.css";
 
-const historyLoans = [
-    { id: 1, name: "Devika Rao", amount: 300000, date: "Oct 4, 2025", status: "COMPLETED" },
-    { id: 2, name: "Kiran Patel", amount: 150000, date: "Jul 22, 2025", status: "REJECTED" },
-];
-
 const HistoryLoans = () => {
+    const [historyLoans, setHistoryLoans] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        fetchHistory();
+    }, []);
+
+    const fetchHistory = async () => {
+        try {
+            const data = await getLoanHistory();
+            setHistoryLoans(data);
+        } catch (err) {
+            console.error("Failed to fetch loan history", err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div className="admin-content-container">
             <div className="admin-header-section">
@@ -15,36 +29,42 @@ const HistoryLoans = () => {
             </div>
 
             <div className="table-container">
-                <table className="admin-table">
-                    <thead>
-                        <tr>
-                            <th>Applicant Name</th>
-                            <th>Loan Amount</th>
-                            <th>Date Processed</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {historyLoans.map((l) => (
-                            <tr key={l.id}>
-                                <td>
-                                    <div className="user-name">{l.name}</div>
-                                </td>
-                                <td>
-                                    <div className="amount-text">₹{l.amount.toLocaleString()}</div>
-                                </td>
-                                <td>
-                                    <div className="date-text">{l.date}</div>
-                                </td>
-                                <td>
-                                    <span className={`status-badge ${l.status === 'COMPLETED' ? 'status-completed' : 'status-failed'}`}>
-                                        {l.status}
-                                    </span>
-                                </td>
+                {loading ? (
+                    <div className="loading-state">Loading history...</div>
+                ) : historyLoans.length === 0 ? (
+                    <div className="empty-state">No loan history found.</div>
+                ) : (
+                    <table className="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Applicant Name</th>
+                                <th>Loan Amount</th>
+                                <th>Date Processed</th>
+                                <th>Status</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {historyLoans.map((l) => (
+                                <tr key={l.id}>
+                                    <td>
+                                        <div className="user-name">{l.fullName || l.username}</div>
+                                    </td>
+                                    <td>
+                                        <div className="amount-text">₹{Number(l.loanAmount).toLocaleString()}</div>
+                                    </td>
+                                    <td>
+                                        <div className="date-text">{new Date(l.createdAt).toLocaleDateString()}</div>
+                                    </td>
+                                    <td>
+                                        <span className={`status-badge ${l.status === 'COMPLETED' || l.status === 'APPROVED' ? 'status-completed' : 'status-failed'}`}>
+                                            {l.status}
+                                        </span>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                )}
             </div>
         </div>
     );

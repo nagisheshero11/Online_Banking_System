@@ -152,4 +152,21 @@ public class LoanService {
         return java.util.Map.of("totalApplied", pending + approved + rejected + completed, "pending", pending, "active",
                 approved, "rejected", rejected, "completed", completed);
     }
+
+    public List<LoanApplicationResponse> getLoanHistory() {
+        List<String> historyStatuses = List.of("APPROVED", "REJECTED", "COMPLETED");
+        return loanRepository.findByStatusIn(historyStatuses).stream()
+                .map(loan -> LoanApplicationResponse.builder()
+                        .id(loan.getId())
+                        .loanType(loan.getLoanType())
+                        .loanAmount(loan.getLoanAmount())
+                        .tenureMonths(loan.getTenureMonths())
+                        .interestRate(loan.getInterestRate())
+                        .status(loan.getStatus())
+                        .createdAt(loan.getCreatedAt())
+                        .username(loan.getUsername())
+                        .accountNumber(loan.getAccountNumber())
+                        .build())
+                .collect(Collectors.toList());
+    }
 }

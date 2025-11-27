@@ -13,6 +13,15 @@ export const getPendingApplications = async () => {
     return res.data;
 };
 
+export const getCardHistory = async () => {
+    const token = getToken();
+    if (!token) throw new Error("No token found");
+    const res = await axios.get(`${API_URL}/history`, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+    return res.data;
+};
+
 export const approveCard = async (cardId) => {
     const token = getToken();
     if (!token) throw new Error("No token found");

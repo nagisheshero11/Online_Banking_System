@@ -9,4 +9,6 @@ public interface LoanApplicationRepository extends JpaRepository<LoanApplication
     List<LoanApplication> findByUsername(String username);
 
     long countByStatus(String status);
+
+    List<LoanApplication> findByStatusIn(List<String> statuses);
 }

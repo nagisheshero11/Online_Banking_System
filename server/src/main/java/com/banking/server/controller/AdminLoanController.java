@@ -79,4 +79,9 @@ public class AdminLoanController {
     public ResponseEntity<?> getLoanStats() {
         return ResponseEntity.ok(loanService.getLoanStatistics());
     }
+
+    @GetMapping("/history")
+    public ResponseEntity<?> getLoanHistory() {
+        return ResponseEntity.ok(loanService.getLoanHistory());
+    }
 }
