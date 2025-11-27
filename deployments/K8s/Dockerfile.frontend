@@ -1,14 +1,21 @@
 # Build Stage
-FROM node:18-alpine as build
+FROM node:18-alpine AS build
 WORKDIR /app
-COPY client/package*.json ./
+
+# Install git
+RUN apk add --no-cache git
+
+# Clone repo (using the user's repo URL)
+RUN git clone https://github.com/sravan7979/Online-Banking-System.git .
+
+# Install dependencies and build
+WORKDIR /app/client
 RUN npm install
-COPY client/ ./
 RUN npm run build
 
 # Serve Stage
 FROM nginx:alpine
-COPY --from=build /app/build /usr/share/nginx/html
-COPY deployments/k8s/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/client/build /usr/share/nginx/html
+COPY deployments/K8s/nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

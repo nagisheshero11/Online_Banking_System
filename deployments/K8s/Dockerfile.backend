@@ -1,13 +1,20 @@
 # Build Stage
-FROM maven:3.9.6-eclipse-temurin-21 as build
+FROM maven:3.9.6-eclipse-temurin-21 AS build
 WORKDIR /app
-COPY server/pom.xml .
-COPY server/src ./src
+
+# Install git
+RUN apt-get update && apt-get install -y git
+
+# Clone repo
+RUN git clone https://github.com/sravan7979/Online-Banking-System.git .
+
+# Build
+WORKDIR /app/server
 RUN mvn clean package -DskipTests
 
 # Run Stage
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
-COPY --from=build /app/target/*.jar app.jar
+COPY --from=build /app/server/target/*.jar app.jar
 EXPOSE 4050
 ENTRYPOINT ["java", "-jar", "app.jar"]
