@@ -161,7 +161,8 @@
     color: #475569;
 }
 
-.form-input, .form-select {
+.form-input,
+.form-select {
     padding: 12px 15px;
     border: 1px solid #E2E8F0;
     border-radius: 10px;
@@ -169,7 +170,8 @@
     transition: all 0.2s;
 }
 
-.form-input:focus, .form-select:focus {
+.form-input:focus,
+.form-select:focus {
     border-color: #3B82F6;
     outline: none;
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
@@ -284,7 +286,7 @@
     background: white;
     border: 1px solid #E2E8F0;
     border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
 
 .upi-details {
@@ -328,7 +330,7 @@
     max-width: 400px;
     text-align: center;
     position: relative;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
 }
 
 .close-modal-btn {
@@ -370,6 +372,13 @@
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

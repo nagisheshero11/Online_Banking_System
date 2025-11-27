@@ -1,6 +1,6 @@
 import './styles/DashboardLayout.css';
 import { Link } from 'react-router-dom';
-import { FaMoneyBillWave, FaExchangeAlt, FaRupeeSign, FaPiggyBank, FaArrowDown, FaArrowUp, FaChevronRight } from 'react-icons/fa';
+import { FaExchangeAlt, FaHistory, FaCog, FaArrowDown, FaArrowUp, FaChevronRight } from 'react-icons/fa';
 
 const currency = (n) =>
   n.toLocaleString(undefined, { style: 'currency', currency: 'INR' });
@@ -51,24 +51,19 @@ const DashboardLayout = ({ accountNumber, currentBalance, transactions }) => {
       <section className="quick-actions-row card">
         <div className="qa-title">Smart Actions</div>
         <div className="qa-buttons">
-          <Link to="/dashboard/deposit-money" className="qa-btn qa-deposit">
-            <FaMoneyBillWave />
-            <span className="qa-label">Deposit Money</span>
-          </Link>
-
-          <Link to="/dashboard/transfer-money" className="qa-btn qa-transfer">
+          <Link to="/dashboard/transfer-money" className="qa-btn">
             <FaExchangeAlt />
-            <span className="qa-label">Transfer Funds</span>
+            <span className="qa-label">Transfer</span>
           </Link>
 
-          <Link to="/dashboard/pay-bills" className="qa-btn qa-bills">
-            <FaRupeeSign />
-            <span className="qa-label">Pay Bills</span>
+          <Link to="/dashboard/transactions" className="qa-btn">
+            <FaHistory />
+            <span className="qa-label">History</span>
           </Link>
 
-          <Link to="/dashboard/request-loan" className="qa-btn qa-loan">
-            <FaPiggyBank />
-            <span className="qa-label">Request Loan</span>
+          <Link to="/dashboard/profile" className="qa-btn">
+            <FaCog />
+            <span className="qa-label">Settings</span>
           </Link>
         </div>
       </section>

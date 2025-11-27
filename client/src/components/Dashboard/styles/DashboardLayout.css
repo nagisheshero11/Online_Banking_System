@@ -179,38 +179,39 @@
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    background: #D4AF37;
-    color: #0D0D0D;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 999px;
-    font-weight: 700;
+    background: #FFFFFF;
+    color: #334155;
+    border: 1px solid #E2E8F0;
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-weight: 600;
     text-decoration: none;
-    box-shadow: 0 14px 26px rgba(212, 175, 55, 0.35);
-}
-
-/* Button color variants */
-/* Unify quick action buttons to accent */
-.qa-deposit,
-.qa-transfer,
-.qa-bills,
-.qa-loan {
-    background: #D4AF37;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
 }
 
 /* Hover effect */
 .qa-btn:hover {
-    background: #C0A062;
+    background: #F8FAFC;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    color: #0F172A;
+    border-color: #CBD5E1;
 }
 
 .qa-btn:focus-visible {
-    outline: 2px solid #C0A062;
+    outline: 2px solid #3B82F6;
     outline-offset: 2px;
 }
 
 .qa-btn svg {
     width: 18px;
     height: 18px;
+    color: #475569;
+}
+
+.qa-btn:hover svg {
+    color: #0F172A;
 }
 
 /* END Quick actions update */

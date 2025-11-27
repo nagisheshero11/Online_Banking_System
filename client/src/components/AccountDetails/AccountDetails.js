@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import './styles/AccountDetails.css';
 import { FaExchangeAlt, FaFileInvoice, FaCog, FaEye, FaEyeSlash, FaCheck, FaPen } from 'react-icons/fa';
 import { getAccountDetails, updateTransactionLimit } from '../../services/accountAPI';
@@ -69,9 +70,15 @@ const AccountDetails = () => {
           <div className="header-username">{account.firstName} {account.lastName}</div>
         </div>
         <div className="header-actions">
-          <button className="portal-action-btn"><FaExchangeAlt /> Transfer</button>
-          <button className="portal-action-btn"><FaFileInvoice /> History</button>
-          <button className="portal-action-btn"><FaCog /> Settings</button>
+          <Link to="/dashboard/transfer-money" className="portal-action-btn">
+            <FaExchangeAlt /> Transfer
+          </Link>
+          <Link to="/dashboard/transactions" className="portal-action-btn">
+            <FaFileInvoice /> History
+          </Link>
+          <Link to="/dashboard/profile" className="portal-action-btn">
+            <FaCog /> Settings
+          </Link>
         </div>
       </div>
 
@@ -144,7 +151,7 @@ const AccountDetails = () => {
                   <div className="power-bar-fill" style={{ width: `${limitPercentage}%` }}></div>
                 </div>
                 <button className="portal-action-btn" onClick={() => setIsEditing(true)}>
-                  <FaPen style={{ marginRight: '8px' }} /> Adjust Limit
+                  <FaPen /> Adjust Limit
                 </button>
               </>
             ) : (

@@ -104,7 +104,7 @@ const Signup = () => {
                         <div className="form-row">
                             <div className="input-group-split">
                                 <FaIdCard className="input-icon" />
-                                <input type="text" name="panNumber" placeholder="PAN Number" required className="split-input" onChange={handleChange} />
+                                <input type="text" name="panNumber" placeholder="PAN Number (Optional)" className="split-input" onChange={handleChange} />
                             </div>
                             <div className="input-group-split">
                                 <FaCreditCard className="input-icon" />

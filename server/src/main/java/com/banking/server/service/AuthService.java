@@ -10,7 +10,6 @@ import com.banking.server.security.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -53,9 +52,6 @@ public class AuthService {
 
         if (userRepository.existsByPhoneNumber(request.getPhoneNumber()))
             throw new RuntimeException("Phone number already registered!");
-
-        if (userRepository.existsByPanNumber(request.getPanNumber()))
-            throw new RuntimeException("PAN number already registered!");
 
         if (userRepository.existsByAccountNumber(upperAcc))
             throw new RuntimeException("Account number already exists!");
@@ -103,9 +99,7 @@ public class AuthService {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmailOrUsername(),
-                        request.getPassword()
-                )
-        );
+                        request.getPassword()));
 
         // Load user
         User user = userRepository.findByEmail(request.getEmailOrUsername())
