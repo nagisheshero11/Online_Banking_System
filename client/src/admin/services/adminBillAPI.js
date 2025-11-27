@@ -1,9 +1,6 @@
-import axios from "axios";
+import api from "../../services/api";
 
-const API_URL = "http://localhost:6060/api/admin/bills";
-
-/* ------------------------- TOKEN HELPER ------------------------- */
-const getToken = () => localStorage.getItem("token");
+const API_URL = "/admin/bills";
 
 /* ------------------------- CREATE BILL ------------------------- */
 /*
@@ -11,23 +8,11 @@ const getToken = () => localStorage.getItem("token");
   Body: { username, accountNumber, amount, dueDate, billType }
 */
 export const createBill = async (billData) => {
-    const token = getToken();
-    if (!token) throw new Error("No token found");
-
     try {
-        const res = await axios({
-            method: "POST",
-            url: `${API_URL}/create`,
-            headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-            },
-            data: billData,
-        });
-
+        const res = await api.post(`${API_URL}/create`, billData);
         return res.data;
     } catch (err) {
         console.error("❌ Create Bill Error:", err?.response || err);
-        throw new Error(err?.response?.data || "Failed to create bill");
+        throw err;
     }
 };

@@ -1,31 +1,17 @@
-import axios from "axios";
+import api from "../../services/api";
 
-const API_URL = "http://localhost:6060/api/admin/transactions";
-
-/* ------------------------- TOKEN HELPER ------------------------- */
-const getToken = () => localStorage.getItem("token");
+const API_URL = "/admin/transactions";
 
 /* ------------------------- GET ALL TRANSACTIONS ----------------- */
 /*
   GET /api/admin/transactions/all
 */
 export const getAllTransactions = async () => {
-    const token = getToken();
-    if (!token) throw new Error("No token found");
-
     try {
-        const res = await axios({
-            method: "GET",
-            url: `${API_URL}/all`,
-            headers: {
-                Authorization: `Bearer ${token}`,
-                Accept: "application/json",
-            },
-        });
-
+        const res = await api.get(`${API_URL}/all`);
         return res.data;
     } catch (err) {
         console.error("❌ Get Transactions Error:", err?.response || err);
-        throw new Error(err?.response?.data || "Failed to fetch transactions");
+        throw err;
     }
 };
