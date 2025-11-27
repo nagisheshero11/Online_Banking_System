@@ -16,7 +16,7 @@ const AdminNavbar = () => {
                     <span className="user-name-strong">Admin</span>
                     <span className="user-sub">Console</span>
                 </div>
-                <Link to="/logout" className="logout-btn" aria-label="Logout">
+                <Link to="/logout" className="admin-logout-btn" aria-label="Logout">
                     Logout
                 </Link>
             </div>

@@ -57,21 +57,25 @@ const ApproveCards = () => {
         setProcessingId(null);
     };
 
-    if (loading) return <div className="approve-cards">Loading...</div>;
+    if (loading) return <div className="loading-state">Loading...</div>;
 
     return (
-        <div className="approve-cards">
+        <div className="admin-content-container">
+            <div className="admin-header-section">
+                <h1 className="admin-page-title">Approve Cards</h1>
+                <p className="admin-page-subtitle">Review and process pending debit/credit card requests.</p>
+            </div>
+
             {cards.length === 0 ? (
-                <p>No pending card applications.</p>
+                <div className="empty-state">No pending card applications.</div>
             ) : (
                 cards.map((c) => (
                     <div className="card-req-box" key={c.id}>
                         <div className="left">
                             <h3>{c.cardHolder}</h3>
-                            <div style={{ fontSize: '0.9rem', color: '#475569', marginTop: '8px' }}>
+                            <div className="card-details-grid">
                                 <div><strong>Type:</strong> {c.cardType}</div>
                                 <div><strong>Applied:</strong> {new Date(c.createdAt).toLocaleDateString()}</div>
-                                {/* In a real app, backend would send user details like balance here */}
                                 <div><strong>User ID:</strong> {c.user?.id || 'N/A'}</div>
                             </div>
                         </div>
@@ -87,7 +91,6 @@ const ApproveCards = () => {
                                 className="reject-btn"
                                 onClick={() => handleReject(c.id)}
                                 disabled={processingId === c.id}
-                                style={{ marginLeft: '10px', background: '#EF4444', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer' }}
                             >
                                 Reject
                             </button>
@@ -103,7 +106,7 @@ const ApproveCards = () => {
                         <h3>Confirm Card Approval</h3>
                         <p>Are you sure you want to approve this card?</p>
 
-                        <div style={{ background: '#F8FAFC', padding: '16px', borderRadius: '12px', margin: '20px 0', fontSize: '0.95rem' }}>
+                        <div className="modal-summary">
                             <div className="summary-row"><span>Applicant:</span> <strong>{selectedCard.cardHolder}</strong></div>
                             <div className="summary-row"><span>Card Type:</span> <strong>{selectedCard.cardType}</strong></div>
                             <div className="summary-row"><span>Card Number:</span> <strong>{selectedCard.cardNumber}</strong></div>
